@@ -87,6 +87,12 @@ class DataTaskHandler extends BinaryHttpResponseHandler {
         LogD("onSuccess(i:" + i + " headers:" + headers);
         _downloader.onFinish(_id, 0, null, binaryData);
     }
+    
+    @Override
+    public void onFinish() {
+        // onFinish called after onSuccess/onFailure
+        _downloader.runNextTaskIfExists();
+    }
 }
 
 class HeadTaskHandler extends AsyncHttpResponseHandler {
@@ -121,6 +127,12 @@ class HeadTaskHandler extends AsyncHttpResponseHandler {
         }
         Cocos2dxDownloader.setResumingSupport(_host, acceptRanges);
         Cocos2dxDownloader.createTask(_downloader, _id, _url, _path);
+    }
+    
+    @Override
+    public void onFinish() {
+        // onFinish called after onSuccess/onFailure
+        _downloader.runNextTaskIfExists();
     }
 
     @Override
@@ -327,9 +339,6 @@ public class Cocos2dxDownloader {
                     catch (URISyntaxException e) {
                         break;
                     }
-                    catch (NullPointerException e) {
-                        break;
-                    }
                     final String host = domain.startsWith("www.") ? domain.substring(4) : domain;
                     Boolean supportResuming = false;
                     Boolean requestHeader = true;
@@ -352,7 +361,7 @@ public class Cocos2dxDownloader {
                     if (!parent.isDirectory() && !parent.mkdirs()) break;
 
                     File finalFile = new File(path);
-                    if (tempFile.isDirectory()) break;
+                    if (finalFile.isDirectory()) break;
 
                     task.handler = new FileTaskHandler(downloader, id, tempFile, finalFile);
                     Header[] headers = null;
