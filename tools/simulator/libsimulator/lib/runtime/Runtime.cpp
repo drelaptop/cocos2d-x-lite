@@ -1,4 +1,4 @@
-﻿/****************************************************************************
+/****************************************************************************
 Copyright (c) 2013 cocos2d-x.org
 Copyright (c) 2013-2016 Chukong Technologies Inc.
 Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
@@ -31,6 +31,7 @@ THE SOFTWARE.
 #include "cocos2d.h"
 #include "ConfigParser.h"
 #include "RuntimeProtocol.h"
+#include "platform/CCApplication.h"
 
 #if ((CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC))
 #include "DeviceEx.h"
@@ -105,7 +106,10 @@ void resetDesignResolution()
         if (size.width < size.height)
             std::swap(size.width, size.height);
     }
-    cocos2d::Director::getInstance()->getOpenGLView()->setDesignResolutionSize(size.width, size.height, ResolutionPolicy::EXACT_FIT);
+    //     TODO: find method to switch view sice
+//    cocos2d::Director::getInstance()->getOpenGLView()->setDesignResolutionSize(size.width, size.height, ResolutionPolicy::EXACT_FIT);
+//    cocos2d::Application::getInstance()->;
+    CCLOG("TODO void resetDesignResolution()");
 }
 
 //
