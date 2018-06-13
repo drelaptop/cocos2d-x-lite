@@ -41,7 +41,7 @@
 USING_NS_CC;
 using namespace std;
 
-AppDelegate::AppDelegate(int width, int height) : Application("Cocos Simulator", width, height)
+AppDelegate::AppDelegate(const std::string& name, int width, int height) : Application(name, width, height)
 {
 }
 
@@ -52,6 +52,9 @@ AppDelegate::~AppDelegate()
 
 bool AppDelegate::applicationDidFinishLaunching()
 {
+    // set default FPS
+    Application::getInstance()->setPreferredFramesPerSecond(60);
+
     auto runtimeEngine = RuntimeEngine::getInstance();
     runtimeEngine->setEventTrackingEnable(true);
     auto jsRuntime = RuntimeJsImpl::create();

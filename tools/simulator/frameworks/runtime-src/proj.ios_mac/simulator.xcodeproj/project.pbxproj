@@ -20,6 +20,8 @@
 		3EEEDB61197107C0006A9FF8 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EEEDB60197107C0006A9FF8 /* MediaPlayer.framework */; };
 		403ACAD520CE435000BB433D /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = 403ACAD420CE435000BB433D /* config.json */; };
 		403ACAD620CE435000BB433D /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = 403ACAD420CE435000BB433D /* config.json */; };
+		404B24FC20D0AD5E0025EC55 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 404B24FB20D0AD5D0025EC55 /* SystemConfiguration.framework */; };
+		40CEAEBC20CFE034007A3281 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40CEAEBB20CFE033007A3281 /* SystemConfiguration.framework */; };
 		4D558C851F95B3B00083B43B /* jsb_module_register.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4D558C841F95B3B00083B43B /* jsb_module_register.cpp */; };
 		4D558C861F95B3BC0083B43B /* jsb_module_register.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4D558C841F95B3B00083B43B /* jsb_module_register.cpp */; };
 		5023811817EBBCAC00990C9B /* AppController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5023810817EBBCAC00990C9B /* AppController.mm */; };
@@ -154,6 +156,8 @@
 		3EB51526195187AF006966AA /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		3EEEDB60197107C0006A9FF8 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk/System/Library/Frameworks/MediaPlayer.framework; sourceTree = DEVELOPER_DIR; };
 		403ACAD420CE435000BB433D /* config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = config.json; path = ../../../config.json; sourceTree = "<group>"; };
+		404B24FB20D0AD5D0025EC55 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.4.sdk/System/Library/Frameworks/SystemConfiguration.framework; sourceTree = DEVELOPER_DIR; };
+		40CEAEBB20CFE033007A3281 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		4D558C841F95B3B00083B43B /* jsb_module_register.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = jsb_module_register.cpp; path = "../../../../../cocos/scripting/js-bindings/manual/jsb_module_register.cpp"; sourceTree = "<group>"; };
 		5023810717EBBCAC00990C9B /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppController.h; sourceTree = "<group>"; };
 		5023810817EBBCAC00990C9B /* AppController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AppController.mm; sourceTree = "<group>"; };
@@ -229,6 +233,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				40CEAEBC20CFE034007A3281 /* SystemConfiguration.framework in Frameworks */,
 				1A1677BA1F54218200294BB1 /* CFNetwork.framework in Frameworks */,
 				1A16779F1F540F7C00294BB1 /* JavaScriptCore.framework in Frameworks */,
 				ED545A9A1B68A2DA00C3958E /* libiconv.dylib in Frameworks */,
@@ -253,6 +258,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				404B24FC20D0AD5E0025EC55 /* SystemConfiguration.framework in Frameworks */,
 				1A1677BE1F54219E00294BB1 /* libicucore.A.tbd in Frameworks */,
 				1A1677BC1F54218800294BB1 /* CFNetwork.framework in Frameworks */,
 				1A16779D1F540F7400294BB1 /* JavaScriptCore.framework in Frameworks */,
@@ -392,6 +398,8 @@
 		F293B3CB15EB7BE500256477 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				40CEAEBB20CFE033007A3281 /* SystemConfiguration.framework */,
+				404B24FB20D0AD5D0025EC55 /* SystemConfiguration.framework */,
 				1A1677BD1F54219E00294BB1 /* libicucore.A.tbd */,
 				1A1677BB1F54218800294BB1 /* CFNetwork.framework */,
 				1A16779E1F540F7C00294BB1 /* JavaScriptCore.framework */,

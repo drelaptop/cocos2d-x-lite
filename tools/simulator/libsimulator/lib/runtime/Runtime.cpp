@@ -26,12 +26,11 @@ THE SOFTWARE.
 
 #include "Runtime.h"
 #include "FileServer.h"
-#include "ConnectWaitLayer.h"
-#include "ConsoleCommand.h"
+//#include "ConnectWaitLayer.h"
+//#include "ConsoleCommand.h"
 #include "cocos2d.h"
 #include "ConfigParser.h"
 #include "RuntimeProtocol.h"
-#include "platform/CCApplication.h"
 
 #if ((CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC))
 #include "DeviceEx.h"
@@ -106,10 +105,8 @@ void resetDesignResolution()
         if (size.width < size.height)
             std::swap(size.width, size.height);
     }
-    //     TODO: find method to switch view sice
 //    cocos2d::Director::getInstance()->getOpenGLView()->setDesignResolutionSize(size.width, size.height, ResolutionPolicy::EXACT_FIT);
-//    cocos2d::Application::getInstance()->;
-    CCLOG("TODO void resetDesignResolution()");
+    CCLOG("resetDesignResolution");
 }
 
 //
@@ -288,7 +285,7 @@ void RuntimeEngine::end()
     {
         CC_SAFE_DELETE(it->second);
     }
-    ConsoleCommand::purge();
+//    ConsoleCommand::purge();
     FileServer::getShareInstance()->stop();
     ConfigParser::purge();
 //    FileServer::purge();
@@ -322,17 +319,18 @@ RuntimeProtocol* RuntimeEngine::getRuntime()
 
 void RuntimeEngine::showUI()
 {
-    auto scene = cocos2d::Scene::create();
-    auto connectLayer = new ConnectWaitLayer();
-    connectLayer->autorelease();
-    auto director = cocos2d::Director::getInstance();
-    scene->addChild(connectLayer);
-    director->runWithScene(scene);
+//    auto scene = cocos2d::Scene::create();
+//    auto connectLayer = new ConnectWaitLayer();
+//    connectLayer->autorelease();
+//    auto director = cocos2d::Director::getInstance();
+//    scene->addChild(connectLayer);
+//    director->runWithScene(scene);
+    CCLOG("void RuntimeEngine::showUI()");
 }
 
 bool RuntimeEngine::startNetwork()
 {
-    ConsoleCommand::getShareInstance()->init();
+//    ConsoleCommand::getShareInstance()->init();
     showUI();
 
     return true;

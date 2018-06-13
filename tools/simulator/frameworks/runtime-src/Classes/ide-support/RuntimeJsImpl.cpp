@@ -31,7 +31,7 @@
 
 #include "RuntimeJsImpl.h"
 
-#include "cocos/base/CCDirector.h"        // 2dx engine
+//#include "cocos/base/CCDirector.h"        // 2dx engine
 
 #if (CC_CODE_IDE_DEBUG_SUPPORT > 0)
 
@@ -42,22 +42,22 @@
 // js
 #include "scripting/js-bindings/jswrapper/SeApi.h"
 #include "scripting/js-bindings/auto/jsb_cocos2dx_auto.hpp"
-#include "scripting/js-bindings/manual/ScriptingCore.h"
+//#include "scripting/js-bindings/manual/ScriptingCore.h"
 #include "scripting/js-bindings/manual/jsb_conversions.hpp"
 #include "scripting/js-bindings/manual/jsb_module_register.hpp"
 #include "scripting/js-bindings/manual/jsb_global.h"
 
 static bool reloadScript(const string& file)
 {
-    auto director = cocos2d::Director::getInstance();
-    cocos2d::FontFNT::purgeCachedData();
-    if (director->getOpenGLView())
-    {
-        cocos2d::SpriteFrameCache::getInstance()->removeSpriteFrames();
-        director->getTextureCache()->removeAllTextures();
-    }
-    cocos2d::FileUtils::getInstance()->purgeCachedEntries();
-    
+//    auto director = cocos2d::Director::getInstance();
+//    cocos2d::FontFNT::purgeCachedData();
+//    if (director->getOpenGLView())
+//    {
+//        cocos2d::SpriteFrameCache::getInstance()->removeSpriteFrames();
+//        director->getTextureCache()->removeAllTextures();
+//    }
+//    cocos2d::FileUtils::getInstance()->purgeCachedEntries();
+
     //director->getScheduler()->unscheduleAll();
     //director->getScheduler()->scheduleUpdate(director->getActionManager(), Scheduler::PRIORITY_SYSTEM, false);
     
@@ -175,9 +175,6 @@ bool RuntimeJsImpl::initJsEnv()
         return true;
     }
 
-    cocos2d::ScriptEngineProtocol *engine = ScriptingCore::getInstance();
-    cocos2d::ScriptEngineManager::getInstance()->setScriptEngine(engine);
-
     auto se = se::ScriptEngine::getInstance();
     jsb_set_xxtea_key("");
     jsb_init_file_operation_delegate();
@@ -291,7 +288,7 @@ void RuntimeJsImpl::onRemove(const std::string &filename)
 
 void RuntimeJsImpl::end()
 {
-    cocos2d::ScriptEngineManager::destroyInstance();
+//    cocos2d::ScriptEngineManager::destroyInstance();
     RuntimeProtocol::end();
 }
 
@@ -313,14 +310,14 @@ bool RuntimeJsImpl::loadScriptFile(const std::string& path)
     CCLOG("------------------------------------------------");
     
     initJsEnv();
-    auto engine = ScriptingCore::getInstance();
+//    auto engine = ScriptingCore::getInstance();
 
     // if (RuntimeEngine::getInstance()->getProjectConfig().getDebuggerType() != kCCRuntimeDebuggerNone)
     // {
     this->startWithDebugger();
     // }
     
-    cocos2d::ScriptEngineManager::getInstance()->setScriptEngine(engine);
+//    cocos2d::ScriptEngineManager::getInstance()->setScriptEngine(engine);
     return jsb_run_script(filepath);
 }
 
