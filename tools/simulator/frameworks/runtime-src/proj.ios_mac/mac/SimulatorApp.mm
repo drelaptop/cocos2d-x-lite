@@ -40,6 +40,7 @@
 #include "cocos2d.h"
 #include "base/CCConfiguration.h"
 #include "ide-support/CodeIDESupport.h"
+#include "platform/desktop/CCGLView-desktop.h"
 
 #include "platform/mac/PlayerMac.h"
 #include "AppEvent.h"
@@ -82,7 +83,6 @@ static void glfwDropFunc(GLFWwindow *window, int count, const char **files)
     std::string firstFile(files[0]);
     forwardEvent.setDataString(firstFile);
 
-//    Director::getInstance()->getEventDispatcher()->dispatchEvent(&forwardEvent);
     EventDispatcher::dispatchCustomEvent(&forwardEvent);
 }
 #endif
@@ -387,22 +387,22 @@ static void glfwDropFunc(GLFWwindow *window, int count, const char **files)
     // create app view
     _app = new AppDelegate(title.str(), _project.getFrameScale() * frameSize.width, _project.getFrameScale() * frameSize.height);
 
+    // this **MUST** be called after create opengl view, or crash will occur at 'glGetString'
     CCLOG("%s\n",Configuration::getInstance()->getInfo().c_str());
 
-    // TODO: check window location when test
-//    _window = eglView->getCocoaWindow();
-//    [[NSApplication sharedApplication] setDelegate: self];
-//    [_window center];
+    auto glfwWindow = ((GLView*)_app->getView())->getGLFWWindow();
+    _window = glfwGetCocoaWindow((GLFWwindow*)glfwWindow);
+    [_window center];
 
-//    [self setZoom:_project.getFrameScale()];
-//    if (pos.x != 0 && pos.y != 0)
-//    {
-//        [_window setFrameOrigin:NSMakePoint(pos.x, pos.y)];
-//    }
+    [self setZoom:_project.getFrameScale()];
+    if (pos.x != 0 && pos.y != 0)
+    {
+        [_window setFrameOrigin:NSMakePoint(pos.x, pos.y)];
+    }
 
-//#if (PLAYER_SUPPORT_DROP > 0)
-//    glfwSetDropCallback(eglView->getWindow(), glfwDropFunc);
-//#endif
+#if (PLAYER_SUPPORT_DROP > 0)
+    glfwSetDropCallback((GLFWwindow*)glfwWindow, glfwDropFunc);
+#endif
 }
 
 - (void) adjustEditMenuIndex
@@ -446,13 +446,14 @@ static void glfwDropFunc(GLFWwindow *window, int count, const char **files)
     NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
     FileUtils::getInstance()->addSearchPath(resourcePath.UTF8String);
 
-    [self setupUI];
-    [self adjustEditMenuIndex];
+    // not show the custom menu items, for it's invalid
+    // [self setupUI];
+    // [self adjustEditMenuIndex];
 
     RuntimeEngine::getInstance()->setProjectConfig(_project);
     _app->start();
     CC_SAFE_DELETE(_app);
-    // After run, application needs to be terminated immediately. -> why?
+    // After run, application needs to be terminated immediately.
     [NSApp terminate: self];
 }
 
@@ -537,7 +538,8 @@ static void glfwDropFunc(GLFWwindow *window, int count, const char **files)
 
     menuBar->addItem("REFRESH_MENU_SEP", "-", "VIEW_MENU");
     menuBar->addItem("REFRESH_MENU", tr("Refresh"), "VIEW_MENU")->setShortcut("super+r");
-/*
+
+    /*
     ProjectConfig &project = _project;
 
     auto dispatcher = Director::getInstance()->getEventDispatcher();
@@ -648,7 +650,7 @@ static void glfwDropFunc(GLFWwindow *window, int count, const char **files)
         }
     });
     dispatcher->addEventListenerWithFixedPriority(listener, 1);
-  */
+     */
 }
 
 
@@ -707,16 +709,16 @@ static void glfwDropFunc(GLFWwindow *window, int count, const char **files)
     }
 }
 
-/*
+
 - (void) setZoom:(float)scale
 {
-    Director::getInstance()->getOpenGLView()->setFrameZoomFactor(scale);
+//    Director::getInstance()->getOpenGLView()->setFrameZoomFactor(scale);
     _project.setFrameScale(scale);
     std::stringstream title;
     title << "Cocos " << tr("Simulator") << " (" << _project.getFrameScale() * 100 << "%)";
     [_window setTitle:[NSString stringWithUTF8String:title.str().c_str()]];
 }
-*/
+
 
 - (BOOL) applicationShouldHandleReopen:(NSApplication *)sender hasVisibleWindows:(BOOL)flag
 {

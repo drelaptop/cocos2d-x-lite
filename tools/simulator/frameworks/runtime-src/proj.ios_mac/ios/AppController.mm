@@ -49,7 +49,7 @@ Application* app = nullptr;
     window = [[UIWindow alloc] initWithFrame: bounds];
 
     // cocos2d application instance
-    app = new AppDelegate(bounds.size.width * scale, bounds.size.height * scale);
+    app = new AppDelegate("Cocos Simulator",bounds.size.width * scale, bounds.size.height * scale);
     app->setMultitouch(true);
     
     // Use RootViewController to manage CCEAGLView

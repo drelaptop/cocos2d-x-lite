@@ -47,9 +47,11 @@
 
 static bool reloadScript(const string& file)
 {
-    CCLOG("call static bool reloadScript(const string& file)");
+    CCLOG("------------------------------------------------");
+    CCLOG("RELOAD Js FILE: %s", file.c_str());
+    CCLOG("------------------------------------------------");
     se::ScriptEngine::getInstance()->cleanup();
-    
+
     string modulefile = file;
     if (modulefile.empty())
     {
@@ -249,6 +251,7 @@ void RuntimeJsImpl::onRemove(const std::string &filename)
 
 void RuntimeJsImpl::end()
 {
+    se::ScriptEngine::getInstance()->destroyInstance();
     RuntimeProtocol::end();
 }
 
