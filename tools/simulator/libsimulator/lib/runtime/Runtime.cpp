@@ -26,8 +26,6 @@ THE SOFTWARE.
 
 #include "Runtime.h"
 #include "FileServer.h"
-//#include "ConnectWaitLayer.h"
-//#include "ConsoleCommand.h"
 #include "cocos2d.h"
 #include "ConfigParser.h"
 #include "RuntimeProtocol.h"
@@ -246,17 +244,9 @@ void RuntimeEngine::start()
         cocos2d::FileUtils::getInstance()->addSearchPath(path);
     }
 
-    //
-    // if (_project.getDebuggerType() == kCCRuntimeDebuggerNone)
-    // {
     setupRuntime();
     startScript("src/jsb.js");
     startScript("");
-    // }
-    // else
-    // {
-    //     startNetwork();
-    // }
 }
 
 void RuntimeEngine::end()
@@ -270,10 +260,9 @@ void RuntimeEngine::end()
     {
         CC_SAFE_DELETE(it->second);
     }
-//    ConsoleCommand::purge();
     FileServer::getShareInstance()->stop();
     ConfigParser::purge();
-//    FileServer::purge();
+    FileServer::purge();
 }
 
 void RuntimeEngine::setEventTrackingEnable(bool enable)
@@ -296,29 +285,6 @@ void RuntimeEngine::addRuntime(RuntimeProtocol *runtime, int type)
 RuntimeProtocol* RuntimeEngine::getRuntime()
 {
     return _runtime;
-}
-
-//
-// private
-//
-
-void RuntimeEngine::showUI()
-{
-//    auto scene = cocos2d::Scene::create();
-//    auto connectLayer = new ConnectWaitLayer();
-//    connectLayer->autorelease();
-//    auto director = cocos2d::Director::getInstance();
-//    scene->addChild(connectLayer);
-//    director->runWithScene(scene);
-    CCLOG("void RuntimeEngine::showUI()");
-}
-
-bool RuntimeEngine::startNetwork()
-{
-//    ConsoleCommand::getShareInstance()->init();
-    showUI();
-
-    return true;
 }
 
 void RuntimeEngine::updateConfigParser()

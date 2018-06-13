@@ -31,7 +31,6 @@
 
 #include "RuntimeJsImpl.h"
 
-//#include "cocos/base/CCDirector.h"        // 2dx engine
 #if (CC_CODE_IDE_DEBUG_SUPPORT > 0)
 
 #include "runtime/ConfigParser.h"   // config

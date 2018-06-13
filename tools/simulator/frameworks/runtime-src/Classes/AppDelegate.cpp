@@ -50,8 +50,8 @@ bool AppDelegate::applicationDidFinishLaunching()
     Application::getInstance()->setPreferredFramesPerSecond(60);
 
     auto runtimeEngine = RuntimeEngine::getInstance();
-    // TODO, false or true
-    runtimeEngine->setEventTrackingEnable(false);
+
+    runtimeEngine->setEventTrackingEnable(true);
     auto jsRuntime = RuntimeJsImpl::create();
     runtimeEngine->addRuntime(jsRuntime, kRuntimeEngineJs);
     runtimeEngine->start();
