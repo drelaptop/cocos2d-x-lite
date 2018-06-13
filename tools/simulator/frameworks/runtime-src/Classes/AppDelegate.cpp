@@ -26,18 +26,12 @@
 #include "AppDelegate.h"
 
 #include "cocos2d.h"
-
-#include "cocos/scripting/js-bindings/manual/jsb_module_register.hpp"
-#include "cocos/scripting/js-bindings/manual/jsb_global.h"
-#include "cocos/scripting/js-bindings/jswrapper/SeApi.h"
 #include "cocos/scripting/js-bindings/event/EventDispatcher.h"
 #include "cocos/scripting/js-bindings/event/CustomEventTypes.h"
-#include "cocos/scripting/js-bindings/manual/jsb_classtype.hpp"
 
 #include "ide-support/CodeIDESupport.h"
 #include "runtime/Runtime.h"
 #include "ide-support/RuntimeJsImpl.h"
-
 USING_NS_CC;
 using namespace std;
 
@@ -56,7 +50,8 @@ bool AppDelegate::applicationDidFinishLaunching()
     Application::getInstance()->setPreferredFramesPerSecond(60);
 
     auto runtimeEngine = RuntimeEngine::getInstance();
-    runtimeEngine->setEventTrackingEnable(true);
+    // TODO, false or true
+    runtimeEngine->setEventTrackingEnable(false);
     auto jsRuntime = RuntimeJsImpl::create();
     runtimeEngine->addRuntime(jsRuntime, kRuntimeEngineJs);
     runtimeEngine->start();

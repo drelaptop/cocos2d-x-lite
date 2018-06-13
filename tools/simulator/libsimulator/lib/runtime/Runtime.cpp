@@ -106,7 +106,7 @@ void resetDesignResolution()
             std::swap(size.width, size.height);
     }
 //    cocos2d::Director::getInstance()->getOpenGLView()->setDesignResolutionSize(size.width, size.height, ResolutionPolicy::EXACT_FIT);
-    CCLOG("resetDesignResolution");
+    CCLOG("resetDesignResolution request");
 }
 
 //
@@ -133,32 +133,15 @@ RuntimeEngine* RuntimeEngine::getInstance()
 
 void RuntimeEngine::setupRuntime()
 {
-    //
-    // 1. get project type fron config.json
-    // 2. init Lua / Js runtime
-    //
-
+    // get project type fron config.json
     updateConfigParser();
     auto entryFile = ConfigParser::getInstance()->getEntryFile();
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_WIN32) && (CC_TARGET_PLATFORM != CC_PLATFORM_MAC)
     ConfigParser::getInstance()->readConfig();
     entryFile = ConfigParser::getInstance()->getEntryFile();
 #endif
-
-    // Lua
-    if ((entryFile.rfind(".lua") != std::string::npos) ||
-        (entryFile.rfind(".luac") != std::string::npos))
-    {
-        _launchEvent = "lua";
-        _runtime = _runtimes[kRuntimeEngineLua];
-    }
-    // Js
-    else if ((entryFile.rfind(".js") != std::string::npos) ||
-             (entryFile.rfind(".jsc") != std::string::npos))
-    {
-        _launchEvent = "js";
-        _runtime = _runtimes[kRuntimeEngineJs];
-    }
+    _launchEvent = "js";
+    _runtime = _runtimes[kRuntimeEngineJs];
 }
 
 void RuntimeEngine::setProjectConfig(const ProjectConfig &config)
@@ -235,6 +218,7 @@ void RuntimeEngine::startScript(const std::string &args)
 
 void RuntimeEngine::start()
 {
+
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_WIN32) && (CC_TARGET_PLATFORM != CC_PLATFORM_MAC)
     _project.setDebuggerType(kCCRuntimeDebuggerCodeIDE);
 #endif
@@ -265,8 +249,9 @@ void RuntimeEngine::start()
     //
     // if (_project.getDebuggerType() == kCCRuntimeDebuggerNone)
     // {
-        setupRuntime();
-        startScript("");
+    setupRuntime();
+    startScript("src/jsb.js");
+    startScript("");
     // }
     // else
     // {
