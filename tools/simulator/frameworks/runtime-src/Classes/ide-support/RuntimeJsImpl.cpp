@@ -40,10 +40,10 @@
 // js
 #include "cocos/scripting/js-bindings/jswrapper/SeApi.h"
 #include "cocos/scripting/js-bindings/auto/jsb_cocos2dx_auto.hpp"
-#include "cocos/scripting/js-bindings/manual/jsb_module_register.hpp"
-#include "cocos/scripting/js-bindings/manual/jsb_global.h"
 #include "cocos/scripting/js-bindings/manual/jsb_classtype.hpp"
 #include "cocos/scripting/js-bindings/manual/jsb_conversions.cpp"
+#include "cocos/scripting/js-bindings/manual/jsb_module_register.hpp"
+#include "cocos/scripting/js-bindings/manual/jsb_global.h"
 
 static bool reloadScript(const string& file)
 {

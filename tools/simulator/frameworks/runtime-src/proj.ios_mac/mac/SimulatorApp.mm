@@ -380,21 +380,21 @@ static void glfwDropFunc(GLFWwindow *window, int count, const char **files)
     if (pos.x < 0) pos.x = 0;
     if (pos.y < 0) pos.y = 0;
 
-    // app name
+    // get app name
     std::stringstream title;
     title << "Cocos Simulator (" << _project.getFrameScale() * 100 << "%)";
 
-    // create app view
+    // create opengl view, and init app
     _app = new AppDelegate(title.str(), _project.getFrameScale() * frameSize.width, _project.getFrameScale() * frameSize.height);
 
-    // this **MUST** be called after create opengl view, or crash will occur at 'glGetString'
+    // this **MUST** be called after create opengl view, or crash will occur at 'gatherGPUInfo'
     CCLOG("%s\n",Configuration::getInstance()->getInfo().c_str());
 
     auto glfwWindow = ((GLView*)_app->getView())->getGLFWWindow();
     _window = glfwGetCocoaWindow((GLFWwindow*)glfwWindow);
     [_window center];
 
-    [self setZoom:_project.getFrameScale()];
+    // [self setZoom:_project.getFrameScale()];
     if (pos.x != 0 && pos.y != 0)
     {
         [_window setFrameOrigin:NSMakePoint(pos.x, pos.y)];
@@ -446,7 +446,7 @@ static void glfwDropFunc(GLFWwindow *window, int count, const char **files)
     NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
     FileUtils::getInstance()->addSearchPath(resourcePath.UTF8String);
 
-    // not show the custom menu items, for it's invalid
+    // not show the custom menu items
     // [self setupUI];
     // [self adjustEditMenuIndex];
 
@@ -457,6 +457,7 @@ static void glfwDropFunc(GLFWwindow *window, int count, const char **files)
     [NSApp terminate: self];
 }
 
+/*
 - (void) setupUI
 {
     auto menuBar = player::PlayerProtocol::getInstance()->getMenuService();
@@ -486,9 +487,7 @@ static void glfwDropFunc(GLFWwindow *window, int count, const char **files)
 
     menuBar->addItem("VIEW_SCALE_MENU_SEP", "-", "VIEW_MENU");
 
-//    no this info at cocos2d-x
-//    auto displayStats = Director::getInstance()->isDisplayStats();
-    bool displayStats = true;
+    auto displayStats = Director::getInstance()->isDisplayStats();
     string fpsItemName = displayStats ? tr("Hide FPS") : tr("Show FPS");
     menuBar->addItem("VIEW_SHOW_FPS", fpsItemName, "VIEW_MENU")
     ->setChecked(displayStats);
@@ -539,7 +538,6 @@ static void glfwDropFunc(GLFWwindow *window, int count, const char **files)
     menuBar->addItem("REFRESH_MENU_SEP", "-", "VIEW_MENU");
     menuBar->addItem("REFRESH_MENU", tr("Refresh"), "VIEW_MENU")->setShortcut("super+r");
 
-    /*
     ProjectConfig &project = _project;
 
     auto dispatcher = Director::getInstance()->getEventDispatcher();
@@ -612,10 +610,10 @@ static void glfwDropFunc(GLFWwindow *window, int count, const char **files)
                             [SIMULATOR relaunch];
                         }else if (data == "VIEW_SHOW_FPS")
                         {
-//                            auto director = cocos2d::Director::getInstance();
-//                            director->setDisplayStats(director->isDisplayStats() == false);
-//                            menuItem->setTitle(director->isDisplayStats() ? tr("Hide FPS") : tr("Show FPS"));
-//                            [SIMULATOR relaunch];
+                            auto director = cocos2d::Director::getInstance();
+                            director->setDisplayStats(director->isDisplayStats() == false);
+                            menuItem->setTitle(director->isDisplayStats() ? tr("Hide FPS") : tr("Show FPS"));
+                            [SIMULATOR relaunch];
                         }
                     }
                 }
@@ -650,9 +648,8 @@ static void glfwDropFunc(GLFWwindow *window, int count, const char **files)
         }
     });
     dispatcher->addEventListenerWithFixedPriority(listener, 1);
-     */
 }
-
+*/
 
 - (void) openConsoleWindow
 {
@@ -709,16 +706,16 @@ static void glfwDropFunc(GLFWwindow *window, int count, const char **files)
     }
 }
 
-
+/*
 - (void) setZoom:(float)scale
 {
-//    Director::getInstance()->getOpenGLView()->setFrameZoomFactor(scale);
+    Director::getInstance()->getOpenGLView()->setFrameZoomFactor(scale);
     _project.setFrameScale(scale);
     std::stringstream title;
     title << "Cocos " << tr("Simulator") << " (" << _project.getFrameScale() * 100 << "%)";
     [_window setTitle:[NSString stringWithUTF8String:title.str().c_str()]];
 }
-
+*/
 
 - (BOOL) applicationShouldHandleReopen:(NSApplication *)sender hasVisibleWindows:(BOOL)flag
 {

@@ -41,7 +41,8 @@ AppDelegate::AppDelegate(const std::string& name, int width, int height) : Appli
 
 AppDelegate::~AppDelegate()
 {
-
+    // NOTE:Please don't remove this call if you want to debug with Cocos Code IDE
+    RuntimeEngine::getInstance()->end();
 }
 
 bool AppDelegate::applicationDidFinishLaunching()
@@ -50,7 +51,6 @@ bool AppDelegate::applicationDidFinishLaunching()
     Application::getInstance()->setPreferredFramesPerSecond(60);
 
     auto runtimeEngine = RuntimeEngine::getInstance();
-
     runtimeEngine->setEventTrackingEnable(true);
     auto jsRuntime = RuntimeJsImpl::create();
     runtimeEngine->addRuntime(jsRuntime, kRuntimeEngineJs);

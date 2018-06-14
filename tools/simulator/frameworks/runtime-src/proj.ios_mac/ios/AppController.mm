@@ -30,9 +30,9 @@
 #import "RootViewController.h"
 #import "platform/ios/CCEAGLView-ios.h"
 
-using namespace cocos2d;
-
 @implementation AppController
+
+using namespace cocos2d;
 
 Application* app = nullptr;
 @synthesize window;
