@@ -44,6 +44,8 @@ namespace cocos2d { namespace network
 
         virtual IDownloadTask *createCoTask(std::shared_ptr<const DownloadTask>& task) override;
 
+        virtual void abort(const std::unique_ptr<IDownloadTask>& task) override;
+        
     protected:
         class Impl;
         std::shared_ptr<Impl>   _impl;

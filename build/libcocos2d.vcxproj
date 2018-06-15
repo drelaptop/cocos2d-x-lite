@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -16,30 +16,24 @@
     <ClCompile Include="..\cocos\base\ccCArray.cpp" />
     <ClCompile Include="..\cocos\base\CCConfiguration.cpp" />
     <ClCompile Include="..\cocos\base\CCData.cpp" />
-    <ClCompile Include="..\cocos\base\ccFPSImages.c" />
     <ClCompile Include="..\cocos\base\CCLog.cpp" />
-    <ClCompile Include="..\cocos\base\CCNS.cpp" />
     <ClCompile Include="..\cocos\base\ccRandom.cpp" />
     <ClCompile Include="..\cocos\base\CCRef.cpp" />
     <ClCompile Include="..\cocos\base\CCScheduler.cpp" />
     <ClCompile Include="..\cocos\base\ccTypes.cpp" />
-    <ClCompile Include="..\cocos\base\CCUserDefault.cpp" />
     <ClCompile Include="..\cocos\base\ccUTF8.cpp" />
     <ClCompile Include="..\cocos\base\ccUtils.cpp" />
     <ClCompile Include="..\cocos\base\CCValue.cpp" />
     <ClCompile Include="..\cocos\base\etc1.cpp" />
-    <ClCompile Include="..\cocos\base\ObjectFactory.cpp" />
     <ClCompile Include="..\cocos\base\pvr.cpp" />
     <ClCompile Include="..\cocos\base\TGAlib.cpp" />
     <ClCompile Include="..\cocos\base\ZipUtils.cpp" />
     <ClCompile Include="..\cocos\cocos2d.cpp" />
-    <ClCompile Include="..\cocos\math\CCAffineTransform.cpp" />
     <ClCompile Include="..\cocos\math\CCGeometry.cpp" />
     <ClCompile Include="..\cocos\math\CCVertex.cpp" />
     <ClCompile Include="..\cocos\math\Mat4.cpp" />
     <ClCompile Include="..\cocos\math\MathUtil.cpp" />
     <ClCompile Include="..\cocos\math\Quaternion.cpp" />
-    <ClCompile Include="..\cocos\math\TransformUtils.cpp" />
     <ClCompile Include="..\cocos\math\Vec2.cpp" />
     <ClCompile Include="..\cocos\math\Vec3.cpp" />
     <ClCompile Include="..\cocos\math\Vec4.cpp" />
@@ -139,31 +133,25 @@
     <ClInclude Include="..\cocos\base\ccConfig.h" />
     <ClInclude Include="..\cocos\base\CCConfiguration.h" />
     <ClInclude Include="..\cocos\base\CCData.h" />
-    <ClInclude Include="..\cocos\base\ccFPSImages.h" />
     <ClInclude Include="..\cocos\base\CCLog.h" />
     <ClInclude Include="..\cocos\base\ccMacros.h" />
     <ClInclude Include="..\cocos\base\CCMap.h" />
-    <ClInclude Include="..\cocos\base\CCNS.h" />
     <ClInclude Include="..\cocos\base\ccRandom.h" />
     <ClInclude Include="..\cocos\base\CCRef.h" />
     <ClInclude Include="..\cocos\base\CCRefPtr.h" />
     <ClInclude Include="..\cocos\base\CCScheduler.h" />
     <ClInclude Include="..\cocos\base\ccTypes.h" />
-    <ClInclude Include="..\cocos\base\CCUserDefault.h" />
     <ClInclude Include="..\cocos\base\ccUTF8.h" />
     <ClInclude Include="..\cocos\base\ccUtils.h" />
     <ClInclude Include="..\cocos\base\CCValue.h" />
     <ClInclude Include="..\cocos\base\CCVector.h" />
     <ClInclude Include="..\cocos\base\etc1.h" />
-    <ClInclude Include="..\cocos\base\firePngData.h" />
-    <ClInclude Include="..\cocos\base\ObjectFactory.h" />
     <ClInclude Include="..\cocos\base\pvr.h" />
     <ClInclude Include="..\cocos\base\TGAlib.h" />
     <ClInclude Include="..\cocos\base\uthash.h" />
     <ClInclude Include="..\cocos\base\utlist.h" />
     <ClInclude Include="..\cocos\base\ZipUtils.h" />
     <ClInclude Include="..\cocos\cocos2d.h" />
-    <ClInclude Include="..\cocos\math\CCAffineTransform.h" />
     <ClInclude Include="..\cocos\math\CCGeometry.h" />
     <ClInclude Include="..\cocos\math\CCMath.h" />
     <ClInclude Include="..\cocos\math\CCMathBase.h" />
@@ -171,7 +159,6 @@
     <ClInclude Include="..\cocos\math\Mat4.h" />
     <ClInclude Include="..\cocos\math\MathUtil.h" />
     <ClInclude Include="..\cocos\math\Quaternion.h" />
-    <ClInclude Include="..\cocos\math\TransformUtils.h" />
     <ClInclude Include="..\cocos\math\Vec2.h" />
     <ClInclude Include="..\cocos\math\Vec3.h" />
     <ClInclude Include="..\cocos\math\Vec4.h" />
@@ -318,7 +305,7 @@
     <ProjectGuid>{98A51BA8-FC3A-415B-AC8F-8C7BD464E93E}</ProjectGuid>
     <RootNamespace>cocos2d-x.win32</RootNamespace>
     <Keyword>Win32Proj</Keyword>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -328,7 +315,7 @@
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '12.0' and exists('$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A')">v120_xp</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '14.0'">v140</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '14.0' and exists('$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A')">v140_xp</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)' == '15.0'">v140</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)' == '15.0'">v141</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '15.0' and exists('$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A')">v140_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -338,7 +325,7 @@
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '12.0' and exists('$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A')">v120_xp</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '14.0'">v140</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '14.0' and exists('$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A')">v140_xp</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)' == '15.0'">v140</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)' == '15.0'">v141</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '15.0' and exists('$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A')">v140_xp</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -381,7 +368,7 @@
     </PreBuildEvent>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\cocos;$(ProjectDir)..\external\sources;$(ProjectDir)..\cocos\renderer\gfx;$(ProjectDir)..\cocos\renderer;$(ProjectDir)..\external\win32\include\zlib;$(ProjectDir)..\external\win32\include\v8;$(ProjectDir)..\external\sources\firefox;$(projectDir)..;$(ProjectDir)..\external\win32\include;$(ProjectDir)..\external\win32\include\uv;$(ProjectDir)..\external\win32\include\uv</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\cocos;$(ProjectDir)..\external\sources;$(ProjectDir)..\cocos\renderer\gfx;$(ProjectDir)..\cocos\renderer;$(ProjectDir)..\cocos\platform;$(ProjectDir)..\external\win32\include\zlib;$(ProjectDir)..\external\win32\include\v8;$(ProjectDir)..\external\sources\firefox;$(projectDir)..;$(ProjectDir)..\external\win32\include;$(ProjectDir)..\external\win32\include\uv</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_USRDLL;USING_V8_SHARED;_LIB;COCOS2D_DEBUG=1;JS_HAVE____INTN;JS_INTPTR_TYPE=int;COCOS2D_JAVASCRIPT=1;XP_WIN;_CRT_SECURE_NO_WARNINGS;_USRJSSTATIC;GLFW_EXPOSE_NATIVE_WIN32;GLFW_EXPOSE_NATIVE_WGL;HAVE_INSPECTOR;_WINDOWS;_WIN32;__MWERKS__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>

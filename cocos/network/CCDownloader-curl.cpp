@@ -750,6 +750,11 @@ namespace cocos2d { namespace network {
         return coTask;
     }
 
+    void DownloaderCURL::abort(const std::unique_ptr<IDownloadTask>& task) {
+        // not support yet
+        // https://github.com/cocos-creator/cocos2d-x-lite/pull/1291
+    }
+
     void DownloaderCURL::_onSchedule(float)
     {
         vector<TaskWrapper> tasks;

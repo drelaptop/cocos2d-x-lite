@@ -16,12 +16,6 @@
     <ClCompile Include="..\cocos\base\CCData.cpp">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="..\cocos\base\ccFPSImages.c">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\base\CCNS.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
     <ClCompile Include="..\cocos\base\ccRandom.cpp">
       <Filter>base</Filter>
     </ClCompile>
@@ -29,9 +23,6 @@
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="..\cocos\base\ccTypes.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\base\CCUserDefault.cpp">
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="..\cocos\base\ccUTF8.cpp">
@@ -46,9 +37,6 @@
     <ClCompile Include="..\cocos\base\etc1.cpp">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="..\cocos\base\ObjectFactory.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
     <ClCompile Include="..\cocos\base\pvr.cpp">
       <Filter>base</Filter>
     </ClCompile>
@@ -57,9 +45,6 @@
     </ClCompile>
     <ClCompile Include="..\cocos\base\ZipUtils.cpp">
       <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\math\CCAffineTransform.cpp">
-      <Filter>math</Filter>
     </ClCompile>
     <ClCompile Include="..\cocos\math\CCGeometry.cpp">
       <Filter>math</Filter>
@@ -74,9 +59,6 @@
       <Filter>math</Filter>
     </ClCompile>
     <ClCompile Include="..\cocos\math\Quaternion.cpp">
-      <Filter>math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\math\TransformUtils.cpp">
       <Filter>math</Filter>
     </ClCompile>
     <ClCompile Include="..\cocos\math\Vec2.cpp">
@@ -379,16 +361,10 @@
     <ClInclude Include="..\cocos\base\CCData.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="..\cocos\base\ccFPSImages.h">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="..\cocos\base\ccMacros.h">
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="..\cocos\base\CCMap.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\base\CCNS.h">
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="..\cocos\base\ccRandom.h">
@@ -401,9 +377,6 @@
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="..\cocos\base\ccTypes.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\base\CCUserDefault.h">
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="..\cocos\base\ccUTF8.h">
@@ -421,12 +394,6 @@
     <ClInclude Include="..\cocos\base\etc1.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="..\cocos\base\firePngData.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\base\ObjectFactory.h">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="..\cocos\base\pvr.h">
       <Filter>base</Filter>
     </ClInclude>
@@ -441,9 +408,6 @@
     </ClInclude>
     <ClInclude Include="..\cocos\base\ZipUtils.h">
       <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\math\CCAffineTransform.h">
-      <Filter>math</Filter>
     </ClInclude>
     <ClInclude Include="..\cocos\math\CCGeometry.h">
       <Filter>math</Filter>
@@ -464,9 +428,6 @@
       <Filter>math</Filter>
     </ClInclude>
     <ClInclude Include="..\cocos\math\Quaternion.h">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\math\TransformUtils.h">
       <Filter>math</Filter>
     </ClInclude>
     <ClInclude Include="..\cocos\math\Vec2.h">

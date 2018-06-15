@@ -31,7 +31,7 @@ THE SOFTWARE.
 
 #include "scripting/js-bindings/event/EventDispatcher.h"
 #include "cocos/scripting/js-bindings/jswrapper/SeApi.h"
-#include "ccMacros.h"
+#include "base/ccMacros.h"
 #include "base/ccUtils.h"
 #include "platform/CCApplication.h"
 
