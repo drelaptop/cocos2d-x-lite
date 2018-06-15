@@ -83,7 +83,7 @@ namespace
     {
         se::ScriptEngine* se = se::ScriptEngine::getInstance();
         char commandBuf[200] = {0};
-		sprintf(commandBuf, "var window = window || this; window.canvas = { width: %d, height: %d };",
+        sprintf(commandBuf, "var window = window || this; window.canvas = { width: %d, height: %d };",
                 g_width,
                 g_height);
         se->evalString(commandBuf);
@@ -96,12 +96,12 @@ NS_CC_BEGIN
 
 Application* Application::_instance = nullptr;
 
-Application::Application(const std::string& name)
+Application::Application(const std::string& name, int width, int height)
 {
-	Application::_instance = this;
-	_scheduler = new Scheduler();
+    Application::_instance = this;
+    _scheduler = new Scheduler();
 
-    createView(name);
+    createView(name, width, height);
     
     renderer::DeviceGraphics::getInstance();
     se::ScriptEngine::getInstance();
@@ -111,15 +111,15 @@ Application::~Application()
 {
     // TODO: destroy DeviceGraphics
     
-	delete _scheduler;
-	_scheduler = nullptr;
+    delete _scheduler;
+    _scheduler = nullptr;
 
     se::ScriptEngine::destroyInstance();
     
     delete CAST_VIEW(_view);
     _view = nullptr;
 
-	Application::_instance = nullptr;
+    Application::_instance = nullptr;
 }
 
 void Application::start()
@@ -147,6 +147,10 @@ void Application::start()
         timeBeginPeriod(wTimerRes);
     }
 
+    LARGE_INTEGER nFreq;
+    QueryPerformanceFrequency(&nFreq);
+    LONGLONG animationInterval = (LONGLONG)(1.0 / _fps * nFreq.QuadPart);
+
     // Main message loop:
     LARGE_INTEGER nLast;
     LARGE_INTEGER nNow;
@@ -163,7 +167,7 @@ void Application::start()
     {       
         QueryPerformanceCounter(&nNow);
         interval = nNow.QuadPart - nLast.QuadPart;
-        if (interval >= _animationInterval)
+        if (interval >= animationInterval)
         {
             nLast.QuadPart = nNow.QuadPart;
             
@@ -178,7 +182,7 @@ void Application::start()
             // Sleep(3) may make a sleep of 2ms or 4ms. Therefore, we subtract 1ms here to make Sleep time shorter.
             // If 'waitMS' is equal or less than 1ms, don't sleep and run into next loop to
             // boost CPU to next frame accurately.
-            waitMS = (_animationInterval - interval) * 1000LL / freq.QuadPart - 1L;
+            waitMS = (animationInterval - interval) * 1000LL / freq.QuadPart - 1L;
             if (waitMS > 1L)
                 Sleep(waitMS);
         } 
@@ -190,9 +194,7 @@ void Application::start()
 
 void Application::setPreferredFramesPerSecond(int fps)
 {
-    LARGE_INTEGER nFreq;
-    QueryPerformanceFrequency(&nFreq);
-    _animationInterval = (LONGLONG)(1.0 / fps * nFreq.QuadPart);
+    _fps = fps;
 }
 
 Application::LanguageType Application::getCurrentLanguage() const
@@ -307,38 +309,25 @@ void Application::setMultitouch(bool)
 {
 }
 
-void Application::onCreateView(int&x, int& y, int& width, int& height, PixelFormat& pixelformat, DepthFormat& depthFormat, int& multisamplingCount)
-{
-    x = 0;
-    y = 0;
-    width = 960;
-    height = 640;
-    
+void Application::onCreateView(PixelFormat& pixelformat, DepthFormat& depthFormat, int& multisamplingCount)
+{  
     pixelformat = PixelFormat::RGBA8;
     depthFormat = DepthFormat::DEPTH24_STENCIL8;
 
     multisamplingCount = 0;
 }
 
-void Application::createView(const std::string& name)
+void Application::createView(const std::string& name, int width, int height)
 {
-    int x = 0;
-    int y = 0;
-    int width = 0;
-    int height = 0;
     int multisamplingCount = 0;
     PixelFormat pixelformat;
     DepthFormat depthFormat;
     
-    onCreateView(x,
-                 y,
-                 width,
-                 height,
-                 pixelformat,
+    onCreateView(pixelformat,
                  depthFormat,
                  multisamplingCount);
 
-    _view = new GLView(this, name, x, y, width, height, pixelformat, depthFormat, multisamplingCount);
+    _view = new GLView(this, name, 0, 0, width, height, pixelformat, depthFormat, multisamplingCount);
     
     g_width = width;
     g_height = height;

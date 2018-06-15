@@ -205,30 +205,6 @@
     <ClCompile Include="..\cocos\scripting\js-bindings\jswrapper\v8\Class.cpp">
       <Filter>js-bindings\jswrapper\v8</Filter>
     </ClCompile>
-    <ClCompile Include="..\cocos\scripting\js-bindings\jswrapper\v8\env.cc">
-      <Filter>js-bindings\jswrapper\v8</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\scripting\js-bindings\jswrapper\v8\http_parser.c">
-      <Filter>js-bindings\jswrapper\v8</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\scripting\js-bindings\jswrapper\v8\inspector_agent.cc">
-      <Filter>js-bindings\jswrapper\v8</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\scripting\js-bindings\jswrapper\v8\inspector_io.cc">
-      <Filter>js-bindings\jswrapper\v8</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\scripting\js-bindings\jswrapper\v8\inspector_socket.cc">
-      <Filter>js-bindings\jswrapper\v8</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\scripting\js-bindings\jswrapper\v8\inspector_socket_server.cc">
-      <Filter>js-bindings\jswrapper\v8</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\scripting\js-bindings\jswrapper\v8\node.cc">
-      <Filter>js-bindings\jswrapper\v8</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\scripting\js-bindings\jswrapper\v8\node_debug_options.cc">
-      <Filter>js-bindings\jswrapper\v8</Filter>
-    </ClCompile>
     <ClCompile Include="..\cocos\scripting\js-bindings\jswrapper\v8\Object.cpp">
       <Filter>js-bindings\jswrapper\v8</Filter>
     </ClCompile>
@@ -236,12 +212,6 @@
       <Filter>js-bindings\jswrapper\v8</Filter>
     </ClCompile>
     <ClCompile Include="..\cocos\scripting\js-bindings\jswrapper\v8\ScriptEngine.cpp">
-      <Filter>js-bindings\jswrapper\v8</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\scripting\js-bindings\jswrapper\v8\SHA1.cpp">
-      <Filter>js-bindings\jswrapper\v8</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocos\scripting\js-bindings\jswrapper\v8\util.cc">
       <Filter>js-bindings\jswrapper\v8</Filter>
     </ClCompile>
     <ClCompile Include="..\cocos\scripting\js-bindings\jswrapper\v8\Utils.cpp">
@@ -339,6 +309,39 @@
       <Filter>js-bindings\manual</Filter>
     </ClCompile>
     <ClCompile Include="..\cocos\base\CCScheduler.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cocos\scripting\js-bindings\jswrapper\v8\debugger\env.cc">
+      <Filter>js-bindings\jswrapper\v8\debugger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cocos\scripting\js-bindings\jswrapper\v8\debugger\http_parser.c">
+      <Filter>js-bindings\jswrapper\v8\debugger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cocos\scripting\js-bindings\jswrapper\v8\debugger\inspector_agent.cc">
+      <Filter>js-bindings\jswrapper\v8\debugger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cocos\scripting\js-bindings\jswrapper\v8\debugger\inspector_io.cc">
+      <Filter>js-bindings\jswrapper\v8\debugger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cocos\scripting\js-bindings\jswrapper\v8\debugger\inspector_socket.cc">
+      <Filter>js-bindings\jswrapper\v8\debugger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cocos\scripting\js-bindings\jswrapper\v8\debugger\inspector_socket_server.cc">
+      <Filter>js-bindings\jswrapper\v8\debugger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cocos\scripting\js-bindings\jswrapper\v8\debugger\node.cc">
+      <Filter>js-bindings\jswrapper\v8\debugger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cocos\scripting\js-bindings\jswrapper\v8\debugger\node_debug_options.cc">
+      <Filter>js-bindings\jswrapper\v8\debugger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cocos\scripting\js-bindings\jswrapper\v8\debugger\SHA1.cpp">
+      <Filter>js-bindings\jswrapper\v8\debugger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cocos\scripting\js-bindings\jswrapper\v8\debugger\util.cc">
+      <Filter>js-bindings\jswrapper\v8\debugger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cocos\base\CCThreadPool.cpp">
       <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>
@@ -589,40 +592,10 @@
     <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\Base.h">
       <Filter>js-bindings\jswrapper\v8</Filter>
     </ClInclude>
-    <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\base64.h">
-      <Filter>js-bindings\jswrapper\v8</Filter>
-    </ClInclude>
     <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\Class.hpp">
       <Filter>js-bindings\jswrapper\v8</Filter>
     </ClInclude>
-    <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\env.h">
-      <Filter>js-bindings\jswrapper\v8</Filter>
-    </ClInclude>
     <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\HelperMacros.h">
-      <Filter>js-bindings\jswrapper\v8</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\http_parser.h">
-      <Filter>js-bindings\jswrapper\v8</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\inspector_agent.h">
-      <Filter>js-bindings\jswrapper\v8</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\inspector_io.h">
-      <Filter>js-bindings\jswrapper\v8</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\inspector_socket.h">
-      <Filter>js-bindings\jswrapper\v8</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\inspector_socket_server.h">
-      <Filter>js-bindings\jswrapper\v8</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\node.h">
-      <Filter>js-bindings\jswrapper\v8</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\node_debug_options.h">
-      <Filter>js-bindings\jswrapper\v8</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\node_mutex.h">
       <Filter>js-bindings\jswrapper\v8</Filter>
     </ClInclude>
     <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\Object.hpp">
@@ -637,19 +610,7 @@
     <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\SeApi.h">
       <Filter>js-bindings\jswrapper\v8</Filter>
     </ClInclude>
-    <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\SHA1.h">
-      <Filter>js-bindings\jswrapper\v8</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\util-inl.h">
-      <Filter>js-bindings\jswrapper\v8</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\util.h">
-      <Filter>js-bindings\jswrapper\v8</Filter>
-    </ClInclude>
     <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\Utils.hpp">
-      <Filter>js-bindings\jswrapper\v8</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\v8_inspector_protocol_json.h">
       <Filter>js-bindings\jswrapper\v8</Filter>
     </ClInclude>
     <ClInclude Include="..\cocos\cocos2d.h" />
@@ -824,6 +785,51 @@
     <ClInclude Include="..\cocos\base\CCScheduler.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\debugger\base64.h">
+      <Filter>js-bindings\jswrapper\v8\debugger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\debugger\env.h">
+      <Filter>js-bindings\jswrapper\v8\debugger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\debugger\http_parser.h">
+      <Filter>js-bindings\jswrapper\v8\debugger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\debugger\inspector_agent.h">
+      <Filter>js-bindings\jswrapper\v8\debugger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\debugger\inspector_io.h">
+      <Filter>js-bindings\jswrapper\v8\debugger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\debugger\inspector_socket.h">
+      <Filter>js-bindings\jswrapper\v8\debugger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\debugger\inspector_socket_server.h">
+      <Filter>js-bindings\jswrapper\v8\debugger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\debugger\node.h">
+      <Filter>js-bindings\jswrapper\v8\debugger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\debugger\node_debug_options.h">
+      <Filter>js-bindings\jswrapper\v8\debugger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\debugger\node_mutex.h">
+      <Filter>js-bindings\jswrapper\v8\debugger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\debugger\SHA1.h">
+      <Filter>js-bindings\jswrapper\v8\debugger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\debugger\util.h">
+      <Filter>js-bindings\jswrapper\v8\debugger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\debugger\util-inl.h">
+      <Filter>js-bindings\jswrapper\v8\debugger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\debugger\v8_inspector_protocol_json.h">
+      <Filter>js-bindings\jswrapper\v8\debugger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\base\CCThreadPool.h">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="base">
@@ -888,6 +894,9 @@
     </Filter>
     <Filter Include="network">
       <UniqueIdentifier>{8553d9e7-36b8-413a-bef4-e21d498ffeca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="js-bindings\jswrapper\v8\debugger">
+      <UniqueIdentifier>{bc60b25a-96ac-44c4-b41d-1cd54b7ced67}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
