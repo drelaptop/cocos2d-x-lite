@@ -39,7 +39,7 @@ namespace
 {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 #include <winsock.h>
-    CC_DLL int gettimeofday(struct timeval * val, void *);
+    extern "C" int gettimeofday(struct timeval * val, void *);
 #endif
 }
 /*

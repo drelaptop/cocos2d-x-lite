@@ -305,9 +305,6 @@
     <ClCompile Include="..\cocos\scripting\js-bindings\jswrapper\v8\debugger\util.cc">
       <Filter>js-bindings\jswrapper\v8\debugger</Filter>
     </ClCompile>
-    <ClCompile Include="..\cocos\base\CCThreadPool.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
     <ClCompile Include="..\cocos\scripting\js-bindings\auto\jsb_cocos2dx_auto.cpp">
       <Filter>js-bindings\auto</Filter>
     </ClCompile>
@@ -370,6 +367,15 @@
     </ClCompile>
     <ClCompile Include="..\cocos\storage\local-storage\LocalStorage.cpp">
       <Filter>storage\local-storage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cocos\platform\win32\CCCanvasRenderingContext2D-win32.cpp">
+      <Filter>platform\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cocos\base\csscolorparser.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cocos\base\CCThreadPool.cpp">
+      <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -818,9 +824,6 @@
     <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\debugger\v8_inspector_protocol_json.h">
       <Filter>js-bindings\jswrapper\v8\debugger</Filter>
     </ClInclude>
-    <ClInclude Include="..\cocos\base\CCThreadPool.h">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="..\cocos\scripting\js-bindings\auto\jsb_cocos2dx_auto.hpp">
       <Filter>js-bindings\auto</Filter>
     </ClInclude>
@@ -889,6 +892,15 @@
     </ClInclude>
     <ClInclude Include="..\cocos\storage\local-storage\LocalStorage.h">
       <Filter>storage\local-storage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\platform\CCCanvasRenderingContext2D.h">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\base\csscolorparser.hpp">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\base\CCThreadPool.h">
+      <Filter>base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

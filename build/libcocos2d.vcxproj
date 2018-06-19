@@ -27,6 +27,7 @@
     <ClCompile Include="..\cocos\base\ccUTF8.cpp" />
     <ClCompile Include="..\cocos\base\ccUtils.cpp" />
     <ClCompile Include="..\cocos\base\CCValue.cpp" />
+    <ClCompile Include="..\cocos\base\csscolorparser.cpp" />
     <ClCompile Include="..\cocos\base\etc1.cpp" />
     <ClCompile Include="..\cocos\base\pvr.cpp" />
     <ClCompile Include="..\cocos\base\TGAlib.cpp" />
@@ -52,6 +53,7 @@
     <ClCompile Include="..\cocos\platform\CCSAXParser.cpp" />
     <ClCompile Include="..\cocos\platform\desktop\CCGLView-desktop.cpp" />
     <ClCompile Include="..\cocos\platform\win32\CCApplication-win32.cpp" />
+    <ClCompile Include="..\cocos\platform\win32\CCCanvasRenderingContext2D-win32.cpp" />
     <ClCompile Include="..\cocos\platform\win32\CCDevice-win32.cpp" />
     <ClCompile Include="..\cocos\platform\win32\CCFileUtils-win32.cpp" />
     <ClCompile Include="..\cocos\platform\win32\CCUtils-win32.cpp" />
@@ -158,6 +160,7 @@
     <ClInclude Include="..\cocos\base\ccUtils.h" />
     <ClInclude Include="..\cocos\base\CCValue.h" />
     <ClInclude Include="..\cocos\base\CCVector.h" />
+    <ClInclude Include="..\cocos\base\csscolorparser.hpp" />
     <ClInclude Include="..\cocos\base\etc1.h" />
     <ClInclude Include="..\cocos\base\pvr.h" />
     <ClInclude Include="..\cocos\base\TGAlib.h" />
@@ -186,6 +189,7 @@
     <ClInclude Include="..\cocos\network\Uri.h" />
     <ClInclude Include="..\cocos\network\WebSocket.h" />
     <ClInclude Include="..\cocos\platform\CCApplication.h" />
+    <ClInclude Include="..\cocos\platform\CCCanvasRenderingContext2D.h" />
     <ClInclude Include="..\cocos\platform\CCDevice.h" />
     <ClInclude Include="..\cocos\platform\CCFileUtils.h" />
     <ClInclude Include="..\cocos\platform\CCGL.h" />
