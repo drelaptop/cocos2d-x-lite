@@ -34,6 +34,8 @@ THE SOFTWARE.
 #include "scripting/js-bindings/jswrapper/v8/ScriptEngine.hpp"
 #include "scripting/js-bindings/event/EventDispatcher.h"
 #include "base/CCScheduler.h"
+#include "base/CCAutoreleasePool.h"
+#include "base/CCGLUtils.h"
 
 #define CAST_VIEW(view)    ((GLView*)view)
 
@@ -124,12 +126,6 @@ Application::~Application()
 
 void Application::start()
 {
-    se::ScriptEngine* se = se::ScriptEngine::getInstance();
-    se->addRegisterCallback(setCanvasCallback);
-    
-    if(!applicationDidFinishLaunching())
-        return;
-
     if (!_view)
         return;
 
@@ -150,6 +146,7 @@ void Application::start()
     LARGE_INTEGER nFreq;
     QueryPerformanceFrequency(&nFreq);
     LONGLONG animationInterval = (LONGLONG)(1.0 / _fps * nFreq.QuadPart);
+    const DWORD _16ms = 16;
 
     // Main message loop:
     LARGE_INTEGER nLast;
@@ -163,33 +160,67 @@ void Application::start()
     LARGE_INTEGER freq;
     QueryPerformanceFrequency(&freq);
     
+    se::ScriptEngine* se = se::ScriptEngine::getInstance();
+
     while (!CAST_VIEW(_view)->windowShouldClose())
     {       
-        QueryPerformanceCounter(&nNow);
-        interval = nNow.QuadPart - nLast.QuadPart;
-        if (interval >= animationInterval)
+        if (!_isStarted)
         {
-            nLast.QuadPart = nNow.QuadPart;
-            
-            CAST_VIEW(_view)->pollEvents();
-            EventDispatcher::dispatchTickEvent((float)interval / freq.QuadPart);
-            CAST_VIEW(_view)->swapBuffers();
+            auto scheduler = Application::getInstance()->getScheduler();
+            scheduler->removeAllFunctionsToBePerformedInCocosThread();
+            scheduler->unscheduleAll();
+
+            se::ScriptEngine::getInstance()->cleanup();
+            cocos2d::PoolManager::getInstance()->getCurrentPool()->clear();
+            cocos2d::EventDispatcher::init();
+
+            ccInvalidateStateCache();
+            se->addRegisterCallback(setCanvasCallback);
+
+            if(!applicationDidFinishLaunching())
+                return;
+
+            _isStarted = true;
+        }
+
+        if(_isStarted)
+        {
+            QueryPerformanceCounter(&nNow);
+            interval = nNow.QuadPart - nLast.QuadPart;
+            if (interval >= animationInterval)
+            {
+                nLast.QuadPart = nNow.QuadPart;
+                
+                CAST_VIEW(_view)->pollEvents();
+                EventDispatcher::dispatchTickEvent((float)interval / freq.QuadPart);
+                CAST_VIEW(_view)->swapBuffers();
+            }
+            else
+            {
+                // The precision of timer on Windows is set to highest (1ms) by 'timeBeginPeriod' from above code,
+                // but it's still not precise enough. For example, if the precision of timer is 1ms,
+                // Sleep(3) may make a sleep of 2ms or 4ms. Therefore, we subtract 1ms here to make Sleep time shorter.
+                // If 'waitMS' is equal or less than 1ms, don't sleep and run into next loop to
+                // boost CPU to next frame accurately.
+                waitMS = (animationInterval - interval) * 1000LL / freq.QuadPart - 1L;
+                if (waitMS > 1L)
+                    Sleep(waitMS);
+            } 
         }
         else
         {
-            // The precision of timer on Windows is set to highest (1ms) by 'timeBeginPeriod' from above code,
-            // but it's still not precise enough. For example, if the precision of timer is 1ms,
-            // Sleep(3) may make a sleep of 2ms or 4ms. Therefore, we subtract 1ms here to make Sleep time shorter.
-            // If 'waitMS' is equal or less than 1ms, don't sleep and run into next loop to
-            // boost CPU to next frame accurately.
-            waitMS = (animationInterval - interval) * 1000LL / freq.QuadPart - 1L;
-            if (waitMS > 1L)
-                Sleep(waitMS);
-        } 
+            Sleep(_16ms);
+        }
+
     }
 
     if (wTimerRes != 0)
         timeEndPeriod(wTimerRes);
+}
+
+void Application::restart()
+{
+    _isStarted = false;
 }
 
 void Application::setPreferredFramesPerSecond(int fps)
@@ -278,6 +309,16 @@ std::string Application::getCurrentLanguageCode() const
     return code;
 }
 
+float Application::getScreenScale() const
+{
+    return CAST_VIEW(_view)->getScale();
+}
+
+GLint Application::getMainFBO() const
+{
+    return CAST_VIEW(_view)->getMainFBO();
+}
+
 Application::Platform Application::getPlatform() const
 {
     return Platform::WINDOWS;
@@ -333,4 +374,9 @@ void Application::createView(const std::string& name, int width, int height)
     g_height = height;
 }
 
+std::string Application::getSystemVersion()
+{
+    // TODO
+    return std::string("unknown Windows version");
+}
 NS_CC_END

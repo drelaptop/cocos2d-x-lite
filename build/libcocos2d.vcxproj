@@ -16,9 +16,11 @@
     <ClCompile Include="..\cocos\base\ccCArray.cpp" />
     <ClCompile Include="..\cocos\base\CCConfiguration.cpp" />
     <ClCompile Include="..\cocos\base\CCData.cpp" />
+    <ClCompile Include="..\cocos\base\CCGLUtils.cpp" />
     <ClCompile Include="..\cocos\base\CCLog.cpp" />
     <ClCompile Include="..\cocos\base\ccRandom.cpp" />
     <ClCompile Include="..\cocos\base\CCRef.cpp" />
+    <ClCompile Include="..\cocos\base\CCRenderTexture.cpp" />
     <ClCompile Include="..\cocos\base\CCScheduler.cpp" />
     <ClCompile Include="..\cocos\base\CCThreadPool.cpp" />
     <ClCompile Include="..\cocos\base\ccTypes.cpp" />
@@ -82,6 +84,7 @@
     <ClCompile Include="..\cocos\renderer\renderer\Technique.cpp" />
     <ClCompile Include="..\cocos\renderer\renderer\View.cpp" />
     <ClCompile Include="..\cocos\renderer\Types.cpp" />
+    <ClCompile Include="..\cocos\scripting\js-bindings\auto\jsb_cocos2dx_auto.cpp" />
     <ClCompile Include="..\cocos\scripting\js-bindings\auto\jsb_cocos2dx_network_auto.cpp" />
     <ClCompile Include="..\cocos\scripting\js-bindings\auto\jsb_gfx_auto.cpp" />
     <ClCompile Include="..\cocos\scripting\js-bindings\auto\jsb_renderer_auto.cpp" />
@@ -108,14 +111,20 @@
     <ClCompile Include="..\cocos\scripting\js-bindings\jswrapper\v8\Utils.cpp" />
     <ClCompile Include="..\cocos\scripting\js-bindings\jswrapper\Value.cpp" />
     <ClCompile Include="..\cocos\scripting\js-bindings\manual\jsb_classtype.cpp" />
+    <ClCompile Include="..\cocos\scripting\js-bindings\manual\jsb_cocos2dx_manual.cpp" />
     <ClCompile Include="..\cocos\scripting\js-bindings\manual\jsb_conversions.cpp" />
     <ClCompile Include="..\cocos\scripting\js-bindings\manual\jsb_gfx_manual.cpp" />
     <ClCompile Include="..\cocos\scripting\js-bindings\manual\jsb_global.cpp" />
     <ClCompile Include="..\cocos\scripting\js-bindings\manual\jsb_helper.cpp" />
+    <ClCompile Include="..\cocos\scripting\js-bindings\manual\jsb_opengl_manual.cpp" />
+    <ClCompile Include="..\cocos\scripting\js-bindings\manual\jsb_opengl_utils.cpp" />
+    <ClCompile Include="..\cocos\scripting\js-bindings\manual\jsb_platfrom_win32.cpp" />
     <ClCompile Include="..\cocos\scripting\js-bindings\manual\jsb_renderer_manual.cpp" />
     <ClCompile Include="..\cocos\scripting\js-bindings\manual\jsb_socketio.cpp" />
     <ClCompile Include="..\cocos\scripting\js-bindings\manual\jsb_websocket.cpp" />
     <ClCompile Include="..\cocos\scripting\js-bindings\manual\jsb_xmlhttprequest.cpp" />
+    <ClCompile Include="..\cocos\storage\local-storage\LocalStorage.cpp" />
+    <ClCompile Include="..\cocos\ui\edit-box\EditBox-win32.cpp" />
     <ClCompile Include="..\external\sources\ConvertUTF\ConvertUTF.c" />
     <ClCompile Include="..\external\sources\ConvertUTF\ConvertUTFWrapper.cpp" />
     <ClCompile Include="..\external\sources\firefox\mozilla\Assertions.cpp" />
@@ -134,12 +143,14 @@
     <ClInclude Include="..\cocos\base\ccConfig.h" />
     <ClInclude Include="..\cocos\base\CCConfiguration.h" />
     <ClInclude Include="..\cocos\base\CCData.h" />
+    <ClInclude Include="..\cocos\base\CCGLUtils.h" />
     <ClInclude Include="..\cocos\base\CCLog.h" />
     <ClInclude Include="..\cocos\base\ccMacros.h" />
     <ClInclude Include="..\cocos\base\CCMap.h" />
     <ClInclude Include="..\cocos\base\ccRandom.h" />
     <ClInclude Include="..\cocos\base\CCRef.h" />
     <ClInclude Include="..\cocos\base\CCRefPtr.h" />
+    <ClInclude Include="..\cocos\base\CCRenderTexture.h" />
     <ClInclude Include="..\cocos\base\CCScheduler.h" />
     <ClInclude Include="..\cocos\base\CCThreadPool.h" />
     <ClInclude Include="..\cocos\base\ccTypes.h" />
@@ -221,9 +232,11 @@
     <ClInclude Include="..\cocos\renderer\renderer\Technique.h" />
     <ClInclude Include="..\cocos\renderer\renderer\View.h" />
     <ClInclude Include="..\cocos\renderer\Types.h" />
+    <ClInclude Include="..\cocos\scripting\js-bindings\auto\jsb_cocos2dx_auto.hpp" />
     <ClInclude Include="..\cocos\scripting\js-bindings\auto\jsb_cocos2dx_network_auto.hpp" />
     <ClInclude Include="..\cocos\scripting\js-bindings\auto\jsb_gfx_auto.hpp" />
     <ClInclude Include="..\cocos\scripting\js-bindings\auto\jsb_renderer_auto.hpp" />
+    <ClInclude Include="..\cocos\scripting\js-bindings\event\CustomEventTypes.h" />
     <ClInclude Include="..\cocos\scripting\js-bindings\event\EventDispatcher.h" />
     <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\config.hpp" />
     <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\HandleObject.hpp" />
@@ -256,14 +269,21 @@
     <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\v8\Utils.hpp" />
     <ClInclude Include="..\cocos\scripting\js-bindings\jswrapper\Value.hpp" />
     <ClInclude Include="..\cocos\scripting\js-bindings\manual\jsb_classtype.hpp" />
+    <ClInclude Include="..\cocos\scripting\js-bindings\manual\jsb_cocos2dx_manual.hpp" />
     <ClInclude Include="..\cocos\scripting\js-bindings\manual\jsb_conversions.hpp" />
     <ClInclude Include="..\cocos\scripting\js-bindings\manual\jsb_gfx_manual.hpp" />
     <ClInclude Include="..\cocos\scripting\js-bindings\manual\jsb_global.h" />
     <ClInclude Include="..\cocos\scripting\js-bindings\manual\jsb_helper.hpp" />
+    <ClInclude Include="..\cocos\scripting\js-bindings\manual\jsb_opengl_manual.hpp" />
+    <ClInclude Include="..\cocos\scripting\js-bindings\manual\jsb_opengl_utils.hpp" />
+    <ClInclude Include="..\cocos\scripting\js-bindings\manual\jsb_platform.h" />
+    <ClInclude Include="..\cocos\scripting\js-bindings\manual\jsb_platform_ios.h" />
     <ClInclude Include="..\cocos\scripting\js-bindings\manual\jsb_renderer_manual.hpp" />
     <ClInclude Include="..\cocos\scripting\js-bindings\manual\jsb_socketio.hpp" />
     <ClInclude Include="..\cocos\scripting\js-bindings\manual\jsb_websocket.hpp" />
     <ClInclude Include="..\cocos\scripting\js-bindings\manual\jsb_xmlhttprequest.hpp" />
+    <ClInclude Include="..\cocos\storage\local-storage\LocalStorage.h" />
+    <ClInclude Include="..\cocos\ui\edit-box\EditBox.h" />
     <ClInclude Include="..\external\sources\ConvertUTF\ConvertUTF.h" />
     <ClInclude Include="..\external\sources\firefox\GLConsts.h" />
     <ClInclude Include="..\external\sources\firefox\mozilla\Assertions.h" />
@@ -335,9 +355,11 @@
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="cocos2d_headers.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="cocos2d_headers.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -378,10 +400,10 @@
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4138;4267;4251;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <CompileAs>CompileAsCpp</CompileAs>
+      <CompileAs>Default</CompileAs>
       <ObjectFileName>$(IntDir)/%(RelativeDir)</ObjectFileName>
     </ClCompile>
     <PreLinkEvent>
