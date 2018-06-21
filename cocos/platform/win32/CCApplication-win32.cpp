@@ -85,11 +85,13 @@ namespace
     {
         se::ScriptEngine* se = se::ScriptEngine::getInstance();
         char commandBuf[200] = {0};
+        int devicePixelRatio = cocos2d::Application::getInstance()->getDevicePixelRatio();
         sprintf(commandBuf, "var window = window || this; window.canvas = { width: %d, height: %d };",
-                g_width,
-                g_height);
+                g_width / devicePixelRatio,
+                g_height / devicePixelRatio);
         se->evalString(commandBuf);
-        
+        cocos2d::ccViewport(0, 0, g_width / devicePixelRatio, g_height / devicePixelRatio);
+        glDepthMask(GL_TRUE);
         return true;
     }
 }
@@ -105,7 +107,11 @@ Application::Application(const std::string& name, int width, int height)
 
     createView(name, width, height);
     
-    renderer::DeviceGraphics::getInstance();
+    _renderTexture = new RenderTexture(width, height);
+    _scheduler = new Scheduler();
+    
+    EventDispatcher::init();
+    se::ScriptEngine::getInstance();
     se::ScriptEngine::getInstance();
 }
 
@@ -120,6 +126,9 @@ Application::~Application()
     
     delete CAST_VIEW(_view);
     _view = nullptr;
+    
+    delete _renderTexture;
+    _renderTexture = nullptr;
 
     Application::_instance = nullptr;
 }
@@ -146,6 +155,7 @@ void Application::start()
     LARGE_INTEGER nFreq;
     QueryPerformanceFrequency(&nFreq);
     LONGLONG animationInterval = (LONGLONG)(1.0 / _fps * nFreq.QuadPart);
+    float dt = 0.f;
     const DWORD _16ms = 16;
 
     // Main message loop:
@@ -183,6 +193,12 @@ void Application::start()
             _isStarted = true;
         }
 
+        // should be invoked at the begin of rendering a frame
+        if (_isDownsampleEnabled)
+            _renderTexture->prepare();
+        CAST_VIEW(_view)->pollEvents();
+        _scheduler->update(dt);
+
         if(_isStarted)
         {
             QueryPerformanceCounter(&nNow);
@@ -190,9 +206,13 @@ void Application::start()
             if (interval >= animationInterval)
             {
                 nLast.QuadPart = nNow.QuadPart;
+                dt = (float)interval / freq.QuadPart;
                 
-                CAST_VIEW(_view)->pollEvents();
-                EventDispatcher::dispatchTickEvent((float)interval / freq.QuadPart);
+                EventDispatcher::dispatchTickEvent(dt);
+
+                if (_isDownsampleEnabled)
+                    _renderTexture->draw();
+
                 CAST_VIEW(_view)->swapBuffers();
             }
             else
