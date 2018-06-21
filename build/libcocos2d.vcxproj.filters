@@ -377,6 +377,36 @@
     <ClCompile Include="..\cocos\base\CCThreadPool.cpp">
       <Filter>base</Filter>
     </ClCompile>
+    <ClCompile Include="..\cocos\scripting\js-bindings\manual\jsb_cocos2dx_network_manual.cpp">
+      <Filter>js-bindings\manual</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cocos\scripting\js-bindings\auto\jsb_cocos2dx_audioengine_auto.cpp">
+      <Filter>js-bindings\auto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cocos\audio\AudioEngine.cpp">
+      <Filter>audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cocos\audio\win32\AudioCache.cpp">
+      <Filter>audio\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cocos\audio\win32\AudioDecoder.cpp">
+      <Filter>audio\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cocos\audio\win32\AudioDecoderManager.cpp">
+      <Filter>audio\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cocos\audio\win32\AudioDecoderMp3.cpp">
+      <Filter>audio\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cocos\audio\win32\AudioDecoderOgg.cpp">
+      <Filter>audio\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cocos\audio\win32\AudioEngine-win32.cpp">
+      <Filter>audio\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cocos\audio\win32\AudioPlayer.cpp">
+      <Filter>audio\win32</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\cocos\base\base64.h">
@@ -902,6 +932,42 @@
     <ClInclude Include="..\cocos\base\CCThreadPool.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="..\cocos\scripting\js-bindings\manual\jsb_cocos2dx_network_manual.h">
+      <Filter>js-bindings\manual</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\scripting\js-bindings\auto\jsb_cocos2dx_audioengine_auto.hpp">
+      <Filter>js-bindings\auto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\audio\win32\AudioCache.h">
+      <Filter>audio\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\audio\win32\AudioDecoder.h">
+      <Filter>audio\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\audio\win32\AudioDecoderManager.h">
+      <Filter>audio\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\audio\win32\AudioDecoderMp3.h">
+      <Filter>audio\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\audio\win32\AudioDecoderOgg.h">
+      <Filter>audio\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\audio\win32\AudioEngine-win32.h">
+      <Filter>audio\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\audio\win32\AudioMacros.h">
+      <Filter>audio\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\audio\win32\AudioPlayer.h">
+      <Filter>audio\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\audio\include\AudioEngine.h">
+      <Filter>audio\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cocos\audio\include\Export.h">
+      <Filter>audio\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="base">
@@ -981,6 +1047,15 @@
     </Filter>
     <Filter Include="storage\local-storage">
       <UniqueIdentifier>{edff1dc7-36e1-4978-a197-d7a5daa8f0a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{c32501cd-4b8f-4bf2-b009-b77550c7f4c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\win32">
+      <UniqueIdentifier>{b06d91ac-f060-4eeb-ae08-0e7dc0d3b195}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\include">
+      <UniqueIdentifier>{d1b8a7c4-28cc-45b3-8276-494fbcf958d6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
