@@ -85,12 +85,11 @@ namespace
     {
         se::ScriptEngine* se = se::ScriptEngine::getInstance();
         char commandBuf[200] = {0};
-        int devicePixelRatio = cocos2d::Application::getInstance()->getDevicePixelRatio();
         sprintf(commandBuf, "var window = window || this; window.canvas = { width: %d, height: %d };",
-                g_width / devicePixelRatio,
-                g_height / devicePixelRatio);
+                g_width,
+                g_height);
         se->evalString(commandBuf);
-        cocos2d::ccViewport(0, 0, g_width / devicePixelRatio, g_height / devicePixelRatio);
+        cocos2d::ccViewport(0, 0, g_width, g_height);
         glDepthMask(GL_TRUE);
         return true;
     }
@@ -111,7 +110,6 @@ Application::Application(const std::string& name, int width, int height)
     _scheduler = new Scheduler();
     
     EventDispatcher::init();
-    se::ScriptEngine::getInstance();
     se::ScriptEngine::getInstance();
 }
 
