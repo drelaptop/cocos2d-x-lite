@@ -56,6 +56,7 @@
 #include "platform/CCApplication.h"
 #include "platform/win32/PlayerWin.h"
 #include "platform/win32/PlayerMenuServiceWin.h"
+#include "platform/desktop/CCGLView-desktop.h"
 
 #include "resource.h"
 
@@ -93,21 +94,27 @@ INT_PTR CALLBACK AboutDialogCallback(HWND hDlg, UINT message, WPARAM wParam, LPA
     }
     return (INT_PTR)FALSE;
 }
-/*
+
+HWND getWin32Window()
+{
+  auto glfwWindow = ((cocos2d::GLView*)cocos2d::Application::getInstance()->getView())->getGLFWWindow();
+  return glfwGetWin32Window(glfwWindow);
+}
+
+
 void onHelpAbout()
 {
     DialogBox(GetModuleHandle(NULL),
               MAKEINTRESOURCE(IDD_DIALOG_ABOUT),
-              Director::getInstance()->getOpenGLView()->getWin32Window(),
+              getWin32Window(),
               AboutDialogCallback);
 }
-*/
+
 
 void shutDownApp()
 {
-    // TODO
-    //HWND hWnd = glview->getWin32Window();
-    //::SendMessage(hWnd, WM_CLOSE, NULL, NULL);
+    
+    ::SendMessage(getWin32Window(), WM_CLOSE, NULL, NULL);
 }
 
 std::string getCurAppPath(void)
@@ -402,6 +409,11 @@ int SimulatorWin::run()
     // create opengl view, and init app
     _app = new AppDelegate(title.str(), _project.getFrameScale() * frameSize.width, _project.getFrameScale() * frameSize.height);
     _app->start();
+    CC_SAFE_DELETE(_app);
+
+    // path for looking Lang file, Studio Default images
+    FileUtils::getInstance()->addSearchPath(getApplicationPath().c_str());
+
     return true;
     /*
     auto glview = GLViewImpl::createWithRect(title.str(), frameRect, frameScale, true);
