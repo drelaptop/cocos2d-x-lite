@@ -1,4 +1,4 @@
-﻿/****************************************************************************
+/****************************************************************************
  Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos.com
@@ -53,6 +53,7 @@
 #include "runtime/ConfigParser.h"
 #include "runtime/Runtime.h"
 
+#include "platform/CCApplication.h"
 #include "platform/win32/PlayerWin.h"
 #include "platform/win32/PlayerMenuServiceWin.h"
 
@@ -92,6 +93,7 @@ INT_PTR CALLBACK AboutDialogCallback(HWND hDlg, UINT message, WPARAM wParam, LPA
     }
     return (INT_PTR)FALSE;
 }
+/*
 void onHelpAbout()
 {
     DialogBox(GetModuleHandle(NULL),
@@ -99,12 +101,13 @@ void onHelpAbout()
               Director::getInstance()->getOpenGLView()->getWin32Window(),
               AboutDialogCallback);
 }
+*/
 
 void shutDownApp()
 {
-    auto glview = dynamic_cast<GLViewImpl*> (Director::getInstance()->getOpenGLView());
-    HWND hWnd = glview->getWin32Window();
-    ::SendMessage(hWnd, WM_CLOSE, NULL, NULL);
+    // TODO
+    //HWND hWnd = glview->getWin32Window();
+    //::SendMessage(hWnd, WM_CLOSE, NULL, NULL);
 }
 
 std::string getCurAppPath(void)
@@ -139,15 +142,6 @@ static bool stringEndWith(const std::string str, const std::string needle)
     return false;
 }
 
-static void initGLContextAttrs()
-{
-    //set OpenGL context attributions,now can only set six attributions:
-    //red,green,blue,alpha,depth,stencil
-    GLContextAttrs glContextAttrs = {8, 8, 8, 8, 24, 8};
-
-    GLView::setGLContextAttrs(glContextAttrs);
-}
-
 SimulatorWin *SimulatorWin::_instance = nullptr;
 
 SimulatorWin *SimulatorWin::getInstance()
@@ -178,7 +172,8 @@ SimulatorWin::~SimulatorWin()
 
 void SimulatorWin::quit()
 {
-    Director::getInstance()->end();
+    delete _app;
+    _app = nullptr;
 }
 
 void SimulatorWin::relaunch()
@@ -289,7 +284,6 @@ int SimulatorWin::run()
     }
 
     // create the application instance
-    _app = new AppDelegate();
     RuntimeEngine::getInstance()->setProjectConfig(_project);
 
     // create console window
@@ -404,7 +398,12 @@ int SimulatorWin::run()
     const bool isResize = _project.isResizeWindow();
     std::stringstream title;
     title << "Cocos Simulator (" << _project.getFrameScale() * 100 << "%)";
-    initGLContextAttrs();
+
+    // create opengl view, and init app
+    _app = new AppDelegate(title.str(), _project.getFrameScale() * frameSize.width, _project.getFrameScale() * frameSize.height);
+    _app->start();
+    return true;
+    /*
     auto glview = GLViewImpl::createWithRect(title.str(), frameRect, frameScale, true);
     _hwnd = glview->getWin32Window();
     player::PlayerWin::createWithHwnd(_hwnd);
@@ -456,10 +455,11 @@ int SimulatorWin::run()
     int ret = app->run();
     CC_SAFE_DELETE(_app);
     return ret;
+    */
 }
 
 // services
-
+/*
 void SimulatorWin::setupUI()
 {
     auto menuBar = player::PlayerProtocol::getInstance()->getMenuService();
@@ -1020,6 +1020,7 @@ void SimulatorWin::onOpenFile(const std::string &filePath)
         msgBox->showMessageBox(title, msg);
     }
 }
+*/
 
 /*
 1. find @folderPath/config.json
@@ -1027,6 +1028,8 @@ void SimulatorWin::onOpenFile(const std::string &filePath)
 3. find @folderPath/cocosstudio/MainScene.csd
 4. find @folderPath/cocosstudio/MainScene.csb
 */
+
+/*
 void SimulatorWin::onOpenProjectFolder(const std::string &folderPath)
 {
     string path = folderPath;
@@ -1120,3 +1123,4 @@ void SimulatorWin::onDrop(const std::string &path)
         onOpenFile(path);
     }
 }
+*/
