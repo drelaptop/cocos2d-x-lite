@@ -89,11 +89,10 @@ void jsb_init_file_operation_delegate()
                     return;
                 }
                 
-                ZipFile* zip = ZipFile::createWithBuffer(data, dataLen);
-                if (zip) {
-                    ssize_t unpackedLen = 0;
-                    uint8_t* unpackedData = zip->getFileData("encrypt.js", &unpackedLen);
-                    
+                if (ZipUtils::isGZipBuffer(data,dataLen)) {
+                    uint8_t* unpackedData;
+                    ssize_t unpackedLen = ZipUtils::inflateMemory(data, dataLen,&unpackedData);
+
                     if (unpackedData == nullptr) {
                         SE_REPORT_ERROR("Can't decrypt code for %s", byteCodePath.c_str());
                         return;
@@ -102,7 +101,6 @@ void jsb_init_file_operation_delegate()
                     readCallback(unpackedData, unpackedLen);
                     free(data);
                     free(unpackedData);
-                    delete zip;
                 }
                 else {
                     readCallback(data, dataLen);
@@ -131,11 +129,9 @@ void jsb_init_file_operation_delegate()
                     return "";
                 }
                 
-                ZipFile* zip = ZipFile::createWithBuffer(data, dataLen);
-                if (zip) {
-                    ssize_t unpackedLen = 0;
-                    uint8_t* unpackedData = zip->getFileData("encrypt.js", &unpackedLen);
-                    
+                if (ZipUtils::isGZipBuffer(data,dataLen)) {
+                    uint8_t* unpackedData;
+                    ssize_t unpackedLen = ZipUtils::inflateMemory(data, dataLen,&unpackedData);
                     if (unpackedData == nullptr) {
                         SE_REPORT_ERROR("Can't decrypt code for %s", byteCodePath.c_str());
                         return "";
@@ -144,7 +140,6 @@ void jsb_init_file_operation_delegate()
                     std::string ret(reinterpret_cast<const char*>(unpackedData), unpackedLen);
                     free(unpackedData);
                     free(data);
-                    delete zip;
                     
                     return ret;
                 }
@@ -890,25 +885,47 @@ static bool JSB_showInputBox(se::State& s)
         se::Value tmp;
         const auto& obj = args[0].toObject();
         
+        cocos2d::EditBox::ShowInfo showInfo;
+        
         obj->getProperty("defaultValue", &tmp);
-        std::string defaultValue = tmp.toString();
+        showInfo.defaultValue = tmp.toString();
+        
         
         obj->getProperty("maxLength", &tmp);
-        int maxLength = tmp.toInt32();
+        showInfo.maxLength = tmp.toInt32();
         
         obj->getProperty("multiple", &tmp);
-        bool isMultiLine = tmp.toBoolean();
+        showInfo.isMultiline = tmp.toBoolean();
         
         obj->getProperty("confirmHold", &tmp);
-        bool confirmHold = tmp.toBoolean();
+        if (! tmp.isUndefined())
+            showInfo.confirmHold = tmp.toBoolean();
         
         obj->getProperty("confirmType", &tmp);
-        std::string confirmType = tmp.toString();
+        if (! tmp.isUndefined())
+            showInfo.confirmType = tmp.toString();
         
         obj->getProperty("inputType", &tmp);
-        std::string inputType = tmp.toString();
+        if (! tmp.isUndefined())
+            showInfo.inputType = tmp.toString();
         
-        EditBox::show(defaultValue, maxLength, isMultiLine, confirmHold, confirmType, inputType);
+        obj->getProperty("originX", &tmp);
+        if (! tmp.isUndefined())
+            showInfo.x = tmp.toInt32();
+        
+        obj->getProperty("originY", &tmp);
+        if (! tmp.isUndefined())
+            showInfo.y = tmp.toInt32();
+        
+        obj->getProperty("width", &tmp);
+        if (! tmp.isUndefined())
+            showInfo.width = tmp.toInt32();
+        
+        obj->getProperty("height", &tmp);
+        if (! tmp.isUndefined())
+            showInfo.height = tmp.toInt32();
+        
+        EditBox::show(showInfo);
         
         return true;
     }
