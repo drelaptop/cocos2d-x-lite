@@ -26,12 +26,7 @@
 NS_CC_BEGIN
 
 // TODO
-void EditBox::show(const std::string& defaultValue,
-                   int maxLength,
-                   bool isMultiLine,
-                   bool confirmHold,
-                   const std::string& confirmType,
-                   const std::string& inputType)
+void EditBox::show(const cocos2d::EditBox::ShowInfo& showInfo)
 {
     
 }
