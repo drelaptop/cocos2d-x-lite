@@ -733,7 +733,7 @@ void SimulatorWin::writeDebugLog(const char *log)
     fputc('\n', _writeDebugLogFile);
     fflush(_writeDebugLogFile);
 }
-
+*/
 void SimulatorWin::parseCocosProjectConfig(ProjectConfig &config)
 {
     // get project directory
@@ -901,7 +901,7 @@ std::string SimulatorWin::getApplicationPath()
 
     return workdir;
 }
-
+/*
 LRESULT CALLBACK SimulatorWin::windowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     if (!_instance) return 0;
@@ -988,7 +988,7 @@ LRESULT CALLBACK SimulatorWin::windowProc(HWND hWnd, UINT uMsg, WPARAM wParam, L
     }
     return g_oldWindowProc(hWnd, uMsg, wParam, lParam);
 }
-
+*/
 void SimulatorWin::onOpenFile(const std::string &filePath)
 {
     string entry = filePath;
@@ -1020,7 +1020,7 @@ void SimulatorWin::onOpenFile(const std::string &filePath)
         msgBox->showMessageBox(title, msg);
     }
 }
-*/
+
 
 /*
 1. find @folderPath/config.json
