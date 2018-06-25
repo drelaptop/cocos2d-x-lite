@@ -20,15 +20,49 @@ enum class CanvasTextBaseline {
     BOTTOM
 };
 
+namespace {
+  void fillRectWithColor(uint8_t* buf, uint32_t totalWidth, uint32_t totalHeight, uint32_t x, uint32_t y, uint32_t width, uint32_t height, uint8_t r, uint8_t g, uint8_t b)
+  {
+    assert(x + width <= totalWidth);
+    assert(y + height <= totalHeight);
+
+    uint32_t y0 = totalHeight - (y + height);
+    uint32_t y1 = totalHeight - y;
+    uint8_t* p;
+    for (uint32_t offsetY = y0; offsetY < y1; ++offsetY)
+    {
+      for (uint32_t offsetX = x; offsetX < (x + width); ++offsetX)
+      {
+        p = buf + (totalWidth * offsetY + offsetX) * 3;
+        *p++ = r;
+        *p++ = g;
+        *p++ = b;
+      }
+    }
+  }
+}
+
 class CanvasRenderingContext2DImpl
 {
 public:
-    CanvasRenderingContext2DImpl()
+  CanvasRenderingContext2DImpl(HWND hWnd = nullptr) : _DC(nullptr)
+    , _bmp(nullptr)
+    , _font((HFONT)GetStockObject(DEFAULT_GUI_FONT))
+    , _wnd(nullptr)
+    , _savedDC(0)
     {
+      _wnd = hWnd;
+      HDC hdc = GetDC(_wnd);
+      _DC = CreateCompatibleDC(hdc);
+      ReleaseDC(_wnd, hdc);
     }
 
     ~CanvasRenderingContext2DImpl()
     {
+      if (_DC)
+      {
+        DeleteDC(_DC);
+      }
     }
 
     void recreateBuffer(float w, float h)
@@ -37,24 +71,32 @@ public:
         _bufferHeight = h;
         if (_bufferWidth < 1.0f || _bufferHeight < 1.0f)
             return;
-        //
-        fillData();
+
+        int textureSize = _bufferWidth * _bufferHeight * 4;
+        uint8_t* data = (uint8_t*)malloc(sizeof(uint8_t) * textureSize);
+        memset(data, 0, textureSize);
+        _imageData.fastSet(data, textureSize);
+        // todo, create bitmap use data above
     }
 
     void beginPath()
     {
+      _DC = BeginPaint(_wnd, &_paintStruct);
     }
 
     void closePath()
     {
+      EndPaint(_wnd, &_paintStruct);
     }
 
     void moveTo(float x, float y)
     {
+      MoveToEx(_DC, x, y, nullptr);
     }
 
     void lineTo(float x, float y)
     {
+      LineTo(_DC, x, y);
     }
 
     void stroke()
@@ -67,26 +109,44 @@ public:
 
     void saveContext()
     {
+      _savedDC = SaveDC(_DC);
     }
 
     void restoreContext()
     {
+      RestoreDC(_DC, _savedDC);
     }
 
     void clearRect(float x, float y, float w, float h)
     {
         if (_bufferWidth < 1.0f || _bufferHeight < 1.0f)
             return;
-        //
-        fillData();
+        if (_imageData.isNull())
+          return;
+
+        uint8_t* buffer = _imageData.getBytes();
+        if (buffer)
+        {
+          uint8_t r = 0;
+          uint8_t g = 0;
+          uint8_t b = 0;
+          fillRectWithColor(buffer, (uint32_t)_bufferWidth, (uint32_t)_bufferHeight, (uint32_t)x, (uint32_t)y, (uint32_t)w, (uint32_t)h, r, g, b);
+        }
     }
 
     void fillRect(float x, float y, float w, float h)
     {
         if (_bufferWidth < 1.0f || _bufferHeight < 1.0f)
             return;
-        //
-        fillData();
+
+        uint8_t* buffer = _imageData.getBytes();
+        if (buffer)
+        {
+          uint8_t r = _fillStyle.r * 255.0f;
+          uint8_t g = _fillStyle.g * 255.0f;
+          uint8_t b = _fillStyle.b * 255.0f;
+          fillRectWithColor(buffer, (uint32_t)_bufferWidth, (uint32_t)_bufferHeight, (uint32_t)x, (uint32_t)y, (uint32_t)w, (uint32_t)h, r, g, b);
+        }
     }
 
     void fillText(const std::string& text, float x, float y, float maxWidth)
@@ -126,10 +186,18 @@ public:
 
     void setFillStyle(float r, float g, float b, float a)
     {
+        _fillStyle.r = r;
+        _fillStyle.g = g;
+        _fillStyle.b = b;
+        _fillStyle.a = a;
     }
 
     void setStrokeStyle(float r, float g, float b, float a)
     {
+        _strokeStyle.r = r;
+        _strokeStyle.g = g;
+        _strokeStyle.b = b;
+        _strokeStyle.a = a;
     }
 
     void setLineWidth(float lineWidth)
@@ -138,44 +206,35 @@ public:
 
     const Data& getDataRef() const
     {
-        return _data;
+        return _imageData;
     }
 
     void fillData()
     {
+      BITMAP bitmap;
+      GetObject(_bmp, sizeof(BITMAP), &bitmap);
+      // check, bmBits == null?
+      _imageData.fastSet((uint8_t*)bitmap.bmBits, sizeof(bitmap.bmBits));
     }
 
+    HDC _DC;
+    HBITMAP _bmp;
 private:
 
-    static const std::string _className;
-
-    Data _data;
+    Data _imageData;
+    HFONT   _font;
+    HWND    _wnd;
+    PAINTSTRUCT _paintStruct;
+    std::string _curFontPath;
+    int _savedDC;
     float _bufferWidth = 0.0f;
     float _bufferHeight = 0.0f;
+
+    CanvasTextAlign _textAlign;
+    CanvasTextBaseline _textBaseLine;
+    cocos2d::Color4F _fillStyle;
+    cocos2d::Color4F _strokeStyle;
 };
-
-
-namespace {
-    void fillRectWithColor(uint8_t* buf, uint32_t totalWidth, uint32_t totalHeight, uint32_t x, uint32_t y, uint32_t width, uint32_t height, uint8_t r, uint8_t g, uint8_t b)
-    {
-        assert(x + width <= totalWidth);
-        assert(y + height <=  totalHeight);
-
-        uint32_t y0 = totalHeight - (y + height);
-        uint32_t y1 = totalHeight - y;
-        uint8_t* p;
-        for (uint32_t offsetY = y0; offsetY < y1; ++offsetY)
-        {
-            for (uint32_t offsetX = x; offsetX < (x + width); ++offsetX)
-            {
-                p = buf + (totalWidth * offsetY + offsetX) * 3;
-                *p++ = r;
-                *p++ = g;
-                *p++ = b;
-            }
-        }
-    }
-}
 
 NS_CC_BEGIN
 
