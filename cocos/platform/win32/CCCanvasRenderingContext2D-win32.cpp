@@ -5,8 +5,6 @@
 #include "cocos/scripting/js-bindings/jswrapper/SeApi.h"
 
 #include "platform/CCFileUtils.h"
-#include "platform/desktop/CCGLView-desktop.h"
-
 #include <regex>
 
 using namespace cocos2d;
@@ -134,14 +132,7 @@ public:
         if (_imageData.isNull())
           return;
 
-        uint8_t* buffer = _imageData.getBytes();
-        if (buffer)
-        {
-          uint8_t r = 0;
-          uint8_t g = 0;
-          uint8_t b = 0;
-          fillRectWithColor(buffer, (uint32_t)_bufferWidth, (uint32_t)_bufferHeight, (uint32_t)x, (uint32_t)y, (uint32_t)w, (uint32_t)h, r, g, b);
-        }
+        memset(_imageData.getBytes(), 0x00, _imageData.getSize());
         _setTextureData();
     }
 
@@ -150,6 +141,7 @@ public:
         if (_bufferWidth < 1.0f || _bufferHeight < 1.0f)
             return;
 
+        //not filled all Bits in buffer? the buffer length is _bufferWidth * _bufferHeight * 4, but it filled _bufferWidth * _bufferHeight * 3?  
         uint8_t* buffer = _imageData.getBytes();
         if (buffer)
         {
@@ -588,7 +580,8 @@ private:
         } bi = { 0 };
         bi.bmiHeader.biSize = sizeof(bi.bmiHeader);
         CC_BREAK_IF(!GetDIBits(_DC, _bmp, 0, 0, nullptr, (LPBITMAPINFO)&bi, DIB_RGB_COLORS));
-        SetDIBits(_DC, _bmp, 0, _bufferHeight, _imageData.getBytes(), (LPBITMAPINFO)&bi, DIB_RGB_COLORS);
+        int ret = SetDIBits(_DC, _bmp, 0, _bufferHeight, _imageData.getBytes(), (LPBITMAPINFO)&bi, DIB_RGB_COLORS);
+        SE_LOGD("SetDIBits return value: %d\n",ret);
       } while (0);
     }
 
