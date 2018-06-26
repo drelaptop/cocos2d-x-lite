@@ -86,6 +86,7 @@ public:
         memset(data, 0, textureSize);
         _imageData.fastSet(data, textureSize);
         // todo, create bitmap use data above
+        _prepareBitmap(_bufferWidth, _bufferHeight);
     }
 
     void beginPath()
@@ -162,7 +163,7 @@ public:
         if (text.empty() || _bufferWidth < 1.0f || _bufferHeight < 1.0f)
             return;
         // check
-        //_imageData = _getTextureDataForText(text.c_str(), (int)x, (int)y, false);
+        _imageData = _getTextureDataForText(text.c_str(), _bufferWidth, _bufferHeight, false);
         
     }
 
@@ -281,9 +282,16 @@ public:
           _font = hDefFont;
           break;
         }
+        else
+        {
+          SelectObject(_DC, _font);
+          SendMessage(_wnd, WM_FONTCHANGE, 0, 0);
+        }
 
         bRet = true;
+          
       } while (0);
+      
     }
 
     void setTextAlign(CanvasTextAlign align)
@@ -876,6 +884,7 @@ void CanvasRenderingContext2D::set_font(const std::string& font)
         }
 
         float fontSize = atof(fontSizeStr.c_str());
+        SE_LOGD("CanvasRenderingContext2D::set_font: %s, %f\n", fontName.c_str(), fontSize);
         _impl->updateFont(fontName, fontSize, !boldStr.empty());
     }
 }
