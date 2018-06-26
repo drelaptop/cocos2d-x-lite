@@ -44,11 +44,6 @@ namespace {
     }
   }
 
-  HWND getWin32Window()
-  {
-    auto glfwWindow = ((cocos2d::GLView*)cocos2d::Application::getInstance()->getView())->getGLFWWindow();
-    return glfwGetWin32Window(glfwWindow);
-  }
 }
 
 class CanvasRenderingContext2DImpl
@@ -171,14 +166,11 @@ public:
       bool enableWrap = false;
         if (text.empty() || _bufferWidth < 1.0f || _bufferHeight < 1.0f)
             return;
-        // draw text
-        if (maxWidth > 0) {
-          enableWrap = true;
-        }
-        SIZE textSize = { (LONG)maxWidth, 0 };
+
+        SIZE textSize = { 0, 0 };
         Point offsetPoint = _convertDrawPoint(Point(x, y), text);
 
-        _drawText(text.c_str(), (int)offsetPoint.x, (int)offsetPoint.y, textSize, enableWrap, 0);
+        _drawText(text.c_str(), (int)offsetPoint.x, (int)offsetPoint.y);
         _imageData = _getTextureData();
         
     }
@@ -196,8 +188,7 @@ public:
         if (text.empty())
             return Size(0.0f, 0.0f);
 
-        DWORD dwCalcFmt = DT_CALCRECT;
-        SIZE size = _sizeWithText(_utf8ToUtf16(text), text.size(), dwCalcFmt, 0, 0, false, 0);
+        SIZE size = _sizeWithText(_utf8ToUtf16(text), text.size());
         SE_LOGD("CanvasRenderingContext2DImpl::measureText: %s, %d, %d\n", text.c_str(), size.cx, size.cy);
         return Size(size.cx, size.cx);
     }
@@ -414,7 +405,7 @@ private:
     }
 
     // x, y offset value
-    int _drawText(const char * pszText, int x, int y, SIZE& tSize, bool enableWrap, int overflow)
+    int _drawText(const char * pszText, int x, int y)
     {
       int nRet = 0;
       wchar_t * pwszBuffer = nullptr;
@@ -423,9 +414,6 @@ private:
         CC_BREAK_IF(!pszText);
 
         DWORD dwFmt = DT_WORDBREAK;
-        if (!enableWrap) {
-          dwFmt |= DT_SINGLELINE;
-        }
 
         if (_textAlign == CanvasTextAlign::LEFT)
         {
@@ -461,44 +449,14 @@ private:
         memset(pwszBuffer, 0, sizeof(wchar_t)*nBufLen);
         nLen = MultiByteToWideChar(CP_UTF8, 0, pszText, nLen, pwszBuffer, nBufLen);
 
-        SIZE newSize = _sizeWithText(pwszBuffer, nLen, dwFmt, tSize.cx, tSize.cy, enableWrap, overflow);
+        SIZE newSize = _sizeWithText(pwszBuffer, nLen);
 
         _textSize = newSize;
 
         RECT rcText = { 0 };
-        // if content width is 0, use text size as content size
-        if (tSize.cx <= 0)
-        {
-          tSize = newSize;
-          rcText.right = newSize.cx;
-          rcText.bottom = newSize.cy;
-        }
-        else
-        {
 
-          rcText.right = newSize.cx; // store the text width to rectangle
-
-          // if content height is 0, use text height as content height
-          // else if content height less than text height, use content height to draw text
-          if (tSize.cy <= 0)
-          {
-            tSize.cy = newSize.cy;
-            dwFmt |= DT_NOCLIP;
-            rcText.bottom = newSize.cy; // store the text height to rectangle
-          }
-          else if (tSize.cy < newSize.cy)
-          {
-            // content height larger than text height need, clip text to rect
-            rcText.bottom = tSize.cy;
-          }
-          else
-          {
-            rcText.bottom = newSize.cy; // store the text height to rectangle
-
-                                        // content larger than text, need adjust vertical position
-            dwFmt |= DT_NOCLIP;
-          }
-        }
+        rcText.right = newSize.cx;
+        rcText.bottom = newSize.cy;
 
         LONG offsetX = x;
         LONG offsetY = y;
@@ -507,7 +465,7 @@ private:
           OffsetRect(&rcText, offsetX, offsetY);
         }
 
-        SE_LOGE("_drawText text size, %d, %d \n", tSize.cx, tSize.cy);
+        SE_LOGE("_drawText text size,%s %d, %d \n", pszText, newSize.cx, newSize.cx);
 
         // draw text
         HGDIOBJ hOldFont = SelectObject(_DC, _font);
@@ -527,13 +485,7 @@ private:
       return nRet;
     }
 
-    SIZE _sizeWithText(const wchar_t * pszText,
-      int nLen,
-      DWORD dwFmt,
-      LONG nWidthLimit,
-      LONG nHeightLimit,
-      bool enableWrap,
-      int overflow)
+    SIZE _sizeWithText(const wchar_t * pszText, int nLen)
     {
       SIZE tRet = { 0 };
       do
@@ -542,55 +494,18 @@ private:
 
         RECT rc = { 0, 0, 0, 0 };
         DWORD dwCalcFmt = DT_CALCRECT;
-        if (!enableWrap)
-        {
-          dwCalcFmt |= DT_SINGLELINE;
-        }
+        
+        //use current font to measure text extent
+        HGDIOBJ hOld = SelectObject(_DC, _font);
 
-        if (nWidthLimit > 0)
-        {
-          rc.right = nWidthLimit;
-          dwCalcFmt |= DT_WORDBREAK
-            | (dwFmt & DT_CENTER)
-            | (dwFmt & DT_RIGHT);
-        }
-        if (overflow == 2)
-        {
-          LONG actualWidth = nWidthLimit + 1;
-          LONG actualHeight = nHeightLimit + 1;
-          int newFontSize = _fontSize + 1;
-
-          while (actualWidth > nWidthLimit || actualHeight > nHeightLimit)
-          {
-            if (newFontSize <= 0)
-            {
-              break;
-            }
-            this->updateFont(_fontName, newFontSize);
-            // use current font to measure text extent
-            HGDIOBJ hOld = SelectObject(_DC, _font);
-            rc.right = nWidthLimit;
-            // measure text size
-            DrawTextW(_DC, pszText, nLen, &rc, dwCalcFmt);
-            DeleteObject(hOld);
-
-            actualWidth = rc.right;
-            actualHeight = rc.bottom;
-            newFontSize = newFontSize - 1;
-          }
-        }
-        else
-        {
-          // use current font to measure text extent
-          HGDIOBJ hOld = SelectObject(_DC, _font);
-
-          // measure text size
-          DrawTextW(_DC, pszText, nLen, &rc, dwCalcFmt);
-          SelectObject(_DC, hOld);
-        }
+        // measure text size
+        DrawTextW(_DC, pszText, nLen, &rc, dwCalcFmt);
+        SelectObject(_DC, hOld);
 
         tRet.cx = rc.right;
         tRet.cy = rc.bottom;
+
+        DeleteObject(hOld);
 
       } while (0);
 
@@ -804,6 +719,7 @@ CanvasGradient* CanvasRenderingContext2D::createLinearGradient(float x0, float y
 
 void CanvasRenderingContext2D::save()
 {
+    SE_LOGD("CanvasRenderingContext2D::save");
     _impl->saveContext();
 }
 
@@ -837,6 +753,7 @@ void CanvasRenderingContext2D::stroke()
 
 void CanvasRenderingContext2D::restore()
 {
+    SE_LOGD("CanvasRenderingContext2D::restore");
     _impl->restoreContext();
 }
 
