@@ -476,8 +476,6 @@ private:
         else
         {
 
-          LONG offsetX = x;
-          LONG offsetY = y;
           rcText.right = newSize.cx; // store the text width to rectangle
 
           // if content height is 0, use text height as content height
@@ -500,11 +498,13 @@ private:
                                         // content larger than text, need adjust vertical position
             dwFmt |= DT_NOCLIP;
           }
+        }
 
-          if (offsetX || offsetY)
-          {
-            OffsetRect(&rcText, offsetX, offsetY);
-          }
+        LONG offsetX = x;
+        LONG offsetY = y;
+        if (offsetX || offsetY)
+        {
+          OffsetRect(&rcText, offsetX, offsetY);
         }
 
         SE_LOGE("_drawText text size, %d, %d \n", tSize.cx, tSize.cy);
@@ -696,6 +696,10 @@ private:
       {
         point.y += _fontSize / 2.0f;
       }
+      // The origin of drawing text on win32 is from top-left, but now we get bottom-left,
+      // So, we need to substract the font size to convert 'point' to top-left.
+      point.y -= _fontSize;
+
       return point;
     }
 };
