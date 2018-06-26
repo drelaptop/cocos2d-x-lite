@@ -54,13 +54,13 @@ namespace {
 class CanvasRenderingContext2DImpl
 {
 public:
-  CanvasRenderingContext2DImpl(HWND hWnd = nullptr) : _DC(nullptr)
+  CanvasRenderingContext2DImpl() : _DC(nullptr)
     , _bmp(nullptr)
     , _font((HFONT)GetStockObject(DEFAULT_GUI_FONT))
     , _wnd(nullptr)
     , _savedDC(0)
     {
-      _wnd = hWnd;
+      _wnd = nullptr;
       HDC hdc = GetDC(_wnd);
       _DC = CreateCompatibleDC(hdc);
       ReleaseDC(_wnd, hdc);
@@ -68,10 +68,12 @@ public:
 
     ~CanvasRenderingContext2DImpl()
     {
+      _prepareBitmap(0, 0);
       if (_DC)
       {
         DeleteDC(_DC);
       }
+      _removeCustomFont();
     }
 
     void recreateBuffer(float w, float h)
@@ -79,14 +81,18 @@ public:
         _bufferWidth = w;
         _bufferHeight = h;
         if (_bufferWidth < 1.0f || _bufferHeight < 1.0f)
-            return;
-
+        {
+          _prepareBitmap(0, 0);
+          return;
+        }
+        
         int textureSize = _bufferWidth * _bufferHeight * 4;
         uint8_t* data = (uint8_t*)malloc(sizeof(uint8_t) * textureSize);
-        memset(data, 0, textureSize);
+        memset(data, 0x00, textureSize);
         _imageData.fastSet(data, textureSize);
-        // todo, create bitmap use data above
+
         _prepareBitmap(_bufferWidth, _bufferHeight);
+        _setTextureData();
     }
 
     void beginPath()
@@ -141,6 +147,7 @@ public:
           uint8_t b = 0;
           fillRectWithColor(buffer, (uint32_t)_bufferWidth, (uint32_t)_bufferHeight, (uint32_t)x, (uint32_t)y, (uint32_t)w, (uint32_t)h, r, g, b);
         }
+        _setTextureData();
     }
 
     void fillRect(float x, float y, float w, float h)
@@ -156,14 +163,22 @@ public:
           uint8_t b = _fillStyle.b * 255.0f;
           fillRectWithColor(buffer, (uint32_t)_bufferWidth, (uint32_t)_bufferHeight, (uint32_t)x, (uint32_t)y, (uint32_t)w, (uint32_t)h, r, g, b);
         }
+        _setTextureData();
     }
 
     void fillText(const std::string& text, float x, float y, float maxWidth)
     {
+      bool enableWrap = false;
         if (text.empty() || _bufferWidth < 1.0f || _bufferHeight < 1.0f)
             return;
-        // check
-        _imageData = _getTextureDataForText(text.c_str(), _bufferWidth, _bufferHeight, false);
+        // draw text
+        if (maxWidth > 0) {
+          enableWrap = true;
+        }
+        SIZE size = { (LONG)maxWidth, 0 };
+
+        _drawText(text.c_str(), x, y, size, enableWrap, false);
+        _imageData = _getTextureData();
         
     }
 
@@ -171,6 +186,7 @@ public:
     {
         if (text.empty() || _bufferWidth < 1.0f || _bufferHeight < 1.0f)
             return;
+
         //
     }
 
@@ -395,7 +411,8 @@ private:
       }
     }
 
-    int _drawText(const char * pszText, SIZE& tSize, bool enableWrap, int overflow)
+    // x, y offset value
+    int _drawText(const char * pszText, int x, int y, SIZE& tSize, bool enableWrap, int overflow)
     {
       int nRet = 0;
       wchar_t * pwszBuffer = nullptr;
@@ -520,7 +537,9 @@ private:
           }
         }
 
-        CC_BREAK_IF(!_prepareBitmap(tSize.cx, tSize.cy));
+        // must not recreate
+        //recreateBuffer(tSize.cx, tSize.cy);
+        SE_LOGE("_drawText text size, %d, %d \n", tSize.cx, tSize.cy);
 
         // draw text
         HGDIOBJ hOldFont = SelectObject(_DC, _font);
@@ -637,20 +656,12 @@ private:
       return true;
     }
 
-    Data _getTextureDataForText(const char * text, int width, int height, bool hasPremultipliedAlpha)
+    Data _getTextureData()
     {
       Data ret;
       do
       {
-
-        updateFont(_fontName, _fontSize, false);
-
-        // draw text
-        // does changing to SIZE here affects the font size by rounding from float?
-        SIZE size = { (LONG)width,(LONG)height };
-        _drawText(text, size, false, false);
-
-        int dataLen = size.cx * size.cy * 4;
+        int dataLen = _bufferWidth * _bufferHeight * 4;
         unsigned char* dataBuf = (unsigned char*)malloc(sizeof(unsigned char) * dataLen);
         CC_BREAK_IF(!dataBuf);
 
@@ -663,38 +674,47 @@ private:
         CC_BREAK_IF(!GetDIBits(_DC, _bmp, 0, 0,
           nullptr, (LPBITMAPINFO)&bi, DIB_RGB_COLORS));
 
-        width = (short)size.cx;
-        height = (short)size.cy;
-
         // copy pixel data
-        bi.bmiHeader.biHeight = (bi.bmiHeader.biHeight > 0)
-          ? -bi.bmiHeader.biHeight : bi.bmiHeader.biHeight;
-        GetDIBits(_DC, _bmp, 0, height, dataBuf,
+        bi.bmiHeader.biHeight = (bi.bmiHeader.biHeight > 0) ? -bi.bmiHeader.biHeight : bi.bmiHeader.biHeight;
+        GetDIBits(_DC, _bmp, 0, _bufferHeight, dataBuf,
           (LPBITMAPINFO)&bi, DIB_RGB_COLORS);
 
         uint8_t r = _fillStyle.r * 255.0f;
         uint8_t g = _fillStyle.g * 255.0f;
         uint8_t b = _fillStyle.b * 255.0f;
         COLORREF textColor = (b << 16 | g << 8 | r) & 0x00ffffff;
-        // check
-        float alpha = 128 / 255.0f;
+        float alpha = 1.0f;
         COLORREF * pPixel = nullptr;
-        for (int y = 0; y < height; ++y)
+        for (int y = 0; y < _bufferHeight; ++y)
         {
-          pPixel = (COLORREF *)dataBuf + y * width;
-          for (int x = 0; x < width; ++x)
+          pPixel = (COLORREF *)dataBuf + y * (int)_bufferWidth;
+          for (int x = 0; x < _bufferWidth; ++x)
           {
             COLORREF& clr = *pPixel;
             clr = ((BYTE)(GetRValue(clr) * alpha) << 24) | textColor;
             ++pPixel;
           }
         }
-
+        
         ret.fastSet(dataBuf, dataLen);
-        hasPremultipliedAlpha = false;
       } while (0);
 
       return ret;
+    }
+
+    void _setTextureData()
+    {
+      do
+      {
+        struct
+        {
+          BITMAPINFOHEADER bmiHeader;
+          int mask[4];
+        } bi = { 0 };
+        bi.bmiHeader.biSize = sizeof(bi.bmiHeader);
+        CC_BREAK_IF(!GetDIBits(_DC, _bmp, 0, 0, nullptr, (LPBITMAPINFO)&bi, DIB_RGB_COLORS));
+        SetDIBits(_DC, _bmp, 0, _bufferHeight, _imageData.getBytes(), (LPBITMAPINFO)&bi, DIB_RGB_COLORS);
+      } while (0);
     }
 };
 
@@ -722,7 +742,7 @@ CanvasRenderingContext2D::CanvasRenderingContext2D(float width, float height)
 , __height(height)
 {
     SE_LOGD("CanvasRenderingContext2D constructor: %p, width: %f, height: %f\n", this, width, height);
-    _impl = new CanvasRenderingContext2DImpl(getWin32Window());
+    _impl = new CanvasRenderingContext2DImpl();
     recreateBufferIfNeeded();
 }
 
