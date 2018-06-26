@@ -175,9 +175,10 @@ public:
         if (maxWidth > 0) {
           enableWrap = true;
         }
-        SIZE size = { (LONG)maxWidth, 0 };
+        SIZE textSize = { (LONG)maxWidth, 0 };
+        Point offsetPoint = _convertDrawPoint(Point(x, y), text);
 
-        _drawText(text.c_str(), x, y, size, enableWrap, false);
+        _drawText(text.c_str(), (int)offsetPoint.x, (int)offsetPoint.y, textSize, enableWrap, 0);
         _imageData = _getTextureData();
         
     }
@@ -195,8 +196,8 @@ public:
         if (text.empty())
             return Size(0.0f, 0.0f);
 
-        SIZE size;
-        GetTextExtentPoint32(_DC, _utf8ToUtf16(text), text.size(), &size);
+        DWORD dwCalcFmt = DT_CALCRECT;
+        SIZE size = _sizeWithText(_utf8ToUtf16(text), text.size(), dwCalcFmt, 0, 0, false, 0);
         SE_LOGD("CanvasRenderingContext2DImpl::measureText: %s, %d, %d\n", text.c_str(), size.cx, size.cy);
         return Size(size.cx, size.cx);
     }
@@ -361,6 +362,7 @@ private:
 
     std::string _fontName;
     int _fontSize;
+    SIZE _textSize;
     CanvasTextAlign _textAlign;
     CanvasTextBaseline _textBaseLine;
     cocos2d::Color4F _fillStyle;
@@ -416,7 +418,6 @@ private:
     {
       int nRet = 0;
       wchar_t * pwszBuffer = nullptr;
-      wchar_t* fixedText = nullptr;
       do
       {
         CC_BREAK_IF(!pszText);
@@ -425,20 +426,31 @@ private:
         if (!enableWrap) {
           dwFmt |= DT_SINGLELINE;
         }
-        DWORD dwHoriFlag = (int)_textAlign & 0x0f;
-        DWORD dwVertFlag = ((int)_textBaseLine & 0xf0) >> 4;
 
-        switch (dwHoriFlag)
+        if (_textAlign == CanvasTextAlign::LEFT)
         {
-        case 1: // left
           dwFmt |= DT_LEFT;
-          break;
-        case 2: // right
-          dwFmt |= DT_RIGHT;
-          break;
-        case 3: // center
+        }
+        else if (_textAlign == CanvasTextAlign::CENTER)
+        {
           dwFmt |= DT_CENTER;
-          break;
+        }
+        else if (_textAlign == CanvasTextAlign::RIGHT)
+        {
+          dwFmt |= DT_RIGHT;
+        }
+
+        if (_textBaseLine == CanvasTextBaseline::TOP)
+        {
+          dwFmt |= DT_TOP;
+        }
+        else if (_textBaseLine == CanvasTextBaseline::MIDDLE)
+        {
+          dwFmt |= DT_VCENTER;
+        }
+        else if (_textBaseLine == CanvasTextBaseline::BOTTOM)
+        {
+          dwFmt |= DT_BOTTOM;
         }
 
         int nLen = strlen(pszText);
@@ -446,41 +458,12 @@ private:
         int nBufLen = nLen + 1;
         pwszBuffer = new wchar_t[nBufLen];
         CC_BREAK_IF(!pwszBuffer);
-
         memset(pwszBuffer, 0, sizeof(wchar_t)*nBufLen);
         nLen = MultiByteToWideChar(CP_UTF8, 0, pszText, nLen, pwszBuffer, nBufLen);
 
-        if (strchr(pszText, '&'))
-        {
-          fixedText = new wchar_t[nLen * 2 + 1];
-          int fixedIndex = 0;
-          for (int index = 0; index < nLen; ++index)
-          {
-            if (pwszBuffer[index] == '&')
-            {
-              fixedText[fixedIndex] = '&';
-              fixedText[fixedIndex + 1] = '&';
-              fixedIndex += 2;
-            }
-            else
-            {
-              fixedText[fixedIndex] = pwszBuffer[index];
-              fixedIndex += 1;
-            }
-          }
-          fixedText[fixedIndex] = '\0';
-          nLen = fixedIndex;
-        }
+        SIZE newSize = _sizeWithText(pwszBuffer, nLen, dwFmt, tSize.cx, tSize.cy, enableWrap, overflow);
 
-        SIZE newSize;
-        if (fixedText)
-        {
-          newSize = _sizeWithText(fixedText, nLen, dwFmt, tSize.cx, tSize.cy, enableWrap, overflow);
-        }
-        else
-        {
-          newSize = _sizeWithText(pwszBuffer, nLen, dwFmt, tSize.cx, tSize.cy, enableWrap, overflow);
-        }
+        _textSize = newSize;
 
         RECT rcText = { 0 };
         // if content width is 0, use text size as content size
@@ -493,17 +476,9 @@ private:
         else
         {
 
-          LONG offsetX = 0;
-          LONG offsetY = 0;
+          LONG offsetX = x;
+          LONG offsetY = y;
           rcText.right = newSize.cx; // store the text width to rectangle
-
-                                     // calculate text horizontal offset
-          if (1 != dwHoriFlag          // and text isn't align to left
-            && newSize.cx < tSize.cx)   // and text's width less then content width,
-          {                               // then need adjust offset of X.
-            offsetX = (2 == dwHoriFlag) ? tSize.cx - newSize.cx     // align to right
-              : (tSize.cx - newSize.cx) / 2;                      // align to center
-          }
 
           // if content height is 0, use text height as content height
           // else if content height less than text height, use content height to draw text
@@ -524,11 +499,6 @@ private:
 
                                         // content larger than text, need adjust vertical position
             dwFmt |= DT_NOCLIP;
-
-            // calculate text vertical offset
-            offsetY = (2 == dwVertFlag) ? tSize.cy - newSize.cy     // align to bottom
-              : (3 == dwVertFlag) ? (tSize.cy - newSize.cy) / 2   // align to middle
-              : 0;                                                // align to top
           }
 
           if (offsetX || offsetY)
@@ -537,8 +507,6 @@ private:
           }
         }
 
-        // must not recreate
-        //recreateBuffer(tSize.cx, tSize.cy);
         SE_LOGE("_drawText text size, %d, %d \n", tSize.cx, tSize.cy);
 
         // draw text
@@ -548,21 +516,13 @@ private:
         SetBkMode(_DC, TRANSPARENT);
         SetTextColor(_DC, RGB(255, 255, 255)); // white color
 
-                                               // draw text
-        if (fixedText)
-        {
-          nRet = DrawTextW(_DC, fixedText, nLen, &rcText, dwFmt);
-        }
-        else
-        {
-          nRet = DrawTextW(_DC, pwszBuffer, nLen, &rcText, dwFmt);
-        }
+        // draw text
+        nRet = DrawTextW(_DC, pwszBuffer, nLen, &rcText, dwFmt);
 
-        SelectObject(_DC, hOldBmp);
-        SelectObject(_DC, hOldFont);
+        DeleteObject(hOldBmp);
+        DeleteObject(hOldFont);
       } while (0);
       CC_SAFE_DELETE_ARRAY(pwszBuffer);
-      delete[] fixedText;
 
       return nRet;
     }
@@ -612,7 +572,7 @@ private:
             rc.right = nWidthLimit;
             // measure text size
             DrawTextW(_DC, pszText, nLen, &rc, dwCalcFmt);
-            SelectObject(_DC, hOld);
+            DeleteObject(hOld);
 
             actualWidth = rc.right;
             actualHeight = rc.bottom;
@@ -715,6 +675,28 @@ private:
         CC_BREAK_IF(!GetDIBits(_DC, _bmp, 0, 0, nullptr, (LPBITMAPINFO)&bi, DIB_RGB_COLORS));
         SetDIBits(_DC, _bmp, 0, _bufferHeight, _imageData.getBytes(), (LPBITMAPINFO)&bi, DIB_RGB_COLORS);
       } while (0);
+    }
+
+    Point _convertDrawPoint(Point point, std::string text) {
+      Size textSize = measureText(text);
+      if (_textAlign == CanvasTextAlign::CENTER)
+      {
+        point.x -= textSize.width / 2.0f;
+      }
+      else if (_textAlign == CanvasTextAlign::RIGHT)
+      {
+        point.x -= textSize.width;
+      }
+
+      if (_textBaseLine == CanvasTextBaseline::TOP)
+      {
+        point.y += _fontSize;
+      }
+      else if (_textBaseLine == CanvasTextBaseline::MIDDLE)
+      {
+        point.y += _fontSize / 2.0f;
+      }
+      return point;
     }
 };
 
