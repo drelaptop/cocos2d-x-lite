@@ -438,7 +438,7 @@ private:
             SetTextColor(_DC, RGB(255, 255, 255)); // white color
 
             // draw text
-            nRet = DrawTextW(_DC, pwszBuffer, text.size(), &rcText, dwFmt);
+            nRet = DrawTextW(_DC, pwszBuffer, bufferLen, &rcText, dwFmt);
 
             DeleteObject(hOldBmp);
             DeleteObject(hOldFont);
