@@ -22,51 +22,51 @@ enum class CanvasTextBaseline {
 };
 
 namespace {
-  void fillRectWithColor(uint8_t* buf, uint32_t totalWidth, uint32_t totalHeight, uint32_t x, uint32_t y, uint32_t width, uint32_t height, uint8_t r, uint8_t g, uint8_t b)
-  {
-    assert(x + width <= totalWidth);
-    assert(y + height <= totalHeight);
-
-    uint32_t y0 = totalHeight - (y + height);
-    uint32_t y1 = totalHeight - y;
-    uint8_t* p;
-    for (uint32_t offsetY = y0; offsetY < y1; ++offsetY)
+    void fillRectWithColor(uint8_t* buf, uint32_t totalWidth, uint32_t totalHeight, uint32_t x, uint32_t y, uint32_t width, uint32_t height, uint8_t r, uint8_t g, uint8_t b)
     {
-      for (uint32_t offsetX = x; offsetX < (x + width); ++offsetX)
-      {
-        p = buf + (totalWidth * offsetY + offsetX) * 3;
-        *p++ = r;
-        *p++ = g;
-        *p++ = b;
-      }
+        assert(x + width <= totalWidth);
+        assert(y + height <= totalHeight);
+
+        uint32_t y0 = totalHeight - (y + height);
+        uint32_t y1 = totalHeight - y;
+        uint8_t* p;
+        for (uint32_t offsetY = y0; offsetY < y1; ++offsetY)
+        {
+            for (uint32_t offsetX = x; offsetX < (x + width); ++offsetX)
+            {
+                p = buf + (totalWidth * offsetY + offsetX) * 3;
+                *p++ = r;
+                *p++ = g;
+                *p++ = b;
+            }
+        }
     }
-  }
 
 }
 
 class CanvasRenderingContext2DImpl
 {
 public:
-  CanvasRenderingContext2DImpl() : _DC(nullptr)
+    CanvasRenderingContext2DImpl() : _DC(nullptr)
     , _bmp(nullptr)
     , _font((HFONT)GetStockObject(DEFAULT_GUI_FONT))
     , _wnd(nullptr)
     , _savedDC(0)
     {
-      _wnd = nullptr;
-      HDC hdc = GetDC(_wnd);
-      _DC = CreateCompatibleDC(hdc);
-      ReleaseDC(_wnd, hdc);
+        _wnd = nullptr;
+        HDC hdc = GetDC(_wnd);
+        _DC = CreateCompatibleDC(hdc);
+        ReleaseDC(_wnd, hdc);
     }
 
     ~CanvasRenderingContext2DImpl()
     {
-      _prepareBitmap(0, 0);
-      if (_DC)
-      {
-        DeleteDC(_DC);
-      }
-      _removeCustomFont();
+        _prepareBitmap(0, 0);
+        if (_DC)
+        {
+            DeleteDC(_DC);
+        }
+        _removeCustomFont();
     }
 
     void recreateBuffer(float w, float h)
@@ -75,10 +75,10 @@ public:
         _bufferHeight = h;
         if (_bufferWidth < 1.0f || _bufferHeight < 1.0f)
         {
-          _prepareBitmap(0, 0);
-          return;
+            _prepareBitmap(0, 0);
+            return;
         }
-        
+
         int textureSize = _bufferWidth * _bufferHeight * 4;
         uint8_t* data = (uint8_t*)malloc(sizeof(uint8_t) * textureSize);
         memset(data, 0x00, textureSize);
@@ -89,22 +89,22 @@ public:
 
     void beginPath()
     {
-      _DC = BeginPaint(_wnd, &_paintStruct);
+        _DC = BeginPaint(_wnd, &_paintStruct);
     }
 
     void closePath()
     {
-      EndPaint(_wnd, &_paintStruct);
+        EndPaint(_wnd, &_paintStruct);
     }
 
     void moveTo(float x, float y)
     {
-      MoveToEx(_DC, x, y, nullptr);
+        MoveToEx(_DC, x, y, nullptr);
     }
 
     void lineTo(float x, float y)
     {
-      LineTo(_DC, x, y);
+        LineTo(_DC, x, y);
     }
 
     void stroke()
@@ -116,12 +116,12 @@ public:
 
     void saveContext()
     {
-      _savedDC = SaveDC(_DC);
+        _savedDC = SaveDC(_DC);
     }
 
     void restoreContext()
     {
-      RestoreDC(_DC, _savedDC);
+        RestoreDC(_DC, _savedDC);
     }
 
     void clearRect(float x, float y, float w, float h)
@@ -129,7 +129,7 @@ public:
         if (_bufferWidth < 1.0f || _bufferHeight < 1.0f)
             return;
         if (_imageData.isNull())
-          return;
+            return;
 
         recreateBuffer(w, h);
     }
@@ -139,14 +139,14 @@ public:
         if (_bufferWidth < 1.0f || _bufferHeight < 1.0f)
             return;
 
-        //not filled all Bits in buffer? the buffer length is _bufferWidth * _bufferHeight * 4, but it filled _bufferWidth * _bufferHeight * 3?  
+        //not filled all Bits in buffer? the buffer length is _bufferWidth * _bufferHeight * 4, but it filled _bufferWidth * _bufferHeight * 3?
         uint8_t* buffer = _imageData.getBytes();
         if (buffer)
         {
-          uint8_t r = _fillStyle.r * 255.0f;
-          uint8_t g = _fillStyle.g * 255.0f;
-          uint8_t b = _fillStyle.b * 255.0f;
-          fillRectWithColor(buffer, (uint32_t)_bufferWidth, (uint32_t)_bufferHeight, (uint32_t)x, (uint32_t)y, (uint32_t)w, (uint32_t)h, r, g, b);
+            uint8_t r = _fillStyle.r * 255.0f;
+            uint8_t g = _fillStyle.g * 255.0f;
+            uint8_t b = _fillStyle.b * 255.0f;
+            fillRectWithColor(buffer, (uint32_t)_bufferWidth, (uint32_t)_bufferHeight, (uint32_t)x, (uint32_t)y, (uint32_t)w, (uint32_t)h, r, g, b);
         }
     }
 
@@ -160,7 +160,7 @@ public:
 
         _drawText(text, (int)offsetPoint.x, (int)offsetPoint.y);
         _imageData = _getTextureData();
-        
+
     }
 
     void strokeText(const std::string& text, float x, float y, float maxWidth)
@@ -185,121 +185,121 @@ public:
 
     void updateFont(const std::string& fontName, float fontSize, bool bold = false)
     {
-      bool bRet = false;
-      do
-      {
-        _fontName = fontName;
-        _fontSize = fontSize;
-        std::string fontPath;
-        HFONT       hDefFont = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
-        LOGFONTA    tNewFont = { 0 };
-        LOGFONTA    tOldFont = { 0 };
-        GetObjectA(hDefFont, sizeof(tNewFont), &tNewFont);
-        if (!_fontName.empty())
+        bool bRet = false;
+        do
         {
-          // create font from ttf file
-          if (FileUtils::getInstance()->getFileExtension(_fontName) == ".ttf")
-          {
-            fontPath = FileUtils::getInstance()->fullPathForFilename(_fontName.c_str());
-            int nFindPos = _fontName.rfind("/");
-            _fontName = &_fontName[nFindPos + 1];
-            nFindPos = _fontName.rfind(".");
-            _fontName = _fontName.substr(0, nFindPos);
-          }
-          else
-          {
-            auto nFindPos = fontName.rfind("/");
-            if (nFindPos != fontName.npos)
+            _fontName = fontName;
+            _fontSize = fontSize;
+            std::string fontPath;
+            HFONT       hDefFont = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
+            LOGFONTA    tNewFont = { 0 };
+            LOGFONTA    tOldFont = { 0 };
+            GetObjectA(hDefFont, sizeof(tNewFont), &tNewFont);
+            if (!_fontName.empty())
             {
-              if (fontName.length() == nFindPos + 1)
-              {
-                _fontName = "";
-              }
-              else
-              {
-                _fontName = &_fontName[nFindPos + 1];
-              }
+                // create font from ttf file
+                if (FileUtils::getInstance()->getFileExtension(_fontName) == ".ttf")
+                {
+                    fontPath = FileUtils::getInstance()->fullPathForFilename(_fontName.c_str());
+                    int nFindPos = _fontName.rfind("/");
+                    _fontName = &_fontName[nFindPos + 1];
+                    nFindPos = _fontName.rfind(".");
+                    _fontName = _fontName.substr(0, nFindPos);
+                }
+                else
+                {
+                    auto nFindPos = fontName.rfind("/");
+                    if (nFindPos != fontName.npos)
+                    {
+                        if (fontName.length() == nFindPos + 1)
+                        {
+                            _fontName = "";
+                        }
+                        else
+                        {
+                            _fontName = &_fontName[nFindPos + 1];
+                        }
+                    }
+                }
+                tNewFont.lfCharSet = DEFAULT_CHARSET;
+                strcpy_s(tNewFont.lfFaceName, LF_FACESIZE, _fontName.c_str());
             }
-          }
-          tNewFont.lfCharSet = DEFAULT_CHARSET;
-          strcpy_s(tNewFont.lfFaceName, LF_FACESIZE, _fontName.c_str());
-        }
 
-        if (_fontSize)
-        {
-          tNewFont.lfHeight = -_fontSize;
-        }
-
-        if (bold)
-        {
-          tNewFont.lfWeight = FW_BOLD;
-        }
-        else
-        {
-          tNewFont.lfWeight = FW_NORMAL;
-        }
-
-        GetObjectA(_font, sizeof(tOldFont), &tOldFont);
-
-        if (tOldFont.lfHeight == tNewFont.lfHeight
-          && tOldFont.lfWeight == tNewFont.lfWeight
-          && 0 == strcmp(tOldFont.lfFaceName, tNewFont.lfFaceName))
-        {
-          bRet = true;
-          break;
-        }
-
-        // delete old font
-        _removeCustomFont();
-
-        if (fontPath.size() > 0)
-        {
-          _curFontPath = fontPath;
-          wchar_t * pwszBuffer = _utf8ToUtf16(_curFontPath);
-          if (pwszBuffer)
-          {
-            if (AddFontResource(pwszBuffer))
+            if (_fontSize)
             {
-              SendMessage(_wnd, WM_FONTCHANGE, 0, 0);
+                tNewFont.lfHeight = -_fontSize;
             }
-            delete[] pwszBuffer;
-            pwszBuffer = nullptr;
-          }
-        }
 
-        _font = nullptr;
+            if (bold)
+            {
+                tNewFont.lfWeight = FW_BOLD;
+            }
+            else
+            {
+                tNewFont.lfWeight = FW_NORMAL;
+            }
 
-        // disable Cleartype
-        tNewFont.lfQuality = ANTIALIASED_QUALITY;
+            GetObjectA(_font, sizeof(tOldFont), &tOldFont);
 
-        // create new font
-        _font = CreateFontIndirectA(&tNewFont);
-        if (!_font)
-        {
-          // create failed, use default font
-          _font = hDefFont;
-          break;
-        }
-        else
-        {
-          SelectObject(_DC, _font);
-          SendMessage(_wnd, WM_FONTCHANGE, 0, 0);
-        }
+            if (tOldFont.lfHeight == tNewFont.lfHeight
+                && tOldFont.lfWeight == tNewFont.lfWeight
+                && 0 == strcmp(tOldFont.lfFaceName, tNewFont.lfFaceName))
+            {
+                bRet = true;
+                break;
+            }
 
-        bRet = true;
-          
-      } while (0);
-      
+            // delete old font
+            _removeCustomFont();
+
+            if (fontPath.size() > 0)
+            {
+                _curFontPath = fontPath;
+                wchar_t * pwszBuffer = _utf8ToUtf16(_curFontPath);
+                if (pwszBuffer)
+                {
+                    if (AddFontResource(pwszBuffer))
+                    {
+                        SendMessage(_wnd, WM_FONTCHANGE, 0, 0);
+                    }
+                    delete[] pwszBuffer;
+                    pwszBuffer = nullptr;
+                }
+            }
+
+            _font = nullptr;
+
+            // disable Cleartype
+            tNewFont.lfQuality = ANTIALIASED_QUALITY;
+
+            // create new font
+            _font = CreateFontIndirectA(&tNewFont);
+            if (!_font)
+            {
+                // create failed, use default font
+                _font = hDefFont;
+                break;
+            }
+            else
+            {
+                SelectObject(_DC, _font);
+                SendMessage(_wnd, WM_FONTCHANGE, 0, 0);
+            }
+
+            bRet = true;
+
+        } while (0);
+
     }
 
     void setTextAlign(CanvasTextAlign align)
     {
-      _textAlign = align;
+        _textAlign = align;
     }
 
     void setTextBaseline(CanvasTextBaseline baseline)
     {
-      _textBaseLine = baseline;
+        _textBaseLine = baseline;
     }
 
     void setFillStyle(float r, float g, float b, float a)
@@ -320,7 +320,7 @@ public:
 
     void setLineWidth(float lineWidth)
     {
-      //check, use Pen to support this
+        //check, use Pen to support this
     }
 
     const Data& getDataRef() const
@@ -352,222 +352,222 @@ private:
     // change utf-8 string to utf-16, pRetLen is the string length after changing
     wchar_t * _utf8ToUtf16(const std::string& str, int * pRetLen = nullptr)
     {
-      wchar_t * pwszBuffer = nullptr;
-      do
-      {
-        if (str.empty())
+        wchar_t * pwszBuffer = nullptr;
+        do
         {
-          break;
-        }
-        int nLen = str.size();
-        int nBufLen = nLen + 1;
-        pwszBuffer = new wchar_t[nBufLen];
-        CC_BREAK_IF(!pwszBuffer);
-        memset(pwszBuffer, 0, sizeof(wchar_t) * nBufLen);
-        // str.size() not equal actuallyLen for Chinese char
-        int actuallyLen = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), nLen, pwszBuffer, nBufLen);
-        // SE_LOGE("_utf8ToUtf16, str:%s, strLen:%d, retLen:%d\n", str.c_str(), str.size(), actuallyLen);
-        if (pRetLen != nullptr) {
-          *pRetLen = actuallyLen;
-        }
-      } while (0);
-      return pwszBuffer;
+            if (str.empty())
+            {
+                break;
+            }
+            int nLen = str.size();
+            int nBufLen = nLen + 1;
+            pwszBuffer = new wchar_t[nBufLen];
+            CC_BREAK_IF(!pwszBuffer);
+            memset(pwszBuffer, 0, sizeof(wchar_t) * nBufLen);
+            // str.size() not equal actuallyLen for Chinese char
+            int actuallyLen = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), nLen, pwszBuffer, nBufLen);
+            // SE_LOGE("_utf8ToUtf16, str:%s, strLen:%d, retLen:%d\n", str.c_str(), str.size(), actuallyLen);
+            if (pRetLen != nullptr) {
+                *pRetLen = actuallyLen;
+            }
+        } while (0);
+        return pwszBuffer;
 
     }
 
     void _removeCustomFont()
     {
-      HFONT hDefFont = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
-      if (hDefFont != _font)
-      {
-        DeleteObject(_font);
-        _font = hDefFont;
-      }
-      // release temp font resource
-      if (_curFontPath.size() > 0)
-      {
-        wchar_t * pwszBuffer = _utf8ToUtf16(_curFontPath);
-        if (pwszBuffer)
+        HFONT hDefFont = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
+        if (hDefFont != _font)
         {
-          RemoveFontResource(pwszBuffer);
-          SendMessage(_wnd, WM_FONTCHANGE, 0, 0);
-          delete[] pwszBuffer;
-          pwszBuffer = nullptr;
+            DeleteObject(_font);
+            _font = hDefFont;
         }
-        _curFontPath.clear();
-      }
+        // release temp font resource
+        if (_curFontPath.size() > 0)
+        {
+            wchar_t * pwszBuffer = _utf8ToUtf16(_curFontPath);
+            if (pwszBuffer)
+            {
+                RemoveFontResource(pwszBuffer);
+                SendMessage(_wnd, WM_FONTCHANGE, 0, 0);
+                delete[] pwszBuffer;
+                pwszBuffer = nullptr;
+            }
+            _curFontPath.clear();
+        }
     }
 
     // x, y offset value
     int _drawText(const std::string& text, int x, int y)
     {
-      int nRet = 0;
-      wchar_t * pwszBuffer = nullptr;
-      do
-      {
-        CC_BREAK_IF(text.empty());
-
-        DWORD dwFmt = DT_SINGLELINE;
-
-        int bufferLen = 0;
-        pwszBuffer = _utf8ToUtf16(text, &bufferLen);
-
-        SIZE newSize = _sizeWithText(pwszBuffer, bufferLen);
-
-        _textSize = newSize;
-
-        RECT rcText = { 0 };
-
-        rcText.right = newSize.cx;
-        rcText.bottom = newSize.cy;
-
-        LONG offsetX = x;
-        LONG offsetY = y;
-        if (offsetX || offsetY)
+        int nRet = 0;
+        wchar_t * pwszBuffer = nullptr;
+        do
         {
-          OffsetRect(&rcText, offsetX, offsetY);
-        }
+            CC_BREAK_IF(text.empty());
 
-        // SE_LOGE("_drawText text,%s size: (%d, %d) offset after convert: (%d, %d) \n", text.c_str(), newSize.cx, newSize.cy, offsetX, offsetY);
+            DWORD dwFmt = DT_SINGLELINE;
 
-        // draw text
-        HGDIOBJ hOldFont = SelectObject(_DC, _font);
-        HGDIOBJ hOldBmp = SelectObject(_DC, _bmp);
+            int bufferLen = 0;
+            pwszBuffer = _utf8ToUtf16(text, &bufferLen);
 
-        SetBkMode(_DC, TRANSPARENT);
-        SetTextColor(_DC, RGB(255, 255, 255)); // white color
+            SIZE newSize = _sizeWithText(pwszBuffer, bufferLen);
 
-        // draw text
-        nRet = DrawTextW(_DC, pwszBuffer, text.size(), &rcText, dwFmt);
+            _textSize = newSize;
 
-        DeleteObject(hOldBmp);
-        DeleteObject(hOldFont);
-      } while (0);
-      CC_SAFE_DELETE_ARRAY(pwszBuffer);
+            RECT rcText = { 0 };
 
-      return nRet;
+            rcText.right = newSize.cx;
+            rcText.bottom = newSize.cy;
+
+            LONG offsetX = x;
+            LONG offsetY = y;
+            if (offsetX || offsetY)
+            {
+                OffsetRect(&rcText, offsetX, offsetY);
+            }
+
+            // SE_LOGE("_drawText text,%s size: (%d, %d) offset after convert: (%d, %d) \n", text.c_str(), newSize.cx, newSize.cy, offsetX, offsetY);
+
+            // draw text
+            HGDIOBJ hOldFont = SelectObject(_DC, _font);
+            HGDIOBJ hOldBmp = SelectObject(_DC, _bmp);
+
+            SetBkMode(_DC, TRANSPARENT);
+            SetTextColor(_DC, RGB(255, 255, 255)); // white color
+
+            // draw text
+            nRet = DrawTextW(_DC, pwszBuffer, text.size(), &rcText, dwFmt);
+
+            DeleteObject(hOldBmp);
+            DeleteObject(hOldFont);
+        } while (0);
+        CC_SAFE_DELETE_ARRAY(pwszBuffer);
+
+        return nRet;
     }
 
     SIZE _sizeWithText(const wchar_t * pszText, int nLen)
     {
-      SIZE tRet = { 0 };
-      do
-      {
-        CC_BREAK_IF(!pszText || nLen <= 0);
+        SIZE tRet = { 0 };
+        do
+        {
+            CC_BREAK_IF(!pszText || nLen <= 0);
 
-        RECT rc = { 0, 0, 0, 0 };
-        DWORD dwCalcFmt = DT_CALCRECT;
-        
-        // use current font to measure text extent
-        HGDIOBJ hOld = SelectObject(_DC, _font);
+            RECT rc = { 0, 0, 0, 0 };
+            DWORD dwCalcFmt = DT_CALCRECT;
 
-        // measure text size
-        DrawTextW(_DC, pszText, nLen, &rc, dwCalcFmt);
+            // use current font to measure text extent
+            HGDIOBJ hOld = SelectObject(_DC, _font);
 
-        tRet.cx = rc.right;
-        tRet.cy = rc.bottom;
+            // measure text size
+            DrawTextW(_DC, pszText, nLen, &rc, dwCalcFmt);
 
-        DeleteObject(hOld);
+            tRet.cx = rc.right;
+            tRet.cy = rc.bottom;
 
-      } while (0);
+            DeleteObject(hOld);
 
-      return tRet;
+        } while (0);
+
+        return tRet;
     }
 
     bool _prepareBitmap(int nWidth, int nHeight)
     {
-      // release bitmap
-      if (_bmp)
-      {
-        DeleteObject(_bmp);
-        _bmp = nullptr;
-      }
-      if (nWidth > 0 && nHeight > 0)
-      {
-        _bmp = CreateBitmap(nWidth, nHeight, 1, 32, nullptr);
-        if (!_bmp)
+        // release bitmap
+        if (_bmp)
         {
-          return false;
+            DeleteObject(_bmp);
+            _bmp = nullptr;
         }
-      }
-      return true;
+        if (nWidth > 0 && nHeight > 0)
+        {
+            _bmp = CreateBitmap(nWidth, nHeight, 1, 32, nullptr);
+            if (!_bmp)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     Data _getTextureData()
     {
-      Data ret;
-      do
-      {
-        int dataLen = _bufferWidth * _bufferHeight * 4;
-        unsigned char* dataBuf = (unsigned char*)malloc(sizeof(unsigned char) * dataLen);
-        CC_BREAK_IF(!dataBuf);
-
-        struct
+        Data ret;
+        do
         {
-          BITMAPINFOHEADER bmiHeader;
-          int mask[4];
-        } bi = { 0 };
-        bi.bmiHeader.biSize = sizeof(bi.bmiHeader);
-        CC_BREAK_IF(!GetDIBits(_DC, _bmp, 0, 0,
-          nullptr, (LPBITMAPINFO)&bi, DIB_RGB_COLORS));
+            int dataLen = _bufferWidth * _bufferHeight * 4;
+            unsigned char* dataBuf = (unsigned char*)malloc(sizeof(unsigned char) * dataLen);
+            CC_BREAK_IF(!dataBuf);
 
-        // copy pixel data
-        bi.bmiHeader.biHeight = (bi.bmiHeader.biHeight > 0) ? -bi.bmiHeader.biHeight : bi.bmiHeader.biHeight;
-        GetDIBits(_DC, _bmp, 0, _bufferHeight, dataBuf,
-          (LPBITMAPINFO)&bi, DIB_RGB_COLORS);
+            struct
+            {
+                BITMAPINFOHEADER bmiHeader;
+                int mask[4];
+            } bi = { 0 };
+            bi.bmiHeader.biSize = sizeof(bi.bmiHeader);
+            CC_BREAK_IF(!GetDIBits(_DC, _bmp, 0, 0,
+                                   nullptr, (LPBITMAPINFO)&bi, DIB_RGB_COLORS));
 
-        uint8_t r = _fillStyle.r * 255.0f;
-        uint8_t g = _fillStyle.g * 255.0f;
-        uint8_t b = _fillStyle.b * 255.0f;
-        COLORREF textColor = (b << 16 | g << 8 | r) & 0x00ffffff;
-        float alpha = 1.0f;
-        COLORREF * pPixel = nullptr;
-        for (int y = 0; y < _bufferHeight; ++y)
-        {
-          pPixel = (COLORREF *)dataBuf + y * (int)_bufferWidth;
-          for (int x = 0; x < _bufferWidth; ++x)
-          {
-            COLORREF& clr = *pPixel;
-            clr = ((BYTE)(GetRValue(clr) * alpha) << 24) | textColor;
-            ++pPixel;
-          }
-        }
-        
-        ret.fastSet(dataBuf, dataLen);
-      } while (0);
+            // copy pixel data
+            bi.bmiHeader.biHeight = (bi.bmiHeader.biHeight > 0) ? -bi.bmiHeader.biHeight : bi.bmiHeader.biHeight;
+            GetDIBits(_DC, _bmp, 0, _bufferHeight, dataBuf,
+                      (LPBITMAPINFO)&bi, DIB_RGB_COLORS);
 
-      return ret;
+            uint8_t r = _fillStyle.r * 255.0f;
+            uint8_t g = _fillStyle.g * 255.0f;
+            uint8_t b = _fillStyle.b * 255.0f;
+            COLORREF textColor = (b << 16 | g << 8 | r) & 0x00ffffff;
+            float alpha = 1.0f;
+            COLORREF * pPixel = nullptr;
+            for (int y = 0; y < _bufferHeight; ++y)
+            {
+                pPixel = (COLORREF *)dataBuf + y * (int)_bufferWidth;
+                for (int x = 0; x < _bufferWidth; ++x)
+                {
+                    COLORREF& clr = *pPixel;
+                    clr = ((BYTE)(GetRValue(clr) * alpha) << 24) | textColor;
+                    ++pPixel;
+                }
+            }
+
+            ret.fastSet(dataBuf, dataLen);
+        } while (0);
+
+        return ret;
     }
 
     Point _convertDrawPoint(Point point, std::string text) {
-      Size textSize = measureText(text);
-      if (_textAlign == CanvasTextAlign::CENTER)
-      {
-        point.x -= textSize.width / 2.0f;
-      }
-      else if (_textAlign == CanvasTextAlign::RIGHT)
-      {
-        point.x -= textSize.width;
-      }
+        Size textSize = measureText(text);
+        if (_textAlign == CanvasTextAlign::CENTER)
+        {
+            point.x -= textSize.width / 2.0f;
+        }
+        else if (_textAlign == CanvasTextAlign::RIGHT)
+        {
+            point.x -= textSize.width;
+        }
 
-      if (_textBaseLine == CanvasTextBaseline::TOP)
-      {
-        point.y += _fontSize;
-      }
-      else if (_textBaseLine == CanvasTextBaseline::MIDDLE)
-      {
-        point.y += _fontSize / 2.0f;
-      }
-      // The origin of drawing text on win32 is from top-left, but now we get bottom-left,
-      // So, we need to substract the font size to convert 'point' to top-left.
-      point.y -= _fontSize;
+        if (_textBaseLine == CanvasTextBaseline::TOP)
+        {
+            point.y += _fontSize;
+        }
+        else if (_textBaseLine == CanvasTextBaseline::MIDDLE)
+        {
+            point.y += _fontSize / 2.0f;
+        }
+        // The origin of drawing text on win32 is from top-left, but now we get bottom-left,
+        // So, we need to substract the font size to convert 'point' to top-left.
+        point.y -= _fontSize;
 
-      // We use font size to calculate text height, but draw text on win32 is based on
-      // the real font height and in top-left position, substract the adjust value to make text inside text rectangle.
-      // check
-      // point.y -= (textSize.height - _fontSize) / 2.0f;
+        // We use font size to calculate text height, but draw text on win32 is based on
+        // the real font height and in top-left position, substract the adjust value to make text inside text rectangle.
+        // check
+        // point.y -= (textSize.height - _fontSize) / 2.0f;
 
-      return point;
+        return point;
     }
 };
 
@@ -654,8 +654,8 @@ void CanvasRenderingContext2D::strokeText(const std::string& text, float x, floa
 
     _impl->strokeText(text, x, y, maxWidth);
 
-   if (_canvasBufferUpdatedCB != nullptr)
-       _canvasBufferUpdatedCB(_impl->getDataRef());
+    if (_canvasBufferUpdatedCB != nullptr)
+        _canvasBufferUpdatedCB(_impl->getDataRef());
 }
 
 cocos2d::Size CanvasRenderingContext2D::measureText(const std::string& text)
@@ -736,7 +736,7 @@ void CanvasRenderingContext2D::set_lineWidth(float lineWidth)
 
 void CanvasRenderingContext2D::set_lineJoin(const std::string& lineJoin)
 {
-     //SE_LOGE("%s isn't implemented!\n", __FUNCTION__);
+    //SE_LOGE("%s isn't implemented!\n", __FUNCTION__);
 }
 
 void CanvasRenderingContext2D::set_font(const std::string& font)
