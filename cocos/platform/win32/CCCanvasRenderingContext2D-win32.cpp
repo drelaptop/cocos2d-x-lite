@@ -160,7 +160,7 @@ public:
         SIZE textSize = { 0, 0 };
         Point offsetPoint = _convertDrawPoint(Point(x, y), text);
 
-        _drawText(text.c_str(), (int)offsetPoint.x, (int)offsetPoint.y);
+        _drawText(text, (int)offsetPoint.x, (int)offsetPoint.y);
         _imageData = _getTextureData();
         
     }
@@ -363,7 +363,7 @@ private:
         int nBufLen = nLen + 1;
         pwszBuffer = new wchar_t[nBufLen];
         CC_BREAK_IF(!pwszBuffer);
-        memset(pwszBuffer, 0, nBufLen);
+        memset(pwszBuffer, 0, sizeof(wchar_t) * nBufLen);
         nLen = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), nLen, pwszBuffer, nBufLen);
         pwszBuffer[nLen] = '\0';
       } while (0);
@@ -395,51 +395,19 @@ private:
     }
 
     // x, y offset value
-    int _drawText(const char * pszText, int x, int y)
+    int _drawText(const std::string& text, int x, int y)
     {
       int nRet = 0;
       wchar_t * pwszBuffer = nullptr;
       do
       {
-        CC_BREAK_IF(!pszText);
+        CC_BREAK_IF(text.empty());
 
-        DWORD dwFmt = DT_WORDBREAK;
+        DWORD dwFmt = DT_SINGLELINE;
 
-        if (_textAlign == CanvasTextAlign::LEFT)
-        {
-          dwFmt |= DT_LEFT;
-        }
-        else if (_textAlign == CanvasTextAlign::CENTER)
-        {
-          dwFmt |= DT_CENTER;
-        }
-        else if (_textAlign == CanvasTextAlign::RIGHT)
-        {
-          dwFmt |= DT_RIGHT;
-        }
+        pwszBuffer = _utf8ToUtf16(text);
 
-        if (_textBaseLine == CanvasTextBaseline::TOP)
-        {
-          dwFmt |= DT_TOP;
-        }
-        else if (_textBaseLine == CanvasTextBaseline::MIDDLE)
-        {
-          dwFmt |= DT_VCENTER;
-        }
-        else if (_textBaseLine == CanvasTextBaseline::BOTTOM)
-        {
-          dwFmt |= DT_BOTTOM;
-        }
-
-        int nLen = strlen(pszText);
-        // utf-8 to utf-16
-        int nBufLen = nLen + 1;
-        pwszBuffer = new wchar_t[nBufLen];
-        CC_BREAK_IF(!pwszBuffer);
-        memset(pwszBuffer, 0, sizeof(wchar_t)*nBufLen);
-        nLen = MultiByteToWideChar(CP_UTF8, 0, pszText, nLen, pwszBuffer, nBufLen);
-
-        SIZE newSize = _sizeWithText(pwszBuffer, nLen);
+        SIZE newSize = _sizeWithText(pwszBuffer, text.size());
 
         _textSize = newSize;
 
@@ -455,7 +423,7 @@ private:
           OffsetRect(&rcText, offsetX, offsetY);
         }
 
-        SE_LOGE("_drawText text,%s size: (%d, %d) offset after convert: (%d, %d) \n", pszText, newSize.cx, newSize.cy, offsetX, offsetY);
+        SE_LOGE("_drawText text,%s size: (%d, %d) offset after convert: (%d, %d) \n", text.c_str(), newSize.cx, newSize.cy, offsetX, offsetY);
 
         // draw text
         HGDIOBJ hOldFont = SelectObject(_DC, _font);
@@ -465,7 +433,7 @@ private:
         SetTextColor(_DC, RGB(255, 255, 255)); // white color
 
         // draw text
-        nRet = DrawTextW(_DC, pwszBuffer, nLen, &rcText, dwFmt);
+        nRet = DrawTextW(_DC, pwszBuffer, text.size(), &rcText, dwFmt);
 
         DeleteObject(hOldBmp);
         DeleteObject(hOldFont);
