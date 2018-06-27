@@ -178,7 +178,9 @@ public:
         if (text.empty())
             return Size(0.0f, 0.0f);
 
-        SIZE size = _sizeWithText(_utf8ToUtf16(text), text.size());
+        int bufferLen = 0;
+        wchar_t * pwszBuffer = _utf8ToUtf16(text, &bufferLen);
+        SIZE size = _sizeWithText(pwszBuffer, bufferLen);
         SE_LOGD("CanvasRenderingContext2DImpl::measureText: %s, %d, %d\n", text.c_str(), size.cx, size.cy);
         return Size(size.cx, size.cy);
     }
@@ -349,7 +351,8 @@ private:
     cocos2d::Color4F _fillStyle;
     cocos2d::Color4F _strokeStyle;
 
-    wchar_t * _utf8ToUtf16(const std::string& str)
+    // change utf-8 string to utf-16, pRetLen is the string length after changing
+    wchar_t * _utf8ToUtf16(const std::string& str, int * pRetLen = nullptr)
     {
       wchar_t * pwszBuffer = nullptr;
       do
@@ -358,14 +361,17 @@ private:
         {
           break;
         }
-        // utf-8 to utf-16
         int nLen = str.size();
         int nBufLen = nLen + 1;
         pwszBuffer = new wchar_t[nBufLen];
         CC_BREAK_IF(!pwszBuffer);
         memset(pwszBuffer, 0, sizeof(wchar_t) * nBufLen);
-        nLen = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), nLen, pwszBuffer, nBufLen);
-        pwszBuffer[nLen] = '\0';
+        // str.size() not equal actuallyLen for Chinese characters
+        int actuallyLen = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), nLen, pwszBuffer, nBufLen);
+        SE_LOGE("_utf8ToUtf16, str:%s, strLen:%d, retLen:%d\n", str.c_str(), str.size(), nLen);
+        if (pRetLen != nullptr) {
+          *pRetLen = actuallyLen;
+        }
       } while (0);
       return pwszBuffer;
 
@@ -405,9 +411,10 @@ private:
 
         DWORD dwFmt = DT_SINGLELINE;
 
-        pwszBuffer = _utf8ToUtf16(text);
+        int bufferLen = 0;
+        pwszBuffer = _utf8ToUtf16(text, &bufferLen);
 
-        SIZE newSize = _sizeWithText(pwszBuffer, text.size());
+        SIZE newSize = _sizeWithText(pwszBuffer, bufferLen);
 
         _textSize = newSize;
 
@@ -458,7 +465,6 @@ private:
 
         // measure text size
         DrawTextW(_DC, pszText, nLen, &rc, dwCalcFmt);
-        SelectObject(_DC, hOld);
 
         tRet.cx = rc.right;
         tRet.cy = rc.bottom;
