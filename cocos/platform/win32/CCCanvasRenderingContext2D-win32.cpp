@@ -85,7 +85,6 @@ public:
         _imageData.fastSet(data, textureSize);
 
         _prepareBitmap(_bufferWidth, _bufferHeight);
-        _setTextureData();
     }
 
     void beginPath()
@@ -132,8 +131,8 @@ public:
         if (_imageData.isNull())
           return;
 
-        memset(_imageData.getBytes(), 0x00, _imageData.getSize());
-        _setTextureData();
+        // memset(_imageData.getBytes(), 0x00, _imageData.getSize());
+        recreateBuffer(w, h);
     }
 
     void fillRect(float x, float y, float w, float h)
@@ -150,7 +149,6 @@ public:
           uint8_t b = _fillStyle.b * 255.0f;
           fillRectWithColor(buffer, (uint32_t)_bufferWidth, (uint32_t)_bufferHeight, (uint32_t)x, (uint32_t)y, (uint32_t)w, (uint32_t)h, r, g, b);
         }
-        _setTextureData();
     }
 
     void fillText(const std::string& text, float x, float y, float maxWidth)
@@ -182,7 +180,7 @@ public:
 
         SIZE size = _sizeWithText(_utf8ToUtf16(text), text.size());
         SE_LOGD("CanvasRenderingContext2DImpl::measureText: %s, %d, %d\n", text.c_str(), size.cx, size.cy);
-        return Size(size.cx, size.cx);
+        return Size(size.cx, size.cy);
     }
 
     void updateFont(const std::string& fontName, float fontSize, bool bold = false)
@@ -457,7 +455,7 @@ private:
           OffsetRect(&rcText, offsetX, offsetY);
         }
 
-        SE_LOGE("_drawText text size,%s %d, %d \n", pszText, newSize.cx, newSize.cx);
+        SE_LOGE("_drawText text,%s size: (%d, %d) offset after convert: (%d, %d) \n", pszText, newSize.cx, newSize.cy, offsetX, offsetY);
 
         // draw text
         HGDIOBJ hOldFont = SelectObject(_DC, _font);
@@ -569,22 +567,6 @@ private:
       return ret;
     }
 
-    void _setTextureData()
-    {
-      do
-      {
-        struct
-        {
-          BITMAPINFOHEADER bmiHeader;
-          int mask[4];
-        } bi = { 0 };
-        bi.bmiHeader.biSize = sizeof(bi.bmiHeader);
-        CC_BREAK_IF(!GetDIBits(_DC, _bmp, 0, 0, nullptr, (LPBITMAPINFO)&bi, DIB_RGB_COLORS));
-        int ret = SetDIBits(_DC, _bmp, 0, _bufferHeight, _imageData.getBytes(), (LPBITMAPINFO)&bi, DIB_RGB_COLORS);
-        SE_LOGD("SetDIBits return value: %d\n",ret);
-      } while (0);
-    }
-
     Point _convertDrawPoint(Point point, std::string text) {
       Size textSize = measureText(text);
       if (_textAlign == CanvasTextAlign::CENTER)
@@ -607,6 +589,11 @@ private:
       // The origin of drawing text on win32 is from top-left, but now we get bottom-left,
       // So, we need to substract the font size to convert 'point' to top-left.
       point.y -= _fontSize;
+
+      // We use font size to calculate text height, but draw text on win32 is based on
+      // the real font height and in top-left position, substract the adjust value to make text inside text rectangle.
+      // check
+      // point.y -= (textSize.height - _fontSize) / 2.0f;
 
       return point;
     }
@@ -676,7 +663,7 @@ void CanvasRenderingContext2D::fillRect(float x, float y, float width, float hei
 
 void CanvasRenderingContext2D::fillText(const std::string& text, float x, float y, float maxWidth)
 {
-    SE_LOGD("CanvasRenderingContext2D::fillText: %s, %f, %f, %f\n", text.c_str(), x, y, maxWidth);
+    SE_LOGD("CanvasRenderingContext2D::fillText: %s, offset: (%f, %f), %f\n", text.c_str(), x, y, maxWidth);
     if (text.empty())
         return;
     recreateBufferIfNeeded();
