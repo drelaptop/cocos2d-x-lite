@@ -130,7 +130,7 @@ public:
     void restoreContext()
     {
         BOOL ret = RestoreDC(_DC, _savedDC);
-		SE_LOGD("CanvasRenderingContext2DImpl::restoreContext: %d\n", ret);
+		//SE_LOGD("CanvasRenderingContext2DImpl::restoreContext: %d\n", ret);
     }
 
     void clearRect(float x, float y, float w, float h)
@@ -187,7 +187,7 @@ public:
         int bufferLen = 0;
         wchar_t * pwszBuffer = _utf8ToUtf16(text, &bufferLen);
         SIZE size = _sizeWithText(pwszBuffer, bufferLen);
-        SE_LOGD("CanvasRenderingContext2DImpl::measureText: %s, %d, %d\n", text.c_str(), size.cx, size.cy);
+        //SE_LOGD("CanvasRenderingContext2DImpl::measureText: %s, %d, %d\n", text.c_str(), size.cx, size.cy);
         CC_SAFE_DELETE_ARRAY(pwszBuffer);
         return Size(size.cx, size.cy);
     }
@@ -585,17 +585,17 @@ NS_CC_BEGIN
 
 CanvasGradient::CanvasGradient()
 {
-    SE_LOGD("CanvasGradient constructor: %p\n", this);
+    //SE_LOGD("CanvasGradient constructor: %p\n", this);
 }
 
 CanvasGradient::~CanvasGradient()
 {
-    SE_LOGD("CanvasGradient destructor: %p\n", this);
+    //SE_LOGD("CanvasGradient destructor: %p\n", this);
 }
 
 void CanvasGradient::addColorStop(float offset, const std::string& color)
 {
-    SE_LOGD("CanvasGradient::addColorStop: %p\n", this);
+    //SE_LOGD("CanvasGradient::addColorStop: %p\n", this);
 }
 
 // CanvasRenderingContext2D
@@ -604,14 +604,14 @@ CanvasRenderingContext2D::CanvasRenderingContext2D(float width, float height)
 : __width(width)
 , __height(height)
 {
-    SE_LOGD("CanvasRenderingContext2D constructor: %p, width: %f, height: %f\n", this, width, height);
+    //SE_LOGD("CanvasRenderingContext2D constructor: %p, width: %f, height: %f\n", this, width, height);
     _impl = new CanvasRenderingContext2DImpl();
     recreateBufferIfNeeded();
 }
 
 CanvasRenderingContext2D::~CanvasRenderingContext2D()
 {
-    SE_LOGD("CanvasRenderingContext2D destructor: %p\n", this);
+    //SE_LOGD("CanvasRenderingContext2D destructor: %p\n", this);
     delete _impl;
 }
 
@@ -620,7 +620,7 @@ void CanvasRenderingContext2D::recreateBufferIfNeeded()
     if (_isBufferSizeDirty)
     {
         _isBufferSizeDirty = false;
-        SE_LOGD("Recreate buffer %p, w: %f, h:%f\n", this, __width, __height);
+        //SE_LOGD("Recreate buffer %p, w: %f, h:%f\n", this, __width, __height);
         _impl->recreateBuffer(__width, __height);
         if (_canvasBufferUpdatedCB != nullptr)
             _canvasBufferUpdatedCB(_impl->getDataRef());
@@ -629,7 +629,7 @@ void CanvasRenderingContext2D::recreateBufferIfNeeded()
 
 void CanvasRenderingContext2D::clearRect(float x, float y, float width, float height)
 {
-    SE_LOGD("CanvasRenderingContext2D::clearRect: %p, %f, %f, %f, %f\n", this, x, y, width, height);
+    //SE_LOGD("CanvasRenderingContext2D::clearRect: %p, %f, %f, %f, %f\n", this, x, y, width, height);
     recreateBufferIfNeeded();
     _impl->clearRect(x, y, width, height);
 }
@@ -645,7 +645,7 @@ void CanvasRenderingContext2D::fillRect(float x, float y, float width, float hei
 
 void CanvasRenderingContext2D::fillText(const std::string& text, float x, float y, float maxWidth)
 {
-    SE_LOGD("CanvasRenderingContext2D::fillText: %s, offset: (%f, %f), %f\n", text.c_str(), x, y, maxWidth);
+    //SE_LOGD("CanvasRenderingContext2D::fillText: %s, offset: (%f, %f), %f\n", text.c_str(), x, y, maxWidth);
     if (text.empty())
         return;
     recreateBufferIfNeeded();
@@ -657,7 +657,7 @@ void CanvasRenderingContext2D::fillText(const std::string& text, float x, float 
 
 void CanvasRenderingContext2D::strokeText(const std::string& text, float x, float y, float maxWidth)
 {
-    SE_LOGD("CanvasRenderingContext2D::strokeText: %s, %f, %f, %f\n", text.c_str(), x, y, maxWidth);
+    //SE_LOGD("CanvasRenderingContext2D::strokeText: %s, %f, %f, %f\n", text.c_str(), x, y, maxWidth);
     if (text.empty())
         return;
     recreateBufferIfNeeded();
@@ -670,7 +670,7 @@ void CanvasRenderingContext2D::strokeText(const std::string& text, float x, floa
 
 cocos2d::Size CanvasRenderingContext2D::measureText(const std::string& text)
 {
-    SE_LOGD("CanvasRenderingContext2D::measureText: %s\n", text.c_str());
+    //SE_LOGD("CanvasRenderingContext2D::measureText: %s\n", text.c_str());
     return _impl->measureText(text);
 }
 
@@ -681,37 +681,37 @@ CanvasGradient* CanvasRenderingContext2D::createLinearGradient(float x0, float y
 
 void CanvasRenderingContext2D::save()
 {
-    SE_LOGD("CanvasRenderingContext2D::save\n");
+    //SE_LOGD("CanvasRenderingContext2D::save\n");
     _impl->saveContext();
 }
 
 void CanvasRenderingContext2D::beginPath()
 {
-    SE_LOGD("\n-----------begin------------------\nCanvasRenderingContext2D::beginPath\n");
+    //SE_LOGD("\n-----------begin------------------\nCanvasRenderingContext2D::beginPath\n");
     _impl->beginPath();
 }
 
 void CanvasRenderingContext2D::closePath()
 {
-    SE_LOGD("CanvasRenderingContext2D::closePath\n");
+    //SE_LOGD("CanvasRenderingContext2D::closePath\n");
     _impl->closePath();
 }
 
 void CanvasRenderingContext2D::moveTo(float x, float y)
 {
-    SE_LOGD("CanvasRenderingContext2D::moveTo\n");
+    //SE_LOGD("CanvasRenderingContext2D::moveTo\n");
     _impl->moveTo(x, y);
 }
 
 void CanvasRenderingContext2D::lineTo(float x, float y)
 {
-    SE_LOGD("CanvasRenderingContext2D::lineTo\n");
+    //SE_LOGD("CanvasRenderingContext2D::lineTo\n");
     _impl->lineTo(x, y);
 }
 
 void CanvasRenderingContext2D::stroke()
 {
-    SE_LOGD("CanvasRenderingContext2D::stroke\n");
+    //SE_LOGD("CanvasRenderingContext2D::stroke\n");
     _impl->stroke();
 
     if (_canvasBufferUpdatedCB != nullptr)
@@ -720,7 +720,7 @@ void CanvasRenderingContext2D::stroke()
 
 void CanvasRenderingContext2D::restore()
 {
-    SE_LOGD("CanvasRenderingContext2D::restore\n");
+    //SE_LOGD("CanvasRenderingContext2D::restore\n");
     _impl->restoreContext();
 }
 
@@ -731,21 +731,21 @@ void CanvasRenderingContext2D::setCanvasBufferUpdatedCallback(const CanvasBuffer
 
 void CanvasRenderingContext2D::set__width(float width)
 {
-    SE_LOGD("CanvasRenderingContext2D::set__width: %f\n", width);
+    //SE_LOGD("CanvasRenderingContext2D::set__width: %f\n", width);
     __width = width;
     _isBufferSizeDirty = true;
 }
 
 void CanvasRenderingContext2D::set__height(float height)
 {
-    SE_LOGD("CanvasRenderingContext2D::set__height: %f\n", height);
+    //SE_LOGD("CanvasRenderingContext2D::set__height: %f\n", height);
     __height = height;
     _isBufferSizeDirty = true;
 }
 
 void CanvasRenderingContext2D::set_lineWidth(float lineWidth)
 {
-    SE_LOGD("CanvasRenderingContext2D::save");
+    //SE_LOGD("CanvasRenderingContext2D::save");
     _lineWidth = lineWidth;
     _impl->setLineWidth(lineWidth);
 }
@@ -775,14 +775,14 @@ void CanvasRenderingContext2D::set_font(const std::string& font)
         }
 
         float fontSize = atof(fontSizeStr.c_str());
-        SE_LOGD("CanvasRenderingContext2D::set_font: %s, Size: %f, isBold: %b\n", fontName.c_str(), fontSize, !boldStr.empty());
+        //SE_LOGD("CanvasRenderingContext2D::set_font: %s, Size: %f, isBold: %b\n", fontName.c_str(), fontSize, !boldStr.empty());
         _impl->updateFont(fontName, fontSize, !boldStr.empty());
     }
 }
 
 void CanvasRenderingContext2D::set_textAlign(const std::string& textAlign)
 {
-    SE_LOGD("CanvasRenderingContext2D::set_textAlign: %s\n", textAlign.c_str());
+    //SE_LOGD("CanvasRenderingContext2D::set_textAlign: %s\n", textAlign.c_str());
     if (textAlign == "left")
     {
         _impl->setTextAlign(CanvasTextAlign::LEFT);
@@ -803,7 +803,7 @@ void CanvasRenderingContext2D::set_textAlign(const std::string& textAlign)
 
 void CanvasRenderingContext2D::set_textBaseline(const std::string& textBaseline)
 {
-    SE_LOGD("CanvasRenderingContext2D::set_textBaseline: %s\n", textBaseline.c_str());
+    //SE_LOGD("CanvasRenderingContext2D::set_textBaseline: %s\n", textBaseline.c_str());
     if (textBaseline == "top")
     {
         _impl->setTextBaseline(CanvasTextBaseline::TOP);
@@ -826,7 +826,7 @@ void CanvasRenderingContext2D::set_fillStyle(const std::string& fillStyle)
 {
     CSSColorParser::Color color = CSSColorParser::parse(fillStyle);
     _impl->setFillStyle(color.r/255.0f, color.g/255.0f, color.b/255.0f, color.a);
-    SE_LOGD("CanvasRenderingContext2D::set_fillStyle: %s, (%d, %d, %d, %f)\n", fillStyle.c_str(), color.r, color.g, color.b, color.a);
+    //SE_LOGD("CanvasRenderingContext2D::set_fillStyle: %s, (%d, %d, %d, %f)\n", fillStyle.c_str(), color.r, color.g, color.b, color.a);
 }
 
 void CanvasRenderingContext2D::set_strokeStyle(const std::string& strokeStyle)
