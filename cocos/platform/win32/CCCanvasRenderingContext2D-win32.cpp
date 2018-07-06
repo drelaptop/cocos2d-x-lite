@@ -92,9 +92,9 @@ public:
         _hpen = CreatePen(PS_SOLID, _lineWidth, RGB(255, 255, 255));
         // the return value of SelectObject is a handle to the object being replaced, so we should delete them to avoid memory leak
         HGDIOBJ hOldPen = SelectObject(_DC, _hpen);
-        HGDIOBJ holdBmp = SelectObject(_DC, _bmp);
+        HGDIOBJ hOldBmp = SelectObject(_DC, _bmp);
         DeleteObject(hOldPen);
-        DeleteObject(holdBmp);
+        DeleteObject(hOldBmp);
 
         SetBkMode(_DC, TRANSPARENT);
     }
@@ -129,7 +129,10 @@ public:
     void restoreContext()
     {
         BOOL ret = RestoreDC(_DC, _savedDC);
-        //SE_LOGD("CanvasRenderingContext2DImpl::restoreContext: %d\n", ret);
+        if (0 == ret)
+        {
+            SE_LOGD("CanvasRenderingContext2DImpl restore context failed.\n");
+        }
     }
 
     void clearRect(float x, float y, float w, float h)
