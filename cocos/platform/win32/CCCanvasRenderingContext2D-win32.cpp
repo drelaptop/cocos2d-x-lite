@@ -7,6 +7,8 @@
 #include "platform/CCFileUtils.h"
 #include <regex>
 
+#include "platform/desktop/CCGLView-desktop.h"
+
 using namespace cocos2d;
 
 enum class CanvasTextAlign {
@@ -40,8 +42,13 @@ namespace {
                 *p++ = b;
             }
         }
-    }
+	};
 
+	HWND getWin32Window()
+	{
+		auto glfwWindow = ((cocos2d::GLView*)cocos2d::Application::getInstance()->getView())->getGLFWWindow();
+		return glfwGetWin32Window(glfwWindow);
+	}
 }
 
 class CanvasRenderingContext2DImpl
@@ -53,7 +60,7 @@ public:
     , _wnd(nullptr)
     , _savedDC(0)
     {
-        _wnd = nullptr;
+        _wnd = getWin32Window();
         HDC hdc = GetDC(_wnd);
         _DC = CreateCompatibleDC(hdc);
         ReleaseDC(_wnd, hdc);
@@ -89,12 +96,13 @@ public:
 
     void beginPath()
     {
-        _DC = BeginPaint(_wnd, &_paintStruct);
+		//_hpen = CreatePen(PS_SOLID, 1, RGB(255, 0, 0));
+		//SelectObject(_DC, _hpen);
     }
 
     void closePath()
     {
-        EndPaint(_wnd, &_paintStruct);
+		//DeleteObject(_hpen);
     }
 
     void moveTo(float x, float y)
@@ -109,7 +117,6 @@ public:
 
     void stroke()
     {
-		closePath();
         if (_bufferWidth < 1.0f || _bufferHeight < 1.0f)
             return;
 		_imageData = _getTextureData();
@@ -122,7 +129,8 @@ public:
 
     void restoreContext()
     {
-        RestoreDC(_DC, _savedDC);
+        BOOL ret = RestoreDC(_DC, _savedDC);
+		SE_LOGD("CanvasRenderingContext2DImpl::restoreContext: %d\n", ret);
     }
 
     void clearRect(float x, float y, float w, float h)
@@ -336,6 +344,7 @@ private:
     Data _imageData;
     HFONT   _font;
     HWND    _wnd;
+	HPEN _hpen;
     PAINTSTRUCT _paintStruct;
     std::string _curFontPath;
     int _savedDC;
