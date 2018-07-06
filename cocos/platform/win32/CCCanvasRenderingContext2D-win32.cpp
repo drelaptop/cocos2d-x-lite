@@ -42,12 +42,6 @@ namespace {
                 *p++ = b;
             }
         }
-    };
-
-    HWND getWin32Window()
-    {
-        auto glfwWindow = ((cocos2d::GLView*)cocos2d::Application::getInstance()->getView())->getGLFWWindow();
-        return glfwGetWin32Window(glfwWindow);
     }
 }
 
@@ -60,7 +54,7 @@ public:
     , _wnd(nullptr)
     , _savedDC(0)
     {
-        _wnd = getWin32Window();
+        _wnd = nullptr;
         HDC hdc = GetDC(_wnd);
         _DC = CreateCompatibleDC(hdc);
         ReleaseDC(_wnd, hdc);
