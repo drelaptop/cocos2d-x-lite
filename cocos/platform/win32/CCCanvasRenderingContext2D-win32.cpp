@@ -7,8 +7,6 @@
 #include "platform/CCFileUtils.h"
 #include <regex>
 
-#include "platform/desktop/CCGLView-desktop.h"
-
 using namespace cocos2d;
 
 enum class CanvasTextAlign {
@@ -90,14 +88,14 @@ public:
 
     void beginPath()
     {
-        // creator will call: save() -> set_lineWidth() -> beginPath() -> moveTo() -> lineTo() -> stroke() -> restore(), when draw a line
+        // called: set_lineWidth() -> beginPath() -> moveTo() -> lineTo() -> stroke(), when draw line
         _hpen = CreatePen(PS_SOLID, _lineWidth, RGB(255, 255, 255));
-        // the return value of SelectObject is a handle to the object being replaced
+        // the return value of SelectObject is a handle to the object being replaced, so we should delete them to avoid memory leak
         HGDIOBJ hOldPen = SelectObject(_DC, _hpen);
         HGDIOBJ holdBmp = SelectObject(_DC, _bmp);
-        // so we should delete them to avoid memory leak
         DeleteObject(hOldPen);
         DeleteObject(holdBmp);
+
         SetBkMode(_DC, TRANSPARENT);
     }
 
