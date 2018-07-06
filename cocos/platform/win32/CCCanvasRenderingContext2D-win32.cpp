@@ -42,13 +42,13 @@ namespace {
                 *p++ = b;
             }
         }
-	};
+    };
 
-	HWND getWin32Window()
-	{
-		auto glfwWindow = ((cocos2d::GLView*)cocos2d::Application::getInstance()->getView())->getGLFWWindow();
-		return glfwGetWin32Window(glfwWindow);
-	}
+    HWND getWin32Window()
+    {
+        auto glfwWindow = ((cocos2d::GLView*)cocos2d::Application::getInstance()->getView())->getGLFWWindow();
+        return glfwGetWin32Window(glfwWindow);
+    }
 }
 
 class CanvasRenderingContext2DImpl
@@ -96,13 +96,13 @@ public:
 
     void beginPath()
     {
-		//_hpen = CreatePen(PS_SOLID, 1, RGB(255, 0, 0));
-		//SelectObject(_DC, _hpen);
+        //_hpen = CreatePen(PS_SOLID, 1, RGB(255, 0, 0));
+        //SelectObject(_DC, _hpen);
     }
 
     void closePath()
     {
-		//DeleteObject(_hpen);
+        //DeleteObject(_hpen);
     }
 
     void moveTo(float x, float y)
@@ -119,7 +119,7 @@ public:
     {
         if (_bufferWidth < 1.0f || _bufferHeight < 1.0f)
             return;
-		_imageData = _getTextureData();
+        _imageData = _getTextureData();
     }
 
     void saveContext()
@@ -130,7 +130,7 @@ public:
     void restoreContext()
     {
         BOOL ret = RestoreDC(_DC, _savedDC);
-		//SE_LOGD("CanvasRenderingContext2DImpl::restoreContext: %d\n", ret);
+        //SE_LOGD("CanvasRenderingContext2DImpl::restoreContext: %d\n", ret);
     }
 
     void clearRect(float x, float y, float w, float h)
@@ -344,7 +344,7 @@ private:
     Data _imageData;
     HFONT   _font;
     HWND    _wnd;
-	HPEN _hpen;
+    HPEN _hpen;
     PAINTSTRUCT _paintStruct;
     std::string _curFontPath;
     int _savedDC;
