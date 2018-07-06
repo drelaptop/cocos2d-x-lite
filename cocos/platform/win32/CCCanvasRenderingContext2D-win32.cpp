@@ -96,27 +96,34 @@ public:
 
     void beginPath()
     {
-        //_hpen = CreatePen(PS_SOLID, 1, RGB(255, 0, 0));
-        //SelectObject(_DC, _hpen);
+        // creator will call: save() -> set_lineWidth() -> beginPath() -> moveTo() -> lineTo() -> stroke() -> restore(), when draw a line
+        _hpen = CreatePen(PS_SOLID, _lineWidth, RGB(255, 255, 255));
+        // the return value of SelectObject is a handle to the object being replaced
+        HGDIOBJ hOldPen = SelectObject(_DC, _hpen);
+        HGDIOBJ holdBmp = SelectObject(_DC, _bmp);
+        // so we should delete them to avoid memory leak
+        DeleteObject(hOldPen);
+        DeleteObject(holdBmp);
+        SetBkMode(_DC, TRANSPARENT);
     }
 
     void closePath()
     {
-        //DeleteObject(_hpen);
     }
 
     void moveTo(float x, float y)
     {
-        MoveToEx(_DC, x, y, nullptr);
+        MoveToEx(_DC, x, -(y - _bufferHeight - _fontSize), nullptr);
     }
 
     void lineTo(float x, float y)
     {
-        LineTo(_DC, x, y);
+        LineTo(_DC, x, -(y - _bufferHeight - _fontSize));
     }
 
     void stroke()
     {
+        DeleteObject(_hpen);
         if (_bufferWidth < 1.0f || _bufferHeight < 1.0f)
             return;
         _imageData = _getTextureData();
@@ -329,7 +336,7 @@ public:
 
     void setLineWidth(float lineWidth)
     {
-        //check, use Pen to support this
+        _lineWidth = lineWidth;
     }
 
     const Data& getDataRef() const
@@ -348,6 +355,7 @@ private:
     PAINTSTRUCT _paintStruct;
     std::string _curFontPath;
     int _savedDC;
+    float _lineWidth = 0.0f;
     float _bufferWidth = 0.0f;
     float _bufferHeight = 0.0f;
 
@@ -745,7 +753,7 @@ void CanvasRenderingContext2D::set__height(float height)
 
 void CanvasRenderingContext2D::set_lineWidth(float lineWidth)
 {
-    //SE_LOGD("CanvasRenderingContext2D::save");
+    //SE_LOGD("CanvasRenderingContext2D::set_lineWidth %d\n", lineWidth);
     _lineWidth = lineWidth;
     _impl->setLineWidth(lineWidth);
 }
