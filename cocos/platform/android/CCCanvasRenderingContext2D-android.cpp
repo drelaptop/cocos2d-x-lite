@@ -223,9 +223,10 @@ void CanvasGradient::addColorStop(float offset, const std::string& color)
 // CanvasRenderingContext2D
 
 CanvasRenderingContext2D::CanvasRenderingContext2D(float width, float height)
-: __width(width)
-, __height(height)
 {
+    // set init canvas width and height as 1.0 x 1.0 if the width and height is invalid.
+    __width = width < 1.0f ? 1.0f : width;
+    __height = height < 1.0f ? 1.0f : height;
     // SE_LOGD("CanvasRenderingContext2D constructor: %p, width: %f, height: %f\n", this, width, height);
     _impl = new CanvasRenderingContext2DImpl();
     recreateBufferIfNeeded();
@@ -347,14 +348,16 @@ void CanvasRenderingContext2D::setCanvasBufferUpdatedCallback(const CanvasBuffer
 void CanvasRenderingContext2D::set__width(float width)
 {
 //    SE_LOGD("CanvasRenderingContext2D::set__width: %f\n", width);
-    __width = width;
+    // set __width as 1.0 if the width is invalid.
+    __width = width < 1.0f ? 1.0f : width;
     _isBufferSizeDirty = true;
 }
 
 void CanvasRenderingContext2D::set__height(float height)
 {
 //    SE_LOGD("CanvasRenderingContext2D::set__height: %f\n", height);
-    __height = height;
+    // set __height as 1.0 if the height is invalid.
+    __height = height < 1.0f ? 1.0f : height;
     _isBufferSizeDirty = true;
 }
 
