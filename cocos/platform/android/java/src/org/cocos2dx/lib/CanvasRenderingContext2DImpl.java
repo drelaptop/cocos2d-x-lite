@@ -224,7 +224,10 @@ public class CanvasRenderingContext2DImpl {
     }
 
     private void restoreContext() {
-        mCanvas.restore();
+        // If there is no saved state, this method should do nothing.
+        if (mCanvas.getSaveCount() > 1){
+            mCanvas.restore();
+        }
     }
 
     private void clearRect(float x, float y, float w, float h) {
