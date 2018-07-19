@@ -110,6 +110,45 @@ public class Cocos2dxLocalStorage {
         }
     }
 
+    public static String getKey(int nIndex) {
+        String ret = null;
+        try {
+            int nCount = 0;
+            String sql = "select key from "+TABLE_NAME;
+            Cursor c = mDatabase.rawQuery(sql, null);
+            if(nIndex < 0 || nIndex >= c.getCount()) {
+                return null;
+            }
+
+            while (c.moveToNext()) {
+                if(nCount == nIndex) {
+                    ret = c.getString(c.getColumnIndex("key"));
+                    break;
+                }
+                nCount++;
+            }
+            c.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ret;
+    }
+
+    public  static int getLength() {
+        int res = 0;
+        try {
+            String sql = "select count(*) as nums from "+TABLE_NAME;
+            Cursor c = mDatabase.rawQuery(sql, null);
+            if (c.moveToNext()){
+                res = c.getInt(c.getColumnIndex("nums"));
+            }
+            c.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
+
     /**
      * This creates/opens the database.
      */
