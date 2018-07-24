@@ -706,6 +706,18 @@ namespace se {
         _exceptionCallback = cb;
     }
 
+    void ScriptEngine::printCurrentInternalStack(FILE* out) const
+    {
+        SE_LOGE("ScriptEngine::_isolate->printCurrentStack before!\n");
+        if (_isolate != nullptr)
+        {
+            _isolate->printCurrentStack(out);
+            fflush(stderr);
+        }
+        SE_LOGE("ScriptEngine::_isolate->printCurrentStack after!\n");
+
+    }
+
     v8::Local<v8::Context> ScriptEngine::_getContext() const
     {
         return _context.Get(_isolate);
