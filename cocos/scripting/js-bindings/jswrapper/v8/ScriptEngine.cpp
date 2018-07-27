@@ -706,15 +706,17 @@ namespace se {
         _exceptionCallback = cb;
     }
 
-    void ScriptEngine::printCurrentInternalStack(FILE* out) const
+    void ScriptEngine::printCurrentInternalStack() const
     {
-        SE_LOGE("ScriptEngine::_isolate->printCurrentStack before!\n");
         if (_isolate != nullptr)
         {
-            _isolate->printCurrentStack(out);
-            fflush(stderr);
+            _isolate->printCurrentStack(stdout);
+            SE_LOGD("==== JS stack trace END ======================================");
         }
-        SE_LOGE("ScriptEngine::_isolate->printCurrentStack after!\n");
+        else
+        {
+            SE_LOGE("ScriptEngine::printCurrentInternalStack, _isolate is nullptr!");
+        }
 
     }
 

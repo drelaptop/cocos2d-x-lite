@@ -282,8 +282,9 @@ namespace se {
         void _releaseScriptObject(void* owner, void* target);
         v8::Local<v8::Context> _getContext() const;
         void _setGarbageCollecting(bool isGarbageCollecting);
-        //
-        void printCurrentInternalStack(FILE* out) const;
+
+        void printCurrentInternalStack() const;
+
     private:
         ScriptEngine();
         ~ScriptEngine();
