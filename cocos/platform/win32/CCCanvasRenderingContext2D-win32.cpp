@@ -554,7 +554,7 @@ private:
                         g = _fillStyle.g * dirtyValue;
                         b = _fillStyle.b * dirtyValue;
                         COLORREF textColor = (b << 16 | g << 8 | r) & 0x00ffffff;
-                        clr = ((BYTE)(0xff * alpha) << 24) | textColor;
+                        clr = ((BYTE)(dirtyValue * alpha) << 24) | textColor;
                     }
                     ++pPixel;
                 }
