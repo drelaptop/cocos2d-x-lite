@@ -869,7 +869,7 @@ static bool js_loadImage(se::State& s)
 SE_BIND_FUNC(js_loadImage)
 
 //pixels(RGBA), width, height, filePath(*.png)
-static bool js_savePixelsToFile(se::State& s)
+static bool js_saveImageData(se::State& s)
 {
     const auto& args = s.args();
     size_t argc = args.size();
@@ -884,7 +884,7 @@ static bool js_savePixelsToFile(se::State& s)
 
         std::string filePath;
         ok &= seval_to_std_string(args[3], &filePath);
-        SE_PRECONDITION2(ok, false, "js_savePixelsToFile : Error processing arguments");
+        SE_PRECONDITION2(ok, false, "js_saveImageData : Error processing arguments");
 
         Image* img = new Image();
         img->initWithRawData(data.getBytes(), data.getSize(), width, height, 8);
@@ -896,7 +896,7 @@ static bool js_savePixelsToFile(se::State& s)
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
     return false;
 }
-SE_BIND_FUNC(js_savePixelsToFile)
+SE_BIND_FUNC(js_saveImageData)
 
 static bool js_setDebugViewText(se::State& s)
 {
@@ -1092,7 +1092,7 @@ bool jsb_register_global_variables(se::Object* global)
     __jsbObj->defineFunction("dumpNativePtrToSeObjectMap", _SE(jsc_dumpNativePtrToSeObjectMap));
 
     __jsbObj->defineFunction("loadImage", _SE(js_loadImage));
-    __jsbObj->defineFunction("savePixelsToFile", _SE(js_savePixelsToFile));
+    __jsbObj->defineFunction("saveImageData", _SE(js_saveImageData));
     __jsbObj->defineFunction("setDebugViewText", _SE(js_setDebugViewText));
     __jsbObj->defineFunction("openDebugView", _SE(js_openDebugView));
     __jsbObj->defineFunction("disableBatchGLCommandsToNative", _SE(js_disableBatchGLCommandsToNative));
