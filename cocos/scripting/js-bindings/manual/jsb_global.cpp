@@ -888,9 +888,10 @@ static bool js_savePixelsToFile(se::State& s)
 
         Image* img = new Image();
         img->initWithRawData(data.getBytes(), data.getSize(), width, height, 8);
-        img->saveToFile(filePath);
+        bool ret = img->saveToFile(filePath);
+        s.rval().setBoolean(ret);
 
-        return true;
+        return ret;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
     return false;
