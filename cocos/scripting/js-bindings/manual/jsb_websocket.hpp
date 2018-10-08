@@ -63,8 +63,6 @@ SE_DECLARE_FUNC(WebSocket_send);
 
 SE_DECLARE_FUNC(WebSocket_close);
 
-//void WebSocket_getReadyStateRegistry(v8::Local<v8::Name> _property,
-//                                     const v8::PropertyCallbackInfo<v8::Value> &_v8args);
 
 bool register_all_websocket(se::Object *obj);
 
