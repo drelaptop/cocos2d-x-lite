@@ -23,18 +23,14 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#ifndef __COCOS2D_UI_WEBVIEW_H
-#define __COCOS2D_UI_WEBVIEW_H
+#pragma once
 
-#include "platform/CCPlatformConfig.h"
+#include <functional>
 
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_TIZEN) && !defined(CC_PLATFORM_OS_TVOS)
-
-
-
-#include "ui/UIWidget.h"
-#include "ui/GUIExport.h"
+#include "base/ccMacros.h"
+#include "base/CCRef.h"
 #include "base/CCData.h"
+#include "base/ccConfig.h"
 
 /**
  * @addtogroup ui
@@ -42,10 +38,8 @@
  */
 
 NS_CC_BEGIN
-namespace experimental{
-    namespace ui{
 
-class WebViewImpl;
+    class WebViewImpl;
 
 /**
  * @brief A View that displays web pages.
@@ -54,199 +48,189 @@ class WebViewImpl;
  * It's mean WebView displays web pages above all graphical elements of cocos2d-x.
  * @js NA
  */
-class CC_GUI_DLL WebView : public cocos2d::ui::Widget {
-public:
-    /**
-     * Allocates and initializes a WebView.
-     */
-    static WebView *create();
+    class WebView : public Ref {
+    public:
+        /**
+         * Allocates and initializes a WebView.
+         */
+        static WebView *create();
 
-    /**
-     * Set javascript interface scheme.
-     *
-     * @see WebView::setOnJSCallback()
-     */
-    void setJavascriptInterfaceScheme(const std::string &scheme);
+        /**
+         * Set javascript interface scheme.
+         *
+         * @see WebView::setOnJSCallback()
+         */
+        void setJavascriptInterfaceScheme(const std::string &scheme);
 
-    /**
-     * Sets the main page contents, MIME type, content encoding, and base URL.
-     *
-     * @param data The content for the main page.
-     * @param MIMEType The MIME type of the data.
-     * @param encoding The encoding of the data.
-     * @param baseURL The base URL for the content.
-     */
-    void loadData(const cocos2d::Data &data,
-                  const std::string &MIMEType,
-                  const std::string &encoding,
-                  const std::string &baseURL);
+        /**
+         * Sets the main page contents, MIME type, content encoding, and base URL.
+         *
+         * @param data The content for the main page.
+         * @param MIMEType The MIME type of the data.
+         * @param encoding The encoding of the data.
+         * @param baseURL The base URL for the content.
+         */
+        void loadData(const cocos2d::Data &data,
+                      const std::string &MIMEType,
+                      const std::string &encoding,
+                      const std::string &baseURL);
 
-    /**
-     * Sets the main page content and base URL.
-     *
-     * @param string The content for the main page.
-     * @param baseURL The base URL for the content.
-     */
-    void loadHTMLString(const std::string &string, const std::string &baseURL = "");
+        /**
+         * Sets the main page content and base URL.
+         *
+         * @param string The content for the main page.
+         * @param baseURL The base URL for the content.
+         */
+        void loadHTMLString(const std::string &string, const std::string &baseURL = "");
 
-    /**
-     * Loads the given URL.
-     *
-     * @param url Content URL.
-     */
-    void loadURL(const std::string &url);
+        /**
+         * Loads the given URL.
+         *
+         * @param url Content URL.
+         */
+        void loadURL(const std::string &url);
 
-    /**
-     * Loads the given fileName.
-     *
-     * @param fileName Content fileName.
-     */
-    void loadFile(const std::string &fileName);
+        /**
+         * Loads the given fileName.
+         *
+         * @param fileName Content fileName.
+         */
+        void loadFile(const std::string &fileName);
 
-    /**
-     * Stops the current load.
-     */
-    void stopLoading();
+        /**
+         * Stops the current load.
+         */
+        void stopLoading();
 
-    /**
-     * Reloads the current URL.
-     */
-    void reload();
+        /**
+         * Reloads the current URL.
+         */
+        void reload();
 
-    /**
-     * Gets whether this WebView has a back history item.
-     *
-     * @return WebView has a back history item.
-     */
-    bool canGoBack();
+        /**
+         * Gets whether this WebView has a back history item.
+         *
+         * @return WebView has a back history item.
+         */
+        bool canGoBack();
 
-    /**
-     * Gets whether this WebView has a forward history item.
-     *
-     * @return WebView has a forward history item.
-     */
-    bool canGoForward();
+        /**
+         * Gets whether this WebView has a forward history item.
+         *
+         * @return WebView has a forward history item.
+         */
+        bool canGoForward();
 
-    /**
-     * Goes back in the history.
-     */
-    void goBack();
+        /**
+         * Goes back in the history.
+         */
+        void goBack();
 
-    /**
-     * Goes forward in the history.
-     */
-    void goForward();
+        /**
+         * Goes forward in the history.
+         */
+        void goForward();
 
-    /**
-     * Evaluates JavaScript in the context of the currently displayed page.
-     */
-    void evaluateJS(const std::string &js);
+        /**
+         * Evaluates JavaScript in the context of the currently displayed page.
+         */
+        void evaluateJS(const std::string &js);
 
-    /**
-     * Set WebView should support zooming. The default value is false.
-     */
-    void setScalesPageToFit(const bool scalesPageToFit);
+        /**
+         * Set WebView should support zooming. The default value is false.
+         */
+        void setScalesPageToFit(const bool scalesPageToFit);
 
-    /**
-     * Call before a web view begins loading.
-     *
-     * @param callback The web view that is about to load new content.
-     * @return YES if the web view should begin loading content; otherwise, NO.
-     */
-    void setOnShouldStartLoading(const std::function<bool(WebView *sender, const std::string &url)>& callback);
+        /**
+         * Call before a web view begins loading.
+         *
+         * @param callback The web view that is about to load new content.
+         * @return YES if the web view should begin loading content; otherwise, NO.
+         */
+        void setOnShouldStartLoading(
+                const std::function<bool(WebView *sender, const std::string &url)> &callback);
 
-    /**
-     * A callback which will be called when a WebView event happens.
-     */
-    typedef std::function<void(WebView *sender, const std::string &url)> ccWebViewCallback;
+        /**
+         * A callback which will be called when a WebView event happens.
+         */
+        typedef std::function<void(WebView *sender, const std::string &url)> ccWebViewCallback;
 
-    /**
-     * Call after a web view finishes loading.
-     *
-     * @param callback The web view that has finished loading.
-     */
-    void setOnDidFinishLoading(const ccWebViewCallback& callback);
+        /**
+         * Call after a web view finishes loading.
+         *
+         * @param callback The web view that has finished loading.
+         */
+        void setOnDidFinishLoading(const ccWebViewCallback &callback);
 
-    /**
-     * Call if a web view failed to load content.
-     *
-     * @param callback The web view that has failed loading.
-     */
-    void setOnDidFailLoading(const ccWebViewCallback& callback);
+        /**
+         * Call if a web view failed to load content.
+         *
+         * @param callback The web view that has failed loading.
+         */
+        void setOnDidFailLoading(const ccWebViewCallback &callback);
 
-    /**
-     * This callback called when load URL that start with javascript interface scheme.
-     */
-    void setOnJSCallback(const ccWebViewCallback& callback);
+        /**
+         * This callback called when load URL that start with javascript interface scheme.
+         */
+        void setOnJSCallback(const ccWebViewCallback &callback);
 
-    /**
-     * Get the callback when WebView is about to start.
-     */
-    std::function<bool(WebView *sender, const std::string &url)> getOnShouldStartLoading()const;
+        /**
+         * Get the callback when WebView is about to start.
+         */
+        std::function<bool(WebView *sender, const std::string &url)>
+        getOnShouldStartLoading() const;
 
-    /**
-     * Get the callback when WebView has finished loading.
-     */
-    ccWebViewCallback getOnDidFinishLoading()const;
+        /**
+         * Get the callback when WebView has finished loading.
+         */
+        ccWebViewCallback getOnDidFinishLoading() const;
 
-    /**
-     * Get the callback when WebView has failed loading.
-     */
-    ccWebViewCallback getOnDidFailLoading()const;
+        /**
+         * Get the callback when WebView has failed loading.
+         */
+        ccWebViewCallback getOnDidFailLoading() const;
 
-    /**
-     *Get the Javascript callback.
-     */
-    ccWebViewCallback getOnJSCallback()const;
+        /**
+         *Get the Javascript callback.
+         */
+        ccWebViewCallback getOnJSCallback() const;
 
-    /**
-     * Set whether the webview bounces at end of scroll of WebView.
-     */
-    void setBounces(bool bounce);
+        /**
+         * Set whether the webview bounces at end of scroll of WebView.
+         */
+        void setBounces(bool bounce);
 
-    virtual void draw(cocos2d::Renderer *renderer, cocos2d::Mat4 const &transform, uint32_t flags) override;
+        /**
+         * Toggle visibility of WebView.
+         */
+        virtual void setVisible(bool visible);
 
-    /**
-     * Toggle visibility of WebView.
-     */
-    virtual void setVisible(bool visible) override;
-    virtual void onEnter() override;
-    virtual void onExit() override;
-    virtual void cleanup() override;
+    protected:
 
-protected:
-    virtual cocos2d::ui::Widget* createCloneInstance() override;
-    virtual void copySpecialProperties(Widget* model) override;
+        std::function<bool(WebView *sender, const std::string &url)> _onShouldStartLoading;
 
-    std::function<bool(WebView *sender, const std::string &url)> _onShouldStartLoading;
+        ccWebViewCallback _onDidFinishLoading;
 
-    ccWebViewCallback _onDidFinishLoading;
+        ccWebViewCallback _onDidFailLoading;
 
-    ccWebViewCallback _onDidFailLoading;
+        ccWebViewCallback _onJSCallback;
 
-    ccWebViewCallback _onJSCallback;
+    CC_CONSTRUCTOR_ACCESS:
 
-CC_CONSTRUCTOR_ACCESS:
-    /**
-     * Default constructor.
-     */
-    WebView();
+        /**
+         * Default constructor.
+         */
+        WebView();
 
-    /**
-     * Default destructor.
-     */
-    virtual ~WebView();
+        /**
+         * Default destructor.
+         */
+        virtual ~WebView();
 
-private:
-    WebViewImpl *_impl;
-    friend class WebViewImpl;
-};
+    private:
+        WebViewImpl *_impl;
 
-      } // namespace ui
-   } // namespace experimental
-}//namespace cocos2d
+        friend class WebViewImpl;
+    };
 
-#endif
-// end group
-/// @}
-#endif //__COCOS2D_UI_WEBVIEW_H
+NS_CC_END

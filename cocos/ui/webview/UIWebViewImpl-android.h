@@ -23,84 +23,68 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#ifndef __COCOS2D__UI__WEBVIEWIMPL_ANDROID_H_
-#define __COCOS2D__UI__WEBVIEWIMPL_ANDROID_H_
-/// @cond DO_NOT_SHOW
-
-#ifdef __ANDROID__
+#pragma once
 
 #include <iosfwd>
 #include <stdint.h>
 
-namespace cocos2d {
-    class Data;
-    class Renderer;
-    class Mat4;
+#include "base/ccMacros.h"
+#include "base/CCData.h"
 
-    namespace experimental {
-        namespace ui{
-            class WebView;
-        }
-    }
-}
+NS_CC_BEGIN
 
-namespace cocos2d {
-    namespace experimental {
-        namespace ui{
+    class WebView;
 
-            class WebViewImpl {
-            public:
-                WebViewImpl(cocos2d::experimental::ui::WebView *webView);
+    class WebViewImpl {
 
-                virtual ~WebViewImpl();
+    public:
+        WebViewImpl(cocos2d::WebView *webView);
 
-                void setJavascriptInterfaceScheme(const std::string &scheme);
+        virtual ~WebViewImpl();
 
-                void loadData(const cocos2d::Data &data, const std::string &MIMEType, const std::string &encoding, const std::string &baseURL);
+        void setJavascriptInterfaceScheme(const std::string &scheme);
 
-                void loadHTMLString(const std::string &string, const std::string &baseURL);
+        void loadData(const cocos2d::Data &data, const std::string &MIMEType,
+                      const std::string &encoding, const std::string &baseURL);
 
-                void loadURL(const std::string &url);
+        void loadHTMLString(const std::string &string, const std::string &baseURL);
 
-                void loadFile(const std::string &fileName);
+        void loadURL(const std::string &url);
 
-                void stopLoading();
+        void loadFile(const std::string &fileName);
 
-                void reload();
+        void stopLoading();
 
-                bool canGoBack();
+        void reload();
 
-                bool canGoForward();
+        bool canGoBack();
 
-                void goBack();
+        bool canGoForward();
 
-                void goForward();
+        void goBack();
 
-                void evaluateJS(const std::string &js);
+        void goForward();
 
-                void setScalesPageToFit(const bool scalesPageToFit);
+        void evaluateJS(const std::string &js);
 
-                virtual void draw(cocos2d::Renderer *renderer, cocos2d::Mat4 const &transform, uint32_t flags);
+        void setScalesPageToFit(const bool scalesPageToFit);
 
-                virtual void setVisible(bool visible);
+        virtual void setVisible(bool visible);
 
-                void setBounces(bool bounces);
+        void setBounces(bool bounces);
 
-                static bool shouldStartLoading(const int viewTag, const std::string &url);
-                static void didFinishLoading(const int viewTag, const std::string &url);
-                static void didFailLoading(const int viewTag, const std::string &url);
-                static void onJsCallback(const int viewTag, const std::string &message);
+        static bool shouldStartLoading(const int viewTag, const std::string &url);
 
-            private:
-                int _viewTag;
-                WebView *_webView;
-            };
+        static void didFinishLoading(const int viewTag, const std::string &url);
 
-        } // namespace ui
-    } // namespace experimental
-} //cocos2d
+        static void didFailLoading(const int viewTag, const std::string &url);
 
-#endif // __ANDROID__
+        static void onJsCallback(const int viewTag, const std::string &message);
 
-/// @endcond
-#endif /* __COCOS2D__UI__WEBVIEWIMPL_ANDROID_H_ */
+    private:
+        int _viewTag;
+        WebView *_webView;
+    };
+
+NS_CC_END
+
