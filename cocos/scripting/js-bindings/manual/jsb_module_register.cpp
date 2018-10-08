@@ -57,7 +57,7 @@
 #include "cocos/scripting/js-bindings/auto/jsb_cocos2dx_audioengine_auto.hpp"
 #endif
 
-#if USE_VIDEO
+#if USE_VIDEO && (CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 #include "cocos/scripting/js-bindings/manual/jsb_videoplayer.hpp"
 #endif
 
@@ -120,7 +120,7 @@ bool jsb_register_all_modules()
     se->addRegisterCallback(register_all_socketio);
 #endif
 
-#if USE_VIDEO
+#if USE_VIDEO && (CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     se->addRegisterCallback(register_all_videoplayer);
 #endif
 
