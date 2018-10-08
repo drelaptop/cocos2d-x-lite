@@ -95,7 +95,6 @@ public class Cocos2dxVideoView extends SurfaceView implements MediaPlayerControl
     protected int mFullScreenHeight = 0;
 
     private int mViewTag = 0;
-    private int mViewVisible = INVISIBLE;
 
     public Cocos2dxVideoView(Cocos2dxActivity activity,int tag) {
         super(activity);
@@ -171,11 +170,10 @@ public class Cocos2dxVideoView extends SurfaceView implements MediaPlayerControl
 
     @Override
     public void setVisibility(int visibility) {
-        if (mSurfaceHolder == null)
-        {
-            mViewVisible = visibility;
-            super.setVisibility(VISIBLE);
-            return;
+        if (visibility == INVISIBLE) {
+            if (getCurrentPosition() > 0 && mSeekWhenPrepared == 0) {
+                mSeekWhenPrepared = getCurrentPosition();
+            }
         }
 
         super.setVisibility(visibility);
@@ -212,9 +210,16 @@ public class Cocos2dxVideoView extends SurfaceView implements MediaPlayerControl
             path = path.substring(AssetResourceRoot.length());
         }
 
-        mVideoFilePath = path;
-        mIsAssetRouse = true;
-        setVideoURI(Uri.parse(path),null);
+        if (path.startsWith("/")) {
+            mIsAssetRouse = false;
+            setVideoURI(Uri.parse(path),null);
+        }
+        else {
+
+            mVideoFilePath = path;
+            mIsAssetRouse = true;
+            setVideoURI(Uri.parse(path), null);
+        }
     }
 
     public void setVideoURL(String url) {
@@ -321,8 +326,8 @@ public class Cocos2dxVideoView extends SurfaceView implements MediaPlayerControl
 
     public void fixSize() {
         if (mFullScreenEnabled) {
-            mFullScreenWidth = mCocos2dxActivity.getGLSurfaceView().getWidth();     // 屏幕宽度（像素）
-            mFullScreenHeight = mCocos2dxActivity.getGLSurfaceView().getHeight();   // 屏幕高度（像素）
+            mFullScreenWidth = mCocos2dxActivity.getGLSurfaceView().getWidth();
+            mFullScreenHeight = mCocos2dxActivity.getGLSurfaceView().getHeight();
 
             fixSize(0, 0, mFullScreenWidth, mFullScreenHeight);
         } else {
@@ -557,7 +562,6 @@ public class Cocos2dxVideoView extends SurfaceView implements MediaPlayerControl
         public void surfaceCreated(SurfaceHolder holder)
         {
             mSurfaceHolder = holder;
-            setVisibility(mViewVisible);
             openVideo();
         }
 
@@ -579,14 +583,13 @@ public class Cocos2dxVideoView extends SurfaceView implements MediaPlayerControl
      */
     private void release(boolean cleartargetstate) {
         if (mMediaPlayer != null) {
-            if (mTargetState == STATE_PLAYING) {
-                mSeekWhenPrepared = mMediaPlayer.getCurrentPosition();
-                mTargetState = STATE_PLAYING;
-            }
             mMediaPlayer.reset();
             mMediaPlayer.release();
             mMediaPlayer = null;
             mCurrentState = STATE_IDLE;
+            if (cleartargetstate) {
+                mTargetState  = STATE_IDLE;
+            }
         }
     }
 

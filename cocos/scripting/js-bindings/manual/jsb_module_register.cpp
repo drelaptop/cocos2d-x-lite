@@ -23,7 +23,7 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#define USE_VIDEO 0
+#define USE_VIDEO 1
 #define USE_AUDIO 1
 #define USE_NET_WORK 1
 
