@@ -128,7 +128,7 @@ scripting/js-bindings/event/EventDispatcher.cpp \
 ../external/sources/ConvertUTF/ConvertUTF.c \
 ui/edit-box/EditBox-android.cpp \
 ui/videoplayer/VideoPlayer-android.cpp \
-
+ui/webview/UIWebViewImpl-android.cpp \
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH) \
                     $(LOCAL_PATH)/.. \
