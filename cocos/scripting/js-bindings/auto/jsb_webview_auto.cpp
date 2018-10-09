@@ -591,7 +591,6 @@ SE_BIND_CTOR(js_webview_WebView_constructor, __jsb_cocos2d_WebView_class, js_coc
 
 
 
-extern se::Object* __jsb_cocos2d_Ref_proto;
 
 static bool js_cocos2d_WebView_finalize(se::State& s)
 {
@@ -604,7 +603,7 @@ SE_BIND_FINALIZE_FUNC(js_cocos2d_WebView_finalize)
 
 bool js_register_webview_WebView(se::Object* obj)
 {
-    auto cls = se::Class::create("WebView", obj, __jsb_cocos2d_Ref_proto, _SE(js_webview_WebView_constructor));
+    auto cls = se::Class::create("WebView", obj, nullptr, _SE(js_webview_WebView_constructor));
 
     cls->defineFunction("setOnShouldStartLoading", _SE(js_webview_WebView_setOnShouldStartLoading));
     cls->defineFunction("setOnDidFailLoading", _SE(js_webview_WebView_setOnDidFailLoading));
