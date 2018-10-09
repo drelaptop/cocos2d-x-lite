@@ -26,6 +26,7 @@ SE_DECLARE_FUNC(js_webview_WebView_getOnJSCallback);
 SE_DECLARE_FUNC(js_webview_WebView_canGoForward);
 SE_DECLARE_FUNC(js_webview_WebView_getOnShouldStartLoading);
 SE_DECLARE_FUNC(js_webview_WebView_stopLoading);
+SE_DECLARE_FUNC(js_webview_WebView_setFrame);
 SE_DECLARE_FUNC(js_webview_WebView_setVisible);
 SE_DECLARE_FUNC(js_webview_WebView_reload);
 SE_DECLARE_FUNC(js_webview_WebView_loadData);

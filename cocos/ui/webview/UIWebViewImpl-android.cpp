@@ -273,6 +273,11 @@ namespace cocos2d {
         JniHelper::callStaticVoidMethod(className, "setVisible", _viewTag, visible);
     }
 
+    void WebViewImpl::setFrame(float x, float y, float width, float height) {
+        JniHelper::callStaticVoidMethod(className, "setWebViewRect", _viewTag,
+                                        (int) x, (int) y, (int) width, (int) height);
+    }
+
     void WebViewImpl::setBounces(bool bounces) {
         // empty function as this was mainly a fix for iOS
     }

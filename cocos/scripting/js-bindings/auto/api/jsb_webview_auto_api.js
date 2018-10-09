@@ -175,6 +175,22 @@ stopLoading : function (
 },
 
 /**
+ * @method setFrame
+ * @param {float} arg0
+ * @param {float} arg1
+ * @param {float} arg2
+ * @param {float} arg3
+ */
+setFrame : function (
+float, 
+float, 
+float, 
+float 
+)
+{
+},
+
+/**
  * @method setVisible
  * @param {bool} arg0
  */

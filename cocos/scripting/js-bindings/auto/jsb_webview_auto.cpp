@@ -416,6 +416,31 @@ static bool js_webview_WebView_stopLoading(se::State& s)
 }
 SE_BIND_FUNC(js_webview_WebView_stopLoading)
 
+static bool js_webview_WebView_setFrame(se::State& s)
+{
+    cocos2d::WebView* cobj = (cocos2d::WebView*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_webview_WebView_setFrame : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 4) {
+        float arg0 = 0;
+        float arg1 = 0;
+        float arg2 = 0;
+        float arg3 = 0;
+        ok &= seval_to_float(args[0], &arg0);
+        ok &= seval_to_float(args[1], &arg1);
+        ok &= seval_to_float(args[2], &arg2);
+        ok &= seval_to_float(args[3], &arg3);
+        SE_PRECONDITION2(ok, false, "js_webview_WebView_setFrame : Error processing arguments");
+        cobj->setFrame(arg0, arg1, arg2, arg3);
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 4);
+    return false;
+}
+SE_BIND_FUNC(js_webview_WebView_setFrame)
+
 static bool js_webview_WebView_setVisible(se::State& s)
 {
     cocos2d::WebView* cobj = (cocos2d::WebView*)s.nativeThisObject();
@@ -622,6 +647,7 @@ bool js_register_webview_WebView(se::Object* obj)
     cls->defineFunction("canGoForward", _SE(js_webview_WebView_canGoForward));
     cls->defineFunction("getOnShouldStartLoading", _SE(js_webview_WebView_getOnShouldStartLoading));
     cls->defineFunction("stopLoading", _SE(js_webview_WebView_stopLoading));
+    cls->defineFunction("setFrame", _SE(js_webview_WebView_setFrame));
     cls->defineFunction("setVisible", _SE(js_webview_WebView_setVisible));
     cls->defineFunction("reload", _SE(js_webview_WebView_reload));
     cls->defineFunction("loadData", _SE(js_webview_WebView_loadData));

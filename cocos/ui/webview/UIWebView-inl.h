@@ -118,6 +118,10 @@ NS_CC_BEGIN
         _impl->setVisible(visible);
     }
 
+    void WebView::setFrame(float x, float y, float width, float height) {
+        _impl->setFrame(x, y, width, height);
+    }
+
     void WebView::setBounces(bool bounces) {
         _impl->setBounces(bounces);
     }

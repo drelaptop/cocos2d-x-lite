@@ -205,6 +205,11 @@ NS_CC_BEGIN
          */
         virtual void setVisible(bool visible);
 
+        /**
+         * Set the rect of WebView.
+         */
+        virtual void setFrame(float x, float y, float width, float height);
+
     protected:
 
         std::function<bool(WebView *sender, const std::string &url)> _onShouldStartLoading;
