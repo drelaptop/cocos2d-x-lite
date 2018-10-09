@@ -23,14 +23,14 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#include "UIWebView.h"
+#include "WebView.h"
 #include "platform/CCFileUtils.h"
 #include "platform/CCPlatformConfig.h"
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_IOS && !defined(CC_PLATFORM_OS_TVOS)
 #include "UIWebViewImpl-ios.h"
 #elif CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
-#include "UIWebViewImpl-android.h"
+#include "WebViewImpl-android.h"
 #else
 static_assert(false, "WebView only supported on iOS & Android");
 #endif

@@ -27,7 +27,7 @@
 #include <string>
 #include <unordered_map>
 
-#include "UIWebView-inl.h"
+#include "WebView-inl.h"
 
 #include "platform/CCFileUtils.h"
 #include "platform/android/jni/JniHelper.h"

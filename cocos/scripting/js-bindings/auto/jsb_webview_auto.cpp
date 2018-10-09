@@ -2,7 +2,7 @@
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_IOS) && !defined(CC_TARGET_OS_TVOS)
 #include "scripting/js-bindings/manual/jsb_conversions.hpp"
 #include "scripting/js-bindings/manual/jsb_global.h"
-#include "ui/webview/UIWebView.h"
+#include "ui/webview/WebView.h"
 
 se::Object* __jsb_cocos2d_WebView_proto = nullptr;
 se::Class* __jsb_cocos2d_WebView_class = nullptr;
