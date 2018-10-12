@@ -11,21 +11,28 @@ Thumbs.db
 /simulator_*.zip
 /prebuilt_*.zip
 
-# ignore copy files
+# ignore copy files which not needed by new project
 /lib
 /linux-build
 /samples
 /templates
 /tests
 /plugin/samples
-# all /tools not needed by templates project
 /tools
+/utils
+/licenses
 
 .gitattributes
 .gitignore
 .gitmodules
 .travis.yml
-setup.py
+/setup.py
+/auto-build-src.bat
+/auto-build.bat
+/download-deps.py
+/gulpfile.js
+/package.json
+/README.md
 
 # Ignore files build by Visual Studio
 win32-msvc-vs201*-x86
