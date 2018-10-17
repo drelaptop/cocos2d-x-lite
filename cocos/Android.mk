@@ -47,38 +47,8 @@ base/CCScheduler.cpp \
 base/csscolorparser.cpp \
 base/CCGLUtils.cpp \
 base/CCRenderTexture.cpp \
-renderer/Types.cpp \
-renderer/gfx/DeviceGraphics.cpp \
-renderer/gfx/FrameBuffer.cpp \
-renderer/gfx/GFX.cpp \
-renderer/gfx/GFXUtils.cpp \
-renderer/gfx/GraphicsHandle.cpp \
-renderer/gfx/IndexBuffer.cpp \
-renderer/gfx/Program.cpp \
-renderer/gfx/RenderBuffer.cpp \
-renderer/gfx/RenderTarget.cpp \
-renderer/gfx/State.cpp \
-renderer/gfx/Texture.cpp \
-renderer/gfx/Texture2D.cpp \
-renderer/gfx/VertexBuffer.cpp \
-renderer/gfx/VertexFormat.cpp \
-renderer/renderer/BaseRenderer.cpp \
-renderer/renderer/Camera.cpp \
-renderer/renderer/Config.cpp \
-renderer/renderer/Effect.cpp \
-renderer/renderer/InputAssembler.cpp \
-renderer/renderer/Light.cpp \
-renderer/renderer/Model.cpp \
-renderer/renderer/Pass.cpp \
-renderer/renderer/ProgramLib.cpp \
-renderer/renderer/Scene.cpp \
-renderer/renderer/Technique.cpp \
-renderer/renderer/View.cpp \
-renderer/renderer/ForwardRenderer.cpp \
 storage/local-storage/LocalStorage-android.cpp \
-scripting/js-bindings/auto/jsb_gfx_auto.cpp \
 scripting/js-bindings/auto/jsb_cocos2dx_network_auto.cpp \
-scripting/js-bindings/auto/jsb_renderer_auto.cpp \
 scripting/js-bindings/auto/jsb_video_auto.cpp \
 scripting/js-bindings/auto/jsb_webview_auto.cpp \
 scripting/js-bindings/auto/jsb_cocos2dx_auto.cpp \
@@ -91,9 +61,7 @@ scripting/js-bindings/manual/jsb_classtype.cpp \
 scripting/js-bindings/manual/jsb_conversions.cpp \
 scripting/js-bindings/manual/jsb_cocos2dx_manual.cpp \
 scripting/js-bindings/manual/jsb_cocos2dx_network_manual.cpp \
-scripting/js-bindings/manual/jsb_gfx_manual.cpp \
 scripting/js-bindings/manual/jsb_global.cpp \
-scripting/js-bindings/manual/jsb_renderer_manual.cpp \
 scripting/js-bindings/manual/jsb_socketio.cpp \
 scripting/js-bindings/manual/jsb_websocket.cpp \
 scripting/js-bindings/manual/jsb_xmlhttprequest.cpp \
@@ -130,6 +98,42 @@ scripting/js-bindings/event/EventDispatcher.cpp \
 ui/edit-box/EditBox-android.cpp \
 ui/videoplayer/VideoPlayer-android.cpp \
 ui/webview/WebViewImpl-android.cpp \
+
+ifeq ($(USE_GFX_RENDERER),1)
+LOCAL_SRC_FILES += \
+renderer/Types.cpp \
+renderer/gfx/DeviceGraphics.cpp \
+renderer/gfx/FrameBuffer.cpp \
+renderer/gfx/GFX.cpp \
+renderer/gfx/GFXUtils.cpp \
+renderer/gfx/GraphicsHandle.cpp \
+renderer/gfx/IndexBuffer.cpp \
+renderer/gfx/Program.cpp \
+renderer/gfx/RenderBuffer.cpp \
+renderer/gfx/RenderTarget.cpp \
+renderer/gfx/State.cpp \
+renderer/gfx/Texture.cpp \
+renderer/gfx/Texture2D.cpp \
+renderer/gfx/VertexBuffer.cpp \
+renderer/gfx/VertexFormat.cpp \
+renderer/renderer/BaseRenderer.cpp \
+renderer/renderer/Camera.cpp \
+renderer/renderer/Config.cpp \
+renderer/renderer/Effect.cpp \
+renderer/renderer/InputAssembler.cpp \
+renderer/renderer/Light.cpp \
+renderer/renderer/Model.cpp \
+renderer/renderer/Pass.cpp \
+renderer/renderer/ProgramLib.cpp \
+renderer/renderer/Scene.cpp \
+renderer/renderer/Technique.cpp \
+renderer/renderer/View.cpp \
+renderer/renderer/ForwardRenderer.cpp \
+scripting/js-bindings/auto/jsb_gfx_auto.cpp \
+scripting/js-bindings/auto/jsb_renderer_auto.cpp \
+scripting/js-bindings/manual/jsb_renderer_manual.cpp \
+scripting/js-bindings/manual/jsb_gfx_manual.cpp
+endif
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH) \
                     $(LOCAL_PATH)/.. \
