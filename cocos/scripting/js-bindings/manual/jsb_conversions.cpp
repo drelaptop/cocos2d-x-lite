@@ -1145,7 +1145,7 @@ bool seval_to_DownloaderHints(const se::Value& v, cocos2d::network::DownloaderHi
 //    return true;
 //}
 
-#if USE_GFX_RENDERER > 0
+#if USE_GFX_RENDERER
 bool seval_to_Rect(const se::Value& v, cocos2d::renderer::Rect* rect)
 {
     assert(v.isObject() && rect != nullptr);
@@ -2916,7 +2916,7 @@ bool std_vector_EffectDefine_to_seval(const std::vector<cocos2d::ValueMap>& v, s
     return true;
 }
 
-#if USE_GFX_RENDERER > 0
+#if USE_GFX_RENDERER
 bool Rect_to_seval(const cocos2d::renderer::Rect& v, se::Value* ret)
 {
     assert(ret != nullptr);

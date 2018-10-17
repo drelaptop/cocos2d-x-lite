@@ -131,7 +131,7 @@ bool seval_to_DownloaderHints(const se::Value& v, cocos2d::network::DownloaderHi
 //bool seval_to_b2Vec2(const se::Value& v, b2Vec2* ret);
 //bool seval_to_b2AABB(const se::Value& v, b2AABB* ret);
 
-#if USE_GFX_RENDERER > 0
+#if USE_GFX_RENDERER
 bool seval_to_Rect(const se::Value& v, cocos2d::renderer::Rect* rect);
 bool seval_to_std_vector_Pass(const se::Value& v, cocos2d::Vector<cocos2d::renderer::Pass*>* ret);
 bool seval_to_std_vector_Texture(const se::Value& v, std::vector<cocos2d::renderer::Texture*>* ret);
@@ -294,7 +294,7 @@ bool Data_to_seval(const cocos2d::Data& v, se::Value* ret);
 bool DownloadTask_to_seval(const cocos2d::network::DownloadTask& v, se::Value* ret);
 bool std_vector_EffectDefine_to_seval(const std::vector<cocos2d::ValueMap>& v, se::Value* ret);
 
-#if USE_GFX_RENDERER > 0
+#if USE_GFX_RENDERER
 bool Rect_to_seval(const cocos2d::renderer::Rect& v, se::Value* ret);
 bool std_unorderedmap_string_EffectProperty_to_seval(const std::unordered_map<std::string, cocos2d::renderer::Effect::Property>& v, se::Value* ret);
 bool EffectProperty_to_seval(const cocos2d::renderer::Effect::Property& v, se::Value* ret);
