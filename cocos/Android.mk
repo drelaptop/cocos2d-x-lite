@@ -48,11 +48,7 @@ base/csscolorparser.cpp \
 base/CCGLUtils.cpp \
 base/CCRenderTexture.cpp \
 storage/local-storage/LocalStorage-android.cpp \
-scripting/js-bindings/auto/jsb_cocos2dx_network_auto.cpp \
-scripting/js-bindings/auto/jsb_video_auto.cpp \
-scripting/js-bindings/auto/jsb_webview_auto.cpp \
 scripting/js-bindings/auto/jsb_cocos2dx_auto.cpp \
-scripting/js-bindings/auto/jsb_cocos2dx_audioengine_auto.cpp \
 scripting/js-bindings/auto/jsb_cocos2dx_extension_auto.cpp \
 scripting/js-bindings/manual/JavaScriptJavaBridge.cpp \
 scripting/js-bindings/manual/jsb_opengl_manual.cpp \
@@ -60,7 +56,6 @@ scripting/js-bindings/manual/jsb_opengl_utils.cpp \
 scripting/js-bindings/manual/jsb_classtype.cpp \
 scripting/js-bindings/manual/jsb_conversions.cpp \
 scripting/js-bindings/manual/jsb_cocos2dx_manual.cpp \
-scripting/js-bindings/manual/jsb_cocos2dx_network_manual.cpp \
 scripting/js-bindings/manual/jsb_global.cpp \
 scripting/js-bindings/manual/jsb_socketio.cpp \
 scripting/js-bindings/manual/jsb_websocket.cpp \
@@ -95,9 +90,11 @@ scripting/js-bindings/event/EventDispatcher.cpp \
 ../external/sources/unzip/unzip.cpp \
 ../external/sources/ConvertUTF/ConvertUTFWrapper.cpp \
 ../external/sources/ConvertUTF/ConvertUTF.c \
-ui/edit-box/EditBox-android.cpp \
-ui/videoplayer/VideoPlayer-android.cpp \
-ui/webview/WebViewImpl-android.cpp \
+ui/edit-box/EditBox-android.cpp
+
+# opengl bindings depend on GFXUtils "_JSB_GL_CHECK"
+LOCAL_SRC_FILES += \
+renderer/gfx/GFXUtils.cpp
 
 ifeq ($(USE_GFX_RENDERER),1)
 LOCAL_SRC_FILES += \
@@ -105,7 +102,6 @@ renderer/Types.cpp \
 renderer/gfx/DeviceGraphics.cpp \
 renderer/gfx/FrameBuffer.cpp \
 renderer/gfx/GFX.cpp \
-renderer/gfx/GFXUtils.cpp \
 renderer/gfx/GraphicsHandle.cpp \
 renderer/gfx/IndexBuffer.cpp \
 renderer/gfx/Program.cpp \
@@ -133,7 +129,34 @@ scripting/js-bindings/auto/jsb_gfx_auto.cpp \
 scripting/js-bindings/auto/jsb_renderer_auto.cpp \
 scripting/js-bindings/manual/jsb_renderer_manual.cpp \
 scripting/js-bindings/manual/jsb_gfx_manual.cpp
-endif
+endif # USE_GFX_RENDERER
+
+ifeq ($(USE_VIDEO),1)
+LOCAL_SRC_FILES += \
+ui/videoplayer/VideoPlayer-android.cpp \
+scripting/js-bindings/auto/jsb_video_auto.cpp
+endif # USE_VIDEO
+
+ifeq ($(USE_WEB_VIEW),1)
+LOCAL_SRC_FILES += \
+ui/webview/WebViewImpl-android.cpp \
+scripting/js-bindings/auto/jsb_webview_auto.cpp
+endif # USE_WEB_VIEW
+
+ifeq ($(USE_AUDIO),1)
+LOCAL_SRC_FILES += \
+scripting/js-bindings/auto/jsb_cocos2dx_audioengine_auto.cpp
+LOCAL_STATIC_LIBRARIES += audioengine_static
+endif # USE_AUDIO
+
+ifeq ($(USE_NET_WORK),1)
+LOCAL_SRC_FILES += \
+scripting/js-bindings/auto/jsb_cocos2dx_network_auto.cpp \
+scripting/js-bindings/manual/jsb_cocos2dx_network_manual.cpp
+LOCAL_STATIC_LIBRARIES += cocos_network_static
+LOCAL_STATIC_LIBRARIES += cocos_extension_static
+endif # USE_NET_WORK
+
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH) \
                     $(LOCAL_PATH)/.. \
@@ -155,7 +178,6 @@ LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH) \
                     $(LOCAL_PATH)/../external/sources \
                     $(LOCAL_PATH)/renderer
 
-LOCAL_STATIC_LIBRARIES := cocos_freetype2_static
 LOCAL_STATIC_LIBRARIES += cocos_png_static
 LOCAL_STATIC_LIBRARIES += cocos_jpeg_static
 LOCAL_STATIC_LIBRARIES += cocos_tiff_static
@@ -163,9 +185,6 @@ LOCAL_STATIC_LIBRARIES += cocos_webp_static
 LOCAL_STATIC_LIBRARIES += cocos_zlib_static
 LOCAL_STATIC_LIBRARIES += uv_static
 LOCAL_STATIC_LIBRARIES += v8_static
-LOCAL_STATIC_LIBRARIES += audioengine_static
-LOCAL_STATIC_LIBRARIES += cocos_network_static
-LOCAL_STATIC_LIBRARIES += cocos_extension_static
 
 LOCAL_WHOLE_STATIC_LIBRARIES := cocos2dxandroid_static
 LOCAL_WHOLE_STATIC_LIBRARIES += cpufeatures
