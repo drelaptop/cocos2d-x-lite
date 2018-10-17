@@ -23,26 +23,6 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#ifndef USE_VIDEO
-#define USE_VIDEO 1
-#endif
-
-#ifndef USE_WEB_VIEW
-#define USE_WEB_VIEW 1
-#endif
-
-#ifndef USE_AUDIO
-#define USE_AUDIO 1
-#endif
-
-#ifndef USE_NET_WORK
-#define USE_NET_WORK 1
-#endif
-
-#ifndef USE_GFX_RENDERER
-#define USE_GFX_RENDERER 0
-#endif
-
 #include "cocos/scripting/js-bindings/manual/jsb_module_register.hpp"
 #include "cocos/scripting/js-bindings/jswrapper/SeApi.h"
 
