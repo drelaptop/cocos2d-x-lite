@@ -744,6 +744,14 @@ str
 },
 
 /**
+ * @method fill
+ */
+fill : function (
+)
+{
+},
+
+/**
  * @method scale
  * @param {float} arg0
  * @param {float} arg1
@@ -861,6 +869,22 @@ float
  * @method beginPath
  */
 beginPath : function (
+)
+{
+},
+
+/**
+ * @method rect
+ * @param {float} arg0
+ * @param {float} arg1
+ * @param {float} arg2
+ * @param {float} arg3
+ */
+rect : function (
+float, 
+float, 
+float, 
+float 
 )
 {
 },

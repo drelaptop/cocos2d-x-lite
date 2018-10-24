@@ -79,6 +79,15 @@ public:
         fillData();
     }
 
+    void fill()
+    {
+        if (_bufferWidth < 1.0f || _bufferHeight < 1.0f)
+            return;
+
+        JniHelper::callObjectVoidMethod(_obj, JCLS_CANVASIMPL, "fill");
+        fillData();
+    }
+
     void saveContext()
     {
         JniHelper::callObjectVoidMethod(_obj, JCLS_CANVASIMPL, "saveContext");
@@ -87,6 +96,14 @@ public:
     void restoreContext()
     {
         JniHelper::callObjectVoidMethod(_obj, JCLS_CANVASIMPL, "restoreContext");
+    }
+
+    void rect(float x, float y, float w, float h)
+    {
+        if (_bufferWidth < 1.0f || _bufferHeight < 1.0f)
+            return;
+        JniHelper::callObjectVoidMethod(_obj, JCLS_CANVASIMPL, "rect", x, y, w, h);
+        fillData();
     }
 
     void clearRect(float x, float y, float w, float h)
@@ -248,6 +265,13 @@ void CanvasRenderingContext2D::recreateBufferIfNeeded()
     }
 }
 
+void CanvasRenderingContext2D::rect(float x, float y, float width, float height)
+{
+//    SE_LOGD("CanvasRenderingContext2D::rect: %p, %f, %f, %f, %f\n", this, x, y, width, height);
+    recreateBufferIfNeeded();
+    _impl->rect(x, y, width, height);
+}
+
 void CanvasRenderingContext2D::clearRect(float x, float y, float width, float height)
 {
 //    SE_LOGD("CanvasRenderingContext2D::clearRect: %p, %f, %f, %f, %f\n", this, x, y, width, height);
@@ -328,6 +352,14 @@ void CanvasRenderingContext2D::lineTo(float x, float y)
 void CanvasRenderingContext2D::stroke()
 {
     _impl->stroke();
+
+    if (_canvasBufferUpdatedCB != nullptr)
+        _canvasBufferUpdatedCB(_impl->getDataRef());
+}
+
+void CanvasRenderingContext2D::fill()
+{
+    _impl->fill();
 
     if (_canvasBufferUpdatedCB != nullptr)
         _canvasBufferUpdatedCB(_impl->getDataRef());

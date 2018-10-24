@@ -57,6 +57,7 @@ public:
     ~CanvasRenderingContext2D();
 
     // Rect
+    void rect(float x, float y, float width, float height);
     void clearRect(float x, float y, float width, float height);
     void fillRect(float x, float y, float width, float height);
 
@@ -70,6 +71,7 @@ public:
     void closePath();
     void moveTo(float x, float y);
     void lineTo(float x, float y);
+    void fill();
     void stroke();
     void restore();
 

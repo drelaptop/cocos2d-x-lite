@@ -231,6 +231,20 @@ public class CanvasRenderingContext2DImpl {
         mCanvas.drawPath(mLinePath, mLinePaint);
     }
 
+    private void fill() {
+        if (mLinePaint == null) {
+            mLinePaint = new Paint();
+        }
+
+        if(mLinePath == null) {
+            mLinePath = new Path();
+        }
+
+        mLinePaint.setARGB(mFillStyleA, mFillStyleR, mFillStyleG, mFillStyleB);
+        mLinePaint.setStyle(Paint.Style.FILL);
+        mCanvas.drawPath(mLinePath, mLinePaint);
+    }
+
     private void saveContext() {
         mCanvas.save();
     }
@@ -242,16 +256,24 @@ public class CanvasRenderingContext2DImpl {
         }
     }
 
+    private void rect(float x, float y, float w, float h) {
+        //        Log.d(TAG, "this: " + this + ", rect: " + x + ", " + y + ", " + w + ", " + h);
+        beginPath();
+        moveTo(x, y);
+        lineTo(x, y + h);
+        lineTo(x + w, y + h);
+        lineTo(x + w, y);
+        closePath();
+    }
+
     private void clearRect(float x, float y, float w, float h) {
-//        Log.d(TAG, "this: " + this + ", clearRect: " + x + ", " + y + ", " + w + ", " + h);
-        int w_ = mBitmap.getWidth();
-        int h_ = mBitmap.getHeight();
-        int size = w_*h_;
-        int[] clearColor = new int[size];
-        for (int i = 0; i < size; ++i) {
+        //        Log.d(TAG, "this: " + this + ", clearRect: " + x + ", " + y + ", " + w + ", " + h);
+        int clearSize = (int)(w * h);
+        int[] clearColor = new int[clearSize];
+        for (int i = 0; i < clearSize; ++i) {
             clearColor[i] = Color.TRANSPARENT;
         }
-        mBitmap.setPixels(clearColor, 0, mBitmap.getWidth(), 0, 0, mBitmap.getWidth(), mBitmap.getHeight());
+        mBitmap.setPixels(clearColor, 0, mBitmap.getWidth(), (int) x, (int) y, (int) w, (int) h);
     }
 
     private void createTextPaintIfNeeded() {
@@ -262,6 +284,13 @@ public class CanvasRenderingContext2DImpl {
 
     private void fillRect(float x, float y, float w, float h) {
         // Log.d(TAG, "fillRect: " + x + ", " + y + ", " + ", " + w + ", " + h);
+        int pixelValue = (mFillStyleA & 0xff) << 24 | (mFillStyleR & 0xff) << 16 | (mFillStyleG & 0xff) << 8 | (mFillStyleB & 0xff);
+        int fillSize = (int)(w * h);
+        int[] fillColor = new int[fillSize];
+        for (int i = 0; i < fillSize; ++i) {
+            fillColor[i] = pixelValue;
+        }
+        mBitmap.setPixels(fillColor, 0, mBitmap.getWidth(), (int)x, (int)y, (int)w, (int)h);
     }
 
     private void fillText(String text, float x, float y, float maxWidth) {
