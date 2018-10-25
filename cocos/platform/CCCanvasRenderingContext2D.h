@@ -91,6 +91,9 @@ public:
     void set_strokeStyle(const std::string& strokeStyle);
     void set_globalCompositeOperation(const std::string& globalCompositeOperation);
 
+    // fill image data into Context2D
+    void _fillImageData(const Data& imageData, float imageWidth, float imageHeight, float offsetX, float offsetY);
+
     // transform
     void translate(float x, float y);
     void scale(float x, float y);

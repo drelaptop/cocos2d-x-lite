@@ -175,6 +175,23 @@ public:
         JniHelper::callObjectVoidMethod(_obj, JCLS_CANVASIMPL, "setLineWidth", lineWidth);
     }
 
+    void _fillImageData(const Data &imageData, float imageWidth, float imageHeight, float offsetX, float offsetY) {
+        if (_bufferWidth < 1.0f || _bufferHeight < 1.0f)
+            return;
+
+        // for (int i = 0; i < 16; ++i) {
+        //     SE_LOGE("_fillImageData, value %d: %d\n", i, imageData.getBytes()[i]);
+        // }
+        jbyteArray arr = JniHelper::getEnv()->NewByteArray(imageData.getSize());
+        JniHelper::getEnv()->SetByteArrayRegion(arr, 0, imageData.getSize(),
+                                                (const jbyte *) imageData.getBytes());
+        JniHelper::callObjectVoidMethod(_obj, JCLS_CANVASIMPL, "_fillImageData", arr, imageWidth,
+                                        imageHeight, offsetX, offsetY);
+        JniHelper::getEnv()->DeleteLocalRef(arr);
+
+        fillData();
+    }
+
     const Data& getDataRef() const
     {
         return _data;
@@ -495,6 +512,12 @@ void CanvasRenderingContext2D::set_globalCompositeOperation(const std::string& g
     // SE_LOGE("%s isn't implemented!\n", __FUNCTION__);
 }
 
+void CanvasRenderingContext2D::_fillImageData(const Data& imageData, float imageWidth, float imageHeight, float offsetX, float offsetY)
+{
+    _impl->_fillImageData(imageData, imageWidth, imageHeight, offsetX, offsetY);
+    if (_canvasBufferUpdatedCB != nullptr)
+        _canvasBufferUpdatedCB(_impl->getDataRef());
+}
 // transform
 //REFINE:
 

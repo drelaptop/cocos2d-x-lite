@@ -292,11 +292,11 @@ public class CanvasRenderingContext2DImpl {
         // Log.d(TAG, "fillRect: " + x + ", " + y + ", " + ", " + w + ", " + h);
         int pixelValue = (mFillStyleA & 0xff) << 24 | (mFillStyleR & 0xff) << 16 | (mFillStyleG & 0xff) << 8 | (mFillStyleB & 0xff);
         int fillSize = (int)(w * h);
-        int[] fillColor = new int[fillSize];
+        int[] fillColors = new int[fillSize];
         for (int i = 0; i < fillSize; ++i) {
-            fillColor[i] = pixelValue;
+            fillColors[i] = pixelValue;
         }
-        mBitmap.setPixels(fillColor, 0, (int) w, (int)x, (int)y, (int)w, (int)h);
+        mBitmap.setPixels(fillColors, 0, (int) w, (int)x, (int)y, (int)w, (int)h);
     }
 
     private void fillText(String text, float x, float y, float maxWidth) {
@@ -376,6 +376,22 @@ public class CanvasRenderingContext2DImpl {
 
     private void setLineWidth(float lineWidth) {
         mLineWidth = lineWidth;
+    }
+
+    private void _fillImageData(byte[] imageData, float imageWidth, float imageHeight, float offsetX, float offsetY) {
+        Log.d(TAG, "_fillImageData: ");
+        int fillSize = (int) (imageWidth * imageHeight);
+        int[] fillColors = new int[fillSize];
+        int r, g, b, a;
+        for (int i = 0; i < fillSize; ++i) {
+            // imageData Pixel (RGBA) -> fillColors int (ARGB)
+            r = ((int)imageData[4 * i + 0]) & 0xff;
+            g = ((int)imageData[4 * i + 1]) & 0xff;
+            b = ((int)imageData[4 * i + 2]) & 0xff;
+            a = ((int)imageData[4 * i + 3]) & 0xff;
+            fillColors[i] = (a & 0xff) << 24 | (r & 0xff) << 16 | (g & 0xff) << 8 | (b & 0xff);
+        }
+        mBitmap.setPixels(fillColors, 0, (int) imageWidth, (int) offsetX, (int) offsetY, (int) imageWidth, (int) imageHeight);
     }
 
     private Point convertDrawPoint(final Point point, String text) {
