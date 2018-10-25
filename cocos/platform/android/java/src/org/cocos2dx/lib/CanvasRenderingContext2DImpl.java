@@ -156,6 +156,7 @@ public class CanvasRenderingContext2DImpl {
         TextPaint paint = new TextPaint();
         paint.setTextSize(fontSize);
         paint.setAntiAlias(true);
+        paint.setSubpixelText(true);
 
         String key = fontName;
         if (enableBold) {
