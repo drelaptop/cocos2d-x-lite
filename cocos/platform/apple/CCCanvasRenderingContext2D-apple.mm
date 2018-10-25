@@ -664,6 +664,16 @@ void CanvasRenderingContext2D::stroke()
         _canvasBufferUpdatedCB([_impl getDataRef]);
 }
 
+void CanvasRenderingContext2D::fill()
+{
+    SE_LOGE("%s isn't implemented!\n", __FUNCTION__);
+}
+
+void CanvasRenderingContext2D::rect(float x, float y, float w, float h)
+{
+    SE_LOGE("%s isn't implemented!\n", __FUNCTION__);
+}
+
 void CanvasRenderingContext2D::restore()
 {
     [_impl restoreContext];
