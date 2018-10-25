@@ -243,6 +243,11 @@ public class CanvasRenderingContext2DImpl {
         mLinePaint.setARGB(mFillStyleA, mFillStyleR, mFillStyleG, mFillStyleB);
         mLinePaint.setStyle(Paint.Style.FILL);
         mCanvas.drawPath(mLinePath, mLinePaint);
+        // workaround: draw a hairline to cover the border
+        mLinePaint.setStrokeWidth(0);
+        mLinePaint.setStyle(Paint.Style.STROKE);
+        mCanvas.drawPath(mLinePath, mLinePaint);
+        mLinePaint.setStrokeWidth(mLineWidth);
     }
 
     private void saveContext() {
