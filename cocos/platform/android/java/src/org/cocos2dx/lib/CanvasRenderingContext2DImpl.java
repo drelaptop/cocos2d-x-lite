@@ -278,8 +278,8 @@ public class CanvasRenderingContext2DImpl {
         for (int i = 0; i < clearSize; ++i) {
             clearColor[i] = Color.TRANSPARENT;
         }
-        mBitmap.setPixels(clearColor, 0, mBitmap.getWidth(), (int) x, (int) y, (int) w, (int) h);
-    }
+        mBitmap.setPixels(clearColor, 0, (int) w, (int) x, (int) y, (int) w, (int) h);
+}
 
     private void createTextPaintIfNeeded() {
         if (mTextPaint == null) {
@@ -295,7 +295,7 @@ public class CanvasRenderingContext2DImpl {
         for (int i = 0; i < fillSize; ++i) {
             fillColor[i] = pixelValue;
         }
-        mBitmap.setPixels(fillColor, 0, mBitmap.getWidth(), (int)x, (int)y, (int)w, (int)h);
+        mBitmap.setPixels(fillColor, 0, (int) w, (int)x, (int)y, (int)w, (int)h);
     }
 
     private void fillText(String text, float x, float y, float maxWidth) {
