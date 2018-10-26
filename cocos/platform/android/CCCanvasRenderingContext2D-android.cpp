@@ -179,9 +179,6 @@ public:
         if (_bufferWidth < 1.0f || _bufferHeight < 1.0f)
             return;
 
-        // for (int i = 0; i < 16; ++i) {
-        //     SE_LOGE("_fillImageData, value %d: %d\n", i, imageData.getBytes()[i]);
-        // }
         jbyteArray arr = JniHelper::getEnv()->NewByteArray(imageData.getSize());
         JniHelper::getEnv()->SetByteArrayRegion(arr, 0, imageData.getSize(),
                                                 (const jbyte *) imageData.getBytes());

@@ -870,6 +870,10 @@ void CanvasRenderingContext2D::set_globalCompositeOperation(const std::string& g
     //SE_LOGE("%s isn't implemented!\n", __FUNCTION__);
 }
 
+void CanvasRenderingContext2D::_fillImageData(const Data& imageData, float imageWidth, float imageHeight, float offsetX, float offsetY)
+{
+    //SE_LOGE("%s isn't implemented!\n", __FUNCTION__);
+}
 // transform
 //REFINE:
 
