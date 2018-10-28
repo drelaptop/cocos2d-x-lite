@@ -55,7 +55,7 @@ namespace se {
         {
             if (info[0]->IsString())
             {
-                v8::String::Utf8Value utf8(info[0]);
+                v8::String::Utf8Value utf8(v8::Isolate::GetCurrent(), info[0]);
                 SE_LOGD("JS: %s\n", *utf8);
             }
         }
@@ -79,14 +79,14 @@ namespace se {
                 std::string scriptName;
                 if (!script.IsEmpty())
                 {
-                    scriptName = *v8::String::Utf8Value(script);
+                    scriptName = *v8::String::Utf8Value(v8::Isolate::GetCurrent(), script);
                 }
 
                 v8::Local<v8::String> func = frame->GetFunctionName();
                 std::string funcName;
                 if (!func.IsEmpty())
                 {
-                    funcName = *v8::String::Utf8Value(func);
+                    funcName = *v8::String::Utf8Value(v8::Isolate::GetCurrent(), func);
                 }
 
                 stackStr += "[";
