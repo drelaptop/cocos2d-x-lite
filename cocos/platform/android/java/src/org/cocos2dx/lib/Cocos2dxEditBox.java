@@ -235,15 +235,11 @@ public class Cocos2dxEditBox {
                     // if more than a quarter of the screen, its probably a keyboard
                     if (heightDiff > mScreenHeight/4) {
                         if (!keyboardVisible) {
-                            Cocos2dxEditBox.sThis.mActivity.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                                            RelativeLayout.LayoutParams.WRAP_CONTENT);
-                                    layoutParams.topMargin = r.bottom - r.top - mEditBoxLayout.getHeight();
-                                    mEditBoxLayout.setLayoutParams(layoutParams);
-                                }
-                            });
+                            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                                    RelativeLayout.LayoutParams.WRAP_CONTENT);
+                            layoutParams.topMargin = r.bottom - r.top - mEditBoxLayout.getHeight();
+                            mEditBoxLayout.setLayoutParams(layoutParams);
                             keyboardVisible = true;
                         }
                     } else {
