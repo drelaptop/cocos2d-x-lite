@@ -67,6 +67,7 @@ public class Cocos2dxEditBox {
     private boolean mConfirmHold = true;
     private Cocos2dxActivity mActivity = null;
     private RelativeLayout mButtonLayout = null;
+    private RelativeLayout mEditBoxLayout = null;
     private RelativeLayout.LayoutParams mButtonParams;
     private int mEditTextID = 1;
     private int mButtonLayoutID = 2;
@@ -234,6 +235,15 @@ public class Cocos2dxEditBox {
                     // if more than a quarter of the screen, its probably a keyboard
                     if (heightDiff > mScreenHeight/4) {
                         if (!keyboardVisible) {
+                            Cocos2dxEditBox.sThis.mActivity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                                            RelativeLayout.LayoutParams.WRAP_CONTENT);
+                                    layoutParams.topMargin = r.bottom - r.top - mEditBoxLayout.getHeight();
+                                    mEditBoxLayout.setLayoutParams(layoutParams);
+                                }
+                            });
                             keyboardVisible = true;
                         }
                     } else {
@@ -266,14 +276,11 @@ public class Cocos2dxEditBox {
      Private functions.
      **************************************************************************************/
     private void addItems(Cocos2dxActivity context, RelativeLayout layout) {
-        RelativeLayout myLayout = new RelativeLayout(context);
-        this.addEditText(context, myLayout);
-        this.addButton(context, myLayout);
+        mEditBoxLayout = new RelativeLayout(context);
+        this.addEditText(context, mEditBoxLayout);
+        this.addButton(context, mEditBoxLayout);
 
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        layout.addView(myLayout, layoutParams);
+        layout.addView(mEditBoxLayout);
 
         //FXI ME: Is it needed?
         // When touch area outside EditText and soft keyboard, then hide.
