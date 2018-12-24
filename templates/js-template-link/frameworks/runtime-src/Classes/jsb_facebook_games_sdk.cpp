@@ -40,10 +40,18 @@ public:
 	std::shared_ptr<facebook_games_sdk::User> login()
 	{
 		auto user = facebook_games_sdk::FacebookGameSDK::getInstance().doLogin().then([=](std::shared_ptr<facebook_games_sdk::User> usr) {
-			if (usr)
-			{
-				usr->getPermissions().get();
-			}
+			return usr;
+		});
+		// Calling future::get on a valid future blocks the thread until the provider makes the shared state ready
+		loginUser = user.get();
+
+		return loginUser;
+	}
+
+	// do PermissionRequest, just like do login()
+	std::shared_ptr<facebook_games_sdk::User> permissionRequest()
+	{
+		auto user = facebook_games_sdk::FacebookGameSDK::getInstance().doPermissionRequest().then([=](std::shared_ptr<facebook_games_sdk::User> usr) {
 			return usr;
 		});
 		// Calling future::get on a valid future blocks the thread until the provider makes the shared state ready
@@ -332,6 +340,24 @@ bool js_FacebookPCGameSDK_login(se::State& s)
 	return false;
 }
 SE_BIND_FUNC(js_FacebookPCGameSDK_login)
+
+bool js_FacebookPCGameSDK_permissionRequest(se::State& s)
+{
+	FacebookPCGameSDK* cobj = (FacebookPCGameSDK*)s.nativeThisObject();
+	SE_PRECONDITION2(cobj, false, "js_FacebookPCGameSDK_login : Invalid Native Object");
+	const auto& args = s.args();
+	size_t argc = args.size();
+	if (argc == 0)
+	{
+		std::shared_ptr<facebook_games_sdk::User> user = cobj->permissionRequest();
+		bool ok = FB_User_to_seval(user, &s.rval());
+		SE_PRECONDITION2(ok, false, "FB_User_to_seval failed");
+		return true;
+	}
+	SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+	return false;
+}
+SE_BIND_FUNC(js_FacebookPCGameSDK_permissionRequest)
 
 bool js_FacebookPCGameSDK_getFriends(se::State& s)
 {
