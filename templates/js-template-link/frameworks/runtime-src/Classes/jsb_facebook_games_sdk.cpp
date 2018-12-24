@@ -9,6 +9,7 @@
 
 #include <locale>
 #include <codecvt>
+#include <strstream>
 
 using namespace cocos2d;
 
@@ -66,11 +67,19 @@ public:
 		const std::map<utility::string_t, utility::string_t>& details = {},
 		const double value_to_sum = 0.0)
 	{
+		loginUser != nullptr ? nullptr : login();
 		_isEventPrepared ? nullptr : _prepareEvent();
 
 		facebook_games_sdk::Event::logEvent(event_name, details, value_to_sum);
 	}
 
+	std::vector<facebook_games_sdk::UserFriend> getFriends()
+	{
+		loginUser != nullptr ? nullptr : login();
+		loginUser->getFriends().get();
+
+		return loginUser->friends();
+	}
 private:
 	FacebookPCGameSDK()
 		: appId(0)
@@ -112,6 +121,17 @@ bool FB_User_to_seval(std::shared_ptr<facebook_games_sdk::User> user, se::Value*
 	obj->setProperty("name", se::Value(convert.to_bytes(user->name())));
 	obj->setProperty("accessToken", se::Value(convert.to_bytes(user->accessToken())));
 	obj->setProperty("hasPicture", se::Value(user->hasPicture()));
+	if (user->hasPicture())
+	{
+		se::HandleObject pic(se::Object::createPlainObject());
+		pic->setProperty("width", se::Value(user->picture().width));
+		pic->setProperty("height", se::Value(user->picture().height));
+		pic->setProperty("url", se::Value(convert.to_bytes(user->picture().url)));
+
+		se::Value picture;
+		picture.setObject(pic);
+		obj->setProperty("picture", picture);
+	}
 	ret->setObject(obj);
 
 	return true;
@@ -139,6 +159,24 @@ bool seval_to_FB_StringsMap(const se::Value& v, std::map<utility::string_t, util
 	}
 
 	return true;
+};
+
+// only FBID_t info in UserFriend struct
+bool FB_Friends_to_seval(std::vector<facebook_games_sdk::UserFriend> &friends, se::Value* ret)
+{
+	assert(ret != nullptr);
+
+	// FBID_t type is unsigned long long, we can't put it into se::Value directly, so convert to std::string
+	std::vector<std::string> friendsInfo;
+	for (const auto& fri : friends)
+	{
+		std::string item;
+		std::strstream strS;
+		strS << fri.getId();
+		strS >> item;
+		friendsInfo.push_back(item);
+	}
+	return std_vector_string_to_seval(friendsInfo, ret);
 };
 
 se::Object* __jsb_FacebookPCGameSDK_proto = nullptr;
@@ -263,6 +301,22 @@ bool js_FacebookPCGameSDK_login(se::State& s)
 	return false;
 }
 SE_BIND_FUNC(js_FacebookPCGameSDK_login)
+
+bool js_FacebookPCGameSDK_getFriends(se::State& s)
+{
+	FacebookPCGameSDK* cobj = (FacebookPCGameSDK*)s.nativeThisObject();
+	SE_PRECONDITION2(cobj, false, "js_FacebookPCGameSDK_login : Invalid Native Object");
+	const auto& args = s.args();
+	size_t argc = args.size();
+	if (argc == 0) {
+		bool ok = FB_Friends_to_seval(cobj->getFriends(), &s.rval());
+		SE_PRECONDITION2(ok, false, "FB_User_to_seval failed");
+		return true;
+	}
+	SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+	return false;
+}
+SE_BIND_FUNC(js_FacebookPCGameSDK_getFriends)
 
 bool js_register_FacebookPCGameSDK(se::Object* obj)
 {
