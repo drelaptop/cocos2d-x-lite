@@ -88,6 +88,16 @@ public:
 
 		return loginUser->permissions();
 	}
+
+	void deauthorizeApp()
+	{
+		loginUser->deauthorizeApp().get();
+	}
+
+	void logout()
+	{
+		loginUser != nullptr ? loginUser->logout() : nullptr;
+	}
 private:
 	FacebookPCGameSDK()
 		: appId(0)
@@ -355,6 +365,36 @@ bool js_FacebookPCGameSDK_getPermissions(se::State& s)
 }
 SE_BIND_FUNC(js_FacebookPCGameSDK_getPermissions)
 
+bool js_FacebookPCGameSDK_deauthorizeApp(se::State& s)
+{
+	FacebookPCGameSDK* cobj = (FacebookPCGameSDK*)s.nativeThisObject();
+	SE_PRECONDITION2(cobj, false, "js_FacebookPCGameSDK_login : Invalid Native Object");
+	const auto& args = s.args();
+	size_t argc = args.size();
+	if (argc == 0) {
+		cobj->deauthorizeApp();
+		return true;
+	}
+	SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+	return false;
+}
+SE_BIND_FUNC(js_FacebookPCGameSDK_deauthorizeApp)
+
+bool js_FacebookPCGameSDK_logout(se::State& s)
+{
+	FacebookPCGameSDK* cobj = (FacebookPCGameSDK*)s.nativeThisObject();
+	SE_PRECONDITION2(cobj, false, "js_FacebookPCGameSDK_login : Invalid Native Object");
+	const auto& args = s.args();
+	size_t argc = args.size();
+	if (argc == 0) {
+		cobj->logout();
+		return true;
+	}
+	SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+	return false;
+}
+SE_BIND_FUNC(js_FacebookPCGameSDK_logout)
+
 bool js_register_FacebookPCGameSDK(se::Object* obj)
 {
 	auto cls = se::Class::create("FacebookPCGameSDK", obj, nullptr, nullptr);
@@ -366,6 +406,8 @@ bool js_register_FacebookPCGameSDK(se::Object* obj)
 	cls->defineFunction("logEvent", _SE(js_FacebookPCGameSDK_logEvent));
 	cls->defineFunction("getFriends", _SE(js_FacebookPCGameSDK_getFriends));
 	cls->defineFunction("getPermissions", _SE(js_FacebookPCGameSDK_getPermissions));
+	cls->defineFunction("deauthorizeApp", _SE(js_FacebookPCGameSDK_deauthorizeApp));
+	cls->defineFunction("logout", _SE(js_FacebookPCGameSDK_logout));
 	cls->install();
 	JSBClassType::registerClass<FacebookPCGameSDK>(cls);
 
