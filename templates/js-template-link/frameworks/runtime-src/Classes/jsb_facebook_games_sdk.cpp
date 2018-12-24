@@ -243,7 +243,7 @@ SE_BIND_FUNC(js_FacebookPCGameSDK_getInstance)
 bool js_FacebookPCGameSDK_initialize(se::State& s)
 {
 	FacebookPCGameSDK* cobj = (FacebookPCGameSDK*)s.nativeThisObject();
-	SE_PRECONDITION2(cobj, false, "js_FacebookPCGameSDK_init : Invalid Native Object");
+	SE_PRECONDITION2(cobj, false, "js_FacebookPCGameSDK_initialize : Invalid Native Object");
 	const auto& args = s.args();
 	size_t argc = args.size();
 	CC_UNUSED bool ok = true;
@@ -251,7 +251,7 @@ bool js_FacebookPCGameSDK_initialize(se::State& s)
 	{
 		std::string arg0;
 		ok &= seval_to_std_string(args[0], &arg0);
-		SE_PRECONDITION2(ok, false, "js_FacebookPCGameSDK_init : Error processing arguments");
+		SE_PRECONDITION2(ok, false, "js_FacebookPCGameSDK_initialize : Error processing arguments");
 		cobj->initialize(arg0);
 		return true;
 	}
@@ -344,7 +344,7 @@ SE_BIND_FUNC(js_FacebookPCGameSDK_login)
 bool js_FacebookPCGameSDK_permissionRequest(se::State& s)
 {
 	FacebookPCGameSDK* cobj = (FacebookPCGameSDK*)s.nativeThisObject();
-	SE_PRECONDITION2(cobj, false, "js_FacebookPCGameSDK_login : Invalid Native Object");
+	SE_PRECONDITION2(cobj, false, "js_FacebookPCGameSDK_permissionRequest : Invalid Native Object");
 	const auto& args = s.args();
 	size_t argc = args.size();
 	if (argc == 0)
@@ -362,7 +362,7 @@ SE_BIND_FUNC(js_FacebookPCGameSDK_permissionRequest)
 bool js_FacebookPCGameSDK_getFriends(se::State& s)
 {
 	FacebookPCGameSDK* cobj = (FacebookPCGameSDK*)s.nativeThisObject();
-	SE_PRECONDITION2(cobj, false, "js_FacebookPCGameSDK_login : Invalid Native Object");
+	SE_PRECONDITION2(cobj, false, "js_FacebookPCGameSDK_getFriends : Invalid Native Object");
 	const auto& args = s.args();
 	size_t argc = args.size();
 	if (argc == 0) {
@@ -378,7 +378,7 @@ SE_BIND_FUNC(js_FacebookPCGameSDK_getFriends)
 bool js_FacebookPCGameSDK_getPermissions(se::State& s)
 {
 	FacebookPCGameSDK* cobj = (FacebookPCGameSDK*)s.nativeThisObject();
-	SE_PRECONDITION2(cobj, false, "js_FacebookPCGameSDK_login : Invalid Native Object");
+	SE_PRECONDITION2(cobj, false, "js_FacebookPCGameSDK_getPermissions : Invalid Native Object");
 	const auto& args = s.args();
 	size_t argc = args.size();
 	if (argc == 0) {
@@ -394,7 +394,7 @@ SE_BIND_FUNC(js_FacebookPCGameSDK_getPermissions)
 bool js_FacebookPCGameSDK_deauthorizeApp(se::State& s)
 {
 	FacebookPCGameSDK* cobj = (FacebookPCGameSDK*)s.nativeThisObject();
-	SE_PRECONDITION2(cobj, false, "js_FacebookPCGameSDK_login : Invalid Native Object");
+	SE_PRECONDITION2(cobj, false, "js_FacebookPCGameSDK_deauthorizeApp : Invalid Native Object");
 	const auto& args = s.args();
 	size_t argc = args.size();
 	if (argc == 0) {
@@ -409,7 +409,7 @@ SE_BIND_FUNC(js_FacebookPCGameSDK_deauthorizeApp)
 bool js_FacebookPCGameSDK_logout(se::State& s)
 {
 	FacebookPCGameSDK* cobj = (FacebookPCGameSDK*)s.nativeThisObject();
-	SE_PRECONDITION2(cobj, false, "js_FacebookPCGameSDK_login : Invalid Native Object");
+	SE_PRECONDITION2(cobj, false, "js_FacebookPCGameSDK_logout : Invalid Native Object");
 	const auto& args = s.args();
 	size_t argc = args.size();
 	if (argc == 0) {
