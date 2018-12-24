@@ -80,6 +80,14 @@ public:
 
 		return loginUser->friends();
 	}
+
+	std::set<utility::string_t> getPermissions()
+	{
+		loginUser != nullptr ? nullptr : login();
+		loginUser->getPermissions().get();
+
+		return loginUser->permissions();
+	}
 private:
 	FacebookPCGameSDK()
 		: appId(0)
@@ -178,6 +186,19 @@ bool FB_Friends_to_seval(std::vector<facebook_games_sdk::UserFriend> &friends, s
 	}
 	return std_vector_string_to_seval(friendsInfo, ret);
 };
+
+bool FB_Permissions_to_seval(std::set<utility::string_t> &permissions, se::Value* ret)
+{
+	assert(ret != nullptr);
+
+	std::vector<std::string> permissionsInfo;
+	std::wstring_convert<std::codecvt_utf8<wchar_t>> convert;
+	for (const auto& perm : permissions)
+	{
+		permissionsInfo.push_back(convert.to_bytes(perm));
+	}
+	return std_vector_string_to_seval(permissionsInfo, ret);
+}
 
 se::Object* __jsb_FacebookPCGameSDK_proto = nullptr;
 se::Class* __jsb_FacebookPCGameSDK_class = nullptr;
@@ -318,6 +339,22 @@ bool js_FacebookPCGameSDK_getFriends(se::State& s)
 }
 SE_BIND_FUNC(js_FacebookPCGameSDK_getFriends)
 
+bool js_FacebookPCGameSDK_getPermissions(se::State& s)
+{
+	FacebookPCGameSDK* cobj = (FacebookPCGameSDK*)s.nativeThisObject();
+	SE_PRECONDITION2(cobj, false, "js_FacebookPCGameSDK_login : Invalid Native Object");
+	const auto& args = s.args();
+	size_t argc = args.size();
+	if (argc == 0) {
+		bool ok = FB_Permissions_to_seval(cobj->getPermissions(), &s.rval());
+		SE_PRECONDITION2(ok, false, "FB_User_to_seval failed");
+		return true;
+	}
+	SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+	return false;
+}
+SE_BIND_FUNC(js_FacebookPCGameSDK_getPermissions)
+
 bool js_register_FacebookPCGameSDK(se::Object* obj)
 {
 	auto cls = se::Class::create("FacebookPCGameSDK", obj, nullptr, nullptr);
@@ -327,6 +364,8 @@ bool js_register_FacebookPCGameSDK(se::Object* obj)
 	cls->defineFunction("login", _SE(js_FacebookPCGameSDK_login));
 	cls->defineFunction("setExternalInfo", _SE(js_FacebookPCGameSDK_setExternalInfo));
 	cls->defineFunction("logEvent", _SE(js_FacebookPCGameSDK_logEvent));
+	cls->defineFunction("getFriends", _SE(js_FacebookPCGameSDK_getFriends));
+	cls->defineFunction("getPermissions", _SE(js_FacebookPCGameSDK_getPermissions));
 	cls->install();
 	JSBClassType::registerClass<FacebookPCGameSDK>(cls);
 
