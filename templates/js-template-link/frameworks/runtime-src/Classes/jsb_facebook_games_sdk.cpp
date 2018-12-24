@@ -106,6 +106,16 @@ public:
 	{
 		loginUser != nullptr ? loginUser->logout() : nullptr;
 	}
+
+	bool hasAccessToken()
+	{
+		return facebook_games_sdk::FacebookGameSDK::getInstance().hasAccessToken();
+	}
+
+	utility::string_t getAccessToken()
+	{
+		return facebook_games_sdk::FacebookGameSDK::getInstance().getAccessToken();
+	}
 private:
 	FacebookPCGameSDK()
 		: appId(0)
@@ -169,6 +179,15 @@ bool seval_to_FB_Strings(const se::Value& v, std::wstring* ret)
 	std::wstring_convert<std::codecvt_utf8<wchar_t>> convert;
 
 	*ret = convert.from_bytes(v.toStringForce());
+	return true;
+};
+
+bool FB_Strings_to_seval(const std::wstring& w, se::Value* ret)
+{
+	assert(ret != nullptr);
+	std::wstring_convert<std::codecvt_utf8<wchar_t>> convert;
+
+	ret->setString(convert.to_bytes(w));
 	return true;
 };
 
@@ -421,6 +440,38 @@ bool js_FacebookPCGameSDK_logout(se::State& s)
 }
 SE_BIND_FUNC(js_FacebookPCGameSDK_logout)
 
+bool js_FacebookPCGameSDK_hasAccessToken(se::State& s)
+{
+	FacebookPCGameSDK* cobj = (FacebookPCGameSDK*)s.nativeThisObject();
+	SE_PRECONDITION2(cobj, false, "js_FacebookPCGameSDK_hasAccessToken : Invalid Native Object");
+	const auto& args = s.args();
+	size_t argc = args.size();
+	if (argc == 0) {
+		auto has = cobj->hasAccessToken();
+		s.rval().setBoolean(has);
+	}
+	SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+	return false;
+}
+SE_BIND_FUNC(js_FacebookPCGameSDK_hasAccessToken)
+
+bool js_FacebookPCGameSDK_getAccessToken(se::State& s)
+{
+	FacebookPCGameSDK* cobj = (FacebookPCGameSDK*)s.nativeThisObject();
+	SE_PRECONDITION2(cobj, false, "js_FacebookPCGameSDK_getAccessToken : Invalid Native Object");
+	const auto& args = s.args();
+	size_t argc = args.size();
+	if (argc == 0) {
+		auto token = cobj->getAccessToken();
+		bool ok = FB_Strings_to_seval(token, &s.rval());
+		SE_PRECONDITION2(ok, false, "FB_Strings_to_seval Error");
+		return true;
+	}
+	SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+	return false;
+}
+SE_BIND_FUNC(js_FacebookPCGameSDK_getAccessToken)
+
 bool js_register_FacebookPCGameSDK(se::Object* obj)
 {
 	auto cls = se::Class::create("FacebookPCGameSDK", obj, nullptr, nullptr);
@@ -434,6 +485,8 @@ bool js_register_FacebookPCGameSDK(se::Object* obj)
 	cls->defineFunction("getPermissions", _SE(js_FacebookPCGameSDK_getPermissions));
 	cls->defineFunction("deauthorizeApp", _SE(js_FacebookPCGameSDK_deauthorizeApp));
 	cls->defineFunction("logout", _SE(js_FacebookPCGameSDK_logout));
+	cls->defineFunction("hasAccessToken", _SE(js_FacebookPCGameSDK_hasAccessToken));
+	cls->defineFunction("getAccessToken", _SE(js_FacebookPCGameSDK_getAccessToken));
 	cls->install();
 	JSBClassType::registerClass<FacebookPCGameSDK>(cls);
 
