@@ -475,18 +475,21 @@ SE_BIND_FUNC(js_FacebookPCGameSDK_getAccessToken)
 bool js_register_FacebookPCGameSDK(se::Object* obj)
 {
 	auto cls = se::Class::create("FacebookPCGameSDK", obj, nullptr, nullptr);
-
+	// sdk manager
 	cls->defineStaticFunction("getInstance", _SE(js_FacebookPCGameSDK_getInstance));
 	cls->defineFunction("initialize", _SE(js_FacebookPCGameSDK_initialize));
 	cls->defineFunction("login", _SE(js_FacebookPCGameSDK_login));
+	cls->defineFunction("permissionRequest", _SE(js_FacebookPCGameSDK_permissionRequest));
+	cls->defineFunction("hasAccessToken", _SE(js_FacebookPCGameSDK_hasAccessToken));
+	cls->defineFunction("getAccessToken", _SE(js_FacebookPCGameSDK_getAccessToken));
+	// event interface, for facebook analysis
 	cls->defineFunction("setExternalInfo", _SE(js_FacebookPCGameSDK_setExternalInfo));
 	cls->defineFunction("logEvent", _SE(js_FacebookPCGameSDK_logEvent));
+	// login user interface
 	cls->defineFunction("getFriends", _SE(js_FacebookPCGameSDK_getFriends));
 	cls->defineFunction("getPermissions", _SE(js_FacebookPCGameSDK_getPermissions));
 	cls->defineFunction("deauthorizeApp", _SE(js_FacebookPCGameSDK_deauthorizeApp));
 	cls->defineFunction("logout", _SE(js_FacebookPCGameSDK_logout));
-	cls->defineFunction("hasAccessToken", _SE(js_FacebookPCGameSDK_hasAccessToken));
-	cls->defineFunction("getAccessToken", _SE(js_FacebookPCGameSDK_getAccessToken));
 	cls->install();
 	JSBClassType::registerClass<FacebookPCGameSDK>(cls);
 
