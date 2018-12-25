@@ -61,6 +61,16 @@ public:
         return loginUser;
     }
 
+    bool hasAccessToken()
+    {
+        return facebook_games_sdk::FacebookGameSDK::getInstance().hasAccessToken();
+    }
+
+    utility::string_t getAccessToken()
+    {
+        return facebook_games_sdk::FacebookGameSDK::getInstance().getAccessToken();
+    }
+
     void setExternalInfo(
         const utility::string_t& extern_id,
         const utility::string_t& extern_namespace)
@@ -108,15 +118,6 @@ public:
         loginUser != nullptr ? loginUser->logout() : nullptr;
     }
 
-    bool hasAccessToken()
-    {
-        return facebook_games_sdk::FacebookGameSDK::getInstance().hasAccessToken();
-    }
-
-    utility::string_t getAccessToken()
-    {
-        return facebook_games_sdk::FacebookGameSDK::getInstance().getAccessToken();
-    }
     // Graph Base Infos
     utility::string_t getGraphVersion()
     {
@@ -345,6 +346,74 @@ bool js_FacebookPCGameSDK_initialize(se::State& s)
 }
 SE_BIND_FUNC(js_FacebookPCGameSDK_initialize)
 
+bool js_FacebookPCGameSDK_login(se::State& s)
+{
+    FacebookPCGameSDK* cobj = (FacebookPCGameSDK*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_FacebookPCGameSDK_login : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0)
+    {
+        std::shared_ptr<facebook_games_sdk::User> user = cobj->login();
+        bool ok = FB_User_to_seval(user, &s.rval());
+        SE_PRECONDITION2(ok, false, "FB_User_to_seval failed");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_FacebookPCGameSDK_login)
+
+bool js_FacebookPCGameSDK_permissionRequest(se::State& s)
+{
+    FacebookPCGameSDK* cobj = (FacebookPCGameSDK*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_FacebookPCGameSDK_permissionRequest : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0)
+    {
+        std::shared_ptr<facebook_games_sdk::User> user = cobj->permissionRequest();
+        bool ok = FB_User_to_seval(user, &s.rval());
+        SE_PRECONDITION2(ok, false, "FB_User_to_seval failed");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_FacebookPCGameSDK_permissionRequest)
+
+bool js_FacebookPCGameSDK_hasAccessToken(se::State& s)
+{
+    FacebookPCGameSDK* cobj = (FacebookPCGameSDK*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_FacebookPCGameSDK_hasAccessToken : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        auto has = cobj->hasAccessToken();
+        s.rval().setBoolean(has);
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_FacebookPCGameSDK_hasAccessToken)
+
+bool js_FacebookPCGameSDK_getAccessToken(se::State& s)
+{
+    FacebookPCGameSDK* cobj = (FacebookPCGameSDK*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_FacebookPCGameSDK_getAccessToken : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        auto token = cobj->getAccessToken();
+        bool ok = FB_Strings_to_seval(token, &s.rval());
+        SE_PRECONDITION2(ok, false, "FB_Strings_to_seval Error");
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_FacebookPCGameSDK_getAccessToken)
+
 bool js_FacebookPCGameSDK_setExternalInfo(se::State& s)
 {
     FacebookPCGameSDK* cobj = (FacebookPCGameSDK*)s.nativeThisObject();
@@ -408,41 +477,7 @@ bool js_FacebookPCGameSDK_logEvent(se::State& s)
 }
 SE_BIND_FUNC(js_FacebookPCGameSDK_logEvent)
 
-bool js_FacebookPCGameSDK_login(se::State& s)
-{
-    FacebookPCGameSDK* cobj = (FacebookPCGameSDK*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_FacebookPCGameSDK_login : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    if (argc == 0)
-    {
-        std::shared_ptr<facebook_games_sdk::User> user = cobj->login();
-        bool ok = FB_User_to_seval(user, &s.rval());
-        SE_PRECONDITION2(ok, false, "FB_User_to_seval failed");
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-    return false;
-}
-SE_BIND_FUNC(js_FacebookPCGameSDK_login)
 
-bool js_FacebookPCGameSDK_permissionRequest(se::State& s)
-{
-    FacebookPCGameSDK* cobj = (FacebookPCGameSDK*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_FacebookPCGameSDK_permissionRequest : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    if (argc == 0)
-    {
-        std::shared_ptr<facebook_games_sdk::User> user = cobj->permissionRequest();
-        bool ok = FB_User_to_seval(user, &s.rval());
-        SE_PRECONDITION2(ok, false, "FB_User_to_seval failed");
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-    return false;
-}
-SE_BIND_FUNC(js_FacebookPCGameSDK_permissionRequest)
 
 bool js_FacebookPCGameSDK_getFriends(se::State& s)
 {
@@ -506,20 +541,6 @@ bool js_FacebookPCGameSDK_logout(se::State& s)
 }
 SE_BIND_FUNC(js_FacebookPCGameSDK_logout)
 
-bool js_FacebookPCGameSDK_hasAccessToken(se::State& s)
-{
-    FacebookPCGameSDK* cobj = (FacebookPCGameSDK*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_FacebookPCGameSDK_hasAccessToken : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    if (argc == 0) {
-        auto has = cobj->hasAccessToken();
-        s.rval().setBoolean(has);
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-    return false;
-}
-SE_BIND_FUNC(js_FacebookPCGameSDK_hasAccessToken)
 
 bool js_FacebookPCGameSDK_getGraphVersion(se::State& s)
 {
@@ -554,23 +575,6 @@ bool js_FacebookPCGameSDK_getGraphBaseURL(se::State& s)
     return false;
 }
 SE_BIND_FUNC(js_FacebookPCGameSDK_getGraphBaseURL)
-
-bool js_FacebookPCGameSDK_getAccessToken(se::State& s)
-{
-    FacebookPCGameSDK* cobj = (FacebookPCGameSDK*)s.nativeThisObject();
-    SE_PRECONDITION2(cobj, false, "js_FacebookPCGameSDK_getAccessToken : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    if (argc == 0) {
-        auto token = cobj->getAccessToken();
-        bool ok = FB_Strings_to_seval(token, &s.rval());
-        SE_PRECONDITION2(ok, false, "FB_Strings_to_seval Error");
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-    return false;
-}
-SE_BIND_FUNC(js_FacebookPCGameSDK_getAccessToken)
 
 bool js_FacebookPCGameSDK_GraphPOST(se::State& s)
 {
