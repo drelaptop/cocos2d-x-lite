@@ -118,39 +118,42 @@ public:
 		return facebook_games_sdk::FacebookGameSDK::getInstance().getAccessToken();
 	}
 	// GraphAPI (post/get/del), return json string
-	static utility::string_t GraphPOST(
-		const utility::string_t& access_token,
+	utility::string_t GraphPOST(
 		const utility::string_t& path,
 		const std::vector<utility::string_t>& args = {}
 	)
 	{
-		auto responseTask = facebook_games_sdk::GraphAPI::post(access_token, path, args).then(
+		loginUser != nullptr ? nullptr : login();
+
+		auto responseTask = facebook_games_sdk::GraphAPI::post(loginUser->accessToken(), path, args).then(
 			[=](json::value json_response) -> utility::string_t {
 			return json_response.to_string();
 		});
 		return responseTask.get();
 	}
 
-	static utility::string_t GraphGET(
-		const utility::string_t& access_token,
+	utility::string_t GraphGET(
 		const utility::string_t& path,
 		const std::vector<utility::string_t>& args = {}
 	)
 	{
-		auto responseTask = facebook_games_sdk::GraphAPI::get(access_token, path, args).then(
+		loginUser != nullptr ? nullptr : login();
+
+		auto responseTask = facebook_games_sdk::GraphAPI::get(loginUser->accessToken(), path, args).then(
 			[=](json::value json_response) -> utility::string_t {
 			return json_response.to_string();
 		});
 		return responseTask.get();
 	}
 
-	static utility::string_t GraphDEL(
-		const utility::string_t& access_token,
+	utility::string_t GraphDELETE(
 		const utility::string_t& path,
 		const std::vector<utility::string_t>& args = {}
 	)
 	{
-		auto responseTask = facebook_games_sdk::GraphAPI::del(access_token, path, args).then(
+		loginUser != nullptr ? nullptr : login();
+
+		auto responseTask = facebook_games_sdk::GraphAPI::del(loginUser->accessToken(), path, args).then(
 			[=](json::value json_response) -> utility::string_t {
 			return json_response.to_string();
 		});
@@ -526,23 +529,23 @@ bool js_FacebookPCGameSDK_getAccessToken(se::State& s)
 }
 SE_BIND_FUNC(js_FacebookPCGameSDK_getAccessToken)
 
-static bool js_FacebookPCGameSDK_GraphPOST(se::State& s)
+bool js_FacebookPCGameSDK_GraphPOST(se::State& s)
 {
+	FacebookPCGameSDK* cobj = (FacebookPCGameSDK*)s.nativeThisObject();
+	SE_PRECONDITION2(cobj, false, "js_FacebookPCGameSDK_getAccessToken : Invalid Native Object");
 	const auto& args = s.args();
 	size_t argc = args.size();
 	bool ok = true;
 	if (argc == 3)
 	{
-		std::wstring arg0, arg1;
-		std::vector<std::wstring> arg2;
+		std::wstring arg0;
+		std::vector<std::wstring> arg1;
 		ok &= seval_to_FB_Strings(args[0], &arg0);
 		SE_PRECONDITION2(ok, false, "FB_Strings_to_seval failed");
-		ok &= seval_to_FB_Strings(args[1], &arg1);
-		SE_PRECONDITION2(ok, false, "FB_Strings_to_seval failed");
-		ok &= seval_to_FB_StringsVector(args[2], &arg2);
+		ok &= seval_to_FB_StringsVector(args[1], &arg1);
 		SE_PRECONDITION2(ok, false, "seval_to_FB_StringsVector failed");
 		// call Graph API
-		auto response = FacebookPCGameSDK::GraphPOST(arg0, arg1, arg2);
+		auto response = cobj->GraphPOST(arg0, arg1);
 		ok = FB_Strings_to_seval(response, &s.rval());
 		SE_PRECONDITION2(ok, false, "FB_Strings_to_seval failed");
 		return true;
@@ -552,23 +555,23 @@ static bool js_FacebookPCGameSDK_GraphPOST(se::State& s)
 }
 SE_BIND_FUNC(js_FacebookPCGameSDK_GraphPOST)
 
-static bool js_FacebookPCGameSDK_GraphGET(se::State& s)
+bool js_FacebookPCGameSDK_GraphGET(se::State& s)
 {
+	FacebookPCGameSDK* cobj = (FacebookPCGameSDK*)s.nativeThisObject();
+	SE_PRECONDITION2(cobj, false, "js_FacebookPCGameSDK_getAccessToken : Invalid Native Object");
 	const auto& args = s.args();
 	size_t argc = args.size();
 	bool ok = true;
 	if (argc == 3)
 	{
-		std::wstring arg0, arg1;
-		std::vector<std::wstring> arg2;
+		std::wstring arg0;
+		std::vector<std::wstring> arg1;
 		ok &= seval_to_FB_Strings(args[0], &arg0);
 		SE_PRECONDITION2(ok, false, "FB_Strings_to_seval failed");
-		ok &= seval_to_FB_Strings(args[1], &arg1);
-		SE_PRECONDITION2(ok, false, "FB_Strings_to_seval failed");
-		ok &= seval_to_FB_StringsVector(args[2], &arg2);
+		ok &= seval_to_FB_StringsVector(args[1], &arg1);
 		SE_PRECONDITION2(ok, false, "seval_to_FB_StringsVector failed");
 		// call Graph API
-		auto response = FacebookPCGameSDK::GraphGET(arg0, arg1, arg2);
+		auto response = cobj->GraphGET(arg0, arg1);
 		ok = FB_Strings_to_seval(response, &s.rval());
 		SE_PRECONDITION2(ok, false, "FB_Strings_to_seval failed");
 		return true;
@@ -578,23 +581,23 @@ static bool js_FacebookPCGameSDK_GraphGET(se::State& s)
 }
 SE_BIND_FUNC(js_FacebookPCGameSDK_GraphGET)
 
-static bool js_FacebookPCGameSDK_GraphDEL(se::State& s)
+bool js_FacebookPCGameSDK_GraphDELETE(se::State& s)
 {
+	FacebookPCGameSDK* cobj = (FacebookPCGameSDK*)s.nativeThisObject();
+	SE_PRECONDITION2(cobj, false, "js_FacebookPCGameSDK_getAccessToken : Invalid Native Object");
 	const auto& args = s.args();
 	size_t argc = args.size();
 	bool ok = true;
 	if (argc == 3)
 	{
-		std::wstring arg0, arg1;
-		std::vector<std::wstring> arg2;
+		std::wstring arg0;
+		std::vector<std::wstring> arg1;
 		ok &= seval_to_FB_Strings(args[0], &arg0);
 		SE_PRECONDITION2(ok, false, "FB_Strings_to_seval failed");
-		ok &= seval_to_FB_Strings(args[1], &arg1);
-		SE_PRECONDITION2(ok, false, "FB_Strings_to_seval failed");
-		ok &= seval_to_FB_StringsVector(args[2], &arg2);
+		ok &= seval_to_FB_StringsVector(args[1], &arg1);
 		SE_PRECONDITION2(ok, false, "seval_to_FB_StringsVector failed");
 		// call Graph API
-		auto response = FacebookPCGameSDK::GraphDEL(arg0, arg1, arg2);
+		auto response = cobj->GraphDELETE(arg0, arg1);
 		ok = FB_Strings_to_seval(response, &s.rval());
 		SE_PRECONDITION2(ok, false, "FB_Strings_to_seval failed");
 		return true;
@@ -602,7 +605,7 @@ static bool js_FacebookPCGameSDK_GraphDEL(se::State& s)
 	SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
 	return false;
 }
-SE_BIND_FUNC(js_FacebookPCGameSDK_GraphDEL)
+SE_BIND_FUNC(js_FacebookPCGameSDK_GraphDELETE)
 
 bool js_register_FacebookPCGameSDK(se::Object* obj)
 {
@@ -623,9 +626,9 @@ bool js_register_FacebookPCGameSDK(se::Object* obj)
 	cls->defineFunction("deauthorizeApp", _SE(js_FacebookPCGameSDK_deauthorizeApp));
 	cls->defineFunction("logout", _SE(js_FacebookPCGameSDK_logout));
 	// GraphAPI, return JSON string
-	cls->defineStaticFunction("GraphPOST", _SE(js_FacebookPCGameSDK_GraphPOST));
-	cls->defineStaticFunction("GraphGET", _SE(js_FacebookPCGameSDK_GraphGET));
-	cls->defineStaticFunction("GraphDEL", _SE(js_FacebookPCGameSDK_GraphDEL));
+	cls->defineFunction("GraphPOST", _SE(js_FacebookPCGameSDK_GraphPOST));
+	cls->defineFunction("GraphGET", _SE(js_FacebookPCGameSDK_GraphGET));
+	cls->defineFunction("GraphDELETE", _SE(js_FacebookPCGameSDK_GraphDELETE));
 
 	cls->install();
 	JSBClassType::registerClass<FacebookPCGameSDK>(cls);
