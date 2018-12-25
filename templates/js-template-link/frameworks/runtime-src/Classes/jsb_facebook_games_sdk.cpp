@@ -117,6 +117,15 @@ public:
 	{
 		return facebook_games_sdk::FacebookGameSDK::getInstance().getAccessToken();
 	}
+	// Graph Base Infos
+	utility::string_t getGraphVersion()
+	{
+		return facebook_games_sdk::GraphAPI::getVersion();
+	}
+	utility::string_t getGraphBaseURL()
+	{
+		return facebook_games_sdk::GraphAPI::getBaseURL();
+	}
 	// GraphAPI (post/get/del), return json string
 	utility::string_t GraphPOST(
 		const utility::string_t& path,
@@ -512,6 +521,40 @@ bool js_FacebookPCGameSDK_hasAccessToken(se::State& s)
 }
 SE_BIND_FUNC(js_FacebookPCGameSDK_hasAccessToken)
 
+bool js_FacebookPCGameSDK_getGraphVersion(se::State& s)
+{
+	FacebookPCGameSDK* cobj = (FacebookPCGameSDK*)s.nativeThisObject();
+	SE_PRECONDITION2(cobj, false, "js_FacebookPCGameSDK_getAccessToken : Invalid Native Object");
+	const auto& args = s.args();
+	size_t argc = args.size();
+	if (argc == 0) {
+		auto version = cobj->getGraphVersion();
+		bool ok = FB_Strings_to_seval(version, &s.rval());
+		SE_PRECONDITION2(ok, false, "FB_Strings_to_seval Error");
+		return true;
+	}
+	SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+	return false;
+}
+SE_BIND_FUNC(js_FacebookPCGameSDK_getGraphVersion)
+
+bool js_FacebookPCGameSDK_getGraphBaseURL(se::State& s)
+{
+	FacebookPCGameSDK* cobj = (FacebookPCGameSDK*)s.nativeThisObject();
+	SE_PRECONDITION2(cobj, false, "js_FacebookPCGameSDK_getAccessToken : Invalid Native Object");
+	const auto& args = s.args();
+	size_t argc = args.size();
+	if (argc == 0) {
+		auto baseURL = cobj->getGraphBaseURL();
+		bool ok = FB_Strings_to_seval(baseURL, &s.rval());
+		SE_PRECONDITION2(ok, false, "FB_Strings_to_seval Error");
+		return true;
+	}
+	SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+	return false;
+}
+SE_BIND_FUNC(js_FacebookPCGameSDK_getGraphBaseURL)
+
 bool js_FacebookPCGameSDK_getAccessToken(se::State& s)
 {
 	FacebookPCGameSDK* cobj = (FacebookPCGameSDK*)s.nativeThisObject();
@@ -625,7 +668,10 @@ bool js_register_FacebookPCGameSDK(se::Object* obj)
 	cls->defineFunction("getPermissions", _SE(js_FacebookPCGameSDK_getPermissions));
 	cls->defineFunction("deauthorizeApp", _SE(js_FacebookPCGameSDK_deauthorizeApp));
 	cls->defineFunction("logout", _SE(js_FacebookPCGameSDK_logout));
-	// GraphAPI, return JSON string
+	// Graph Base Infos
+	cls->defineFunction("getGraphVersion", _SE(js_FacebookPCGameSDK_getGraphVersion));
+	cls->defineFunction("getGraphBaseURL", _SE(js_FacebookPCGameSDK_getGraphBaseURL));
+	// GraphAPI kernal API, return JSON string
 	cls->defineFunction("GraphPOST", _SE(js_FacebookPCGameSDK_GraphPOST));
 	cls->defineFunction("GraphGET", _SE(js_FacebookPCGameSDK_GraphGET));
 	cls->defineFunction("GraphDELETE", _SE(js_FacebookPCGameSDK_GraphDELETE));
